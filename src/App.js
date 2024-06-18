@@ -37,6 +37,7 @@ const BeeswarmChart = ({
     const r = radius + padding / 2;
     const beeswarmData = new AccurateBeeswarm(data, r, (d) => x(d.value))
       .withTiesBrokenRandomly()
+      .oneSided()
       .calculateYPositions()
       .map(({ datum, x, y }) => ({ data: datum, x, y }));
 
@@ -62,7 +63,7 @@ const BeeswarmChart = ({
       .data(beeswarmData)
       .join("circle")
       .attr("cx", (d) => d.x)
-      .attr("cy", (d) => height / 2 + d.y)
+      .attr("cy", (d) => height * 0.915 - d.y)
       .attr("r", radius)
       .attr("fill", (d) => getColor(d.data.winningParty));
 
@@ -111,8 +112,8 @@ function processData(data) {
 }
 
 const width = 1000;
-const height = 400;
-const radius = 3;
+const height = 450;
+const radius = 3.5;
 const padding = 1.5;
 const margin = { top: 20, right: 20, bottom: 30, left: 20 };
 
@@ -139,6 +140,18 @@ function App() {
   return (
     <div>
       <h1>Beeswarm Chart</h1>
+      <div>
+        <BeeswarmChart
+          data={dataForBeeswarmTurnout}
+          width={width}
+          height={height}
+          radius={5}
+          padding={1.5}
+          margin={margin}
+          domain={[10000, 70000]}
+        />
+      </div>
+
       <div>
         <BeeswarmChart
           data={dataForBeeswarmTurnout}
