@@ -15,7 +15,6 @@ const BeeswarmChart = ({
   radius,
   padding,
   margin,
-  color,
   domain,
 }) => {
   const svgRef = useRef();
@@ -41,6 +40,16 @@ const BeeswarmChart = ({
       .calculateYPositions()
       .map(({ datum, x, y }) => ({ data: datum, x, y }));
 
+    const getColor = (party) => {
+      if (party === "C") {
+        return "rgb(0, 135, 220)";
+      } else if (party === "Lab") {
+        return "rgb(220, 36, 31)";
+      } else {
+        return "black";
+      }
+    };
+
     svg.append("g").call(xAxis);
 
     const circles = svg
@@ -51,12 +60,12 @@ const BeeswarmChart = ({
       .attr("cx", (d) => d.x)
       .attr("cy", (d) => height / 2 + d.y)
       .attr("r", radius)
-      .attr("fill", color);
+      .attr("fill", (d) => getColor(d.data.winningParty));
 
     return () => {
       circles.remove();
     };
-  }, [data, width, height, radius, padding, margin, color, domain]);
+  }, [data, width, height, radius, padding, margin, domain]);
 
   return <svg ref={svgRef} width={width} height={height} />;
 };
@@ -92,8 +101,8 @@ function processData(data) {
   return constituencyData;
 }
 
-const width = 500;
-const height = 470;
+const width = 1000;
+const height = 400;
 const radius = 3;
 const padding = 1.5;
 const margin = { top: 20, right: 20, bottom: 30, left: 20 };
@@ -106,6 +115,7 @@ function App() {
     ([name, data]) => ({
       name,
       value: data.turnout,
+      winningParty: data.winningParty,
     })
   );
 
@@ -113,6 +123,7 @@ function App() {
     ([name, data]) => ({
       name,
       value: data.electorate,
+      winningParty: data.winningParty,
     })
   );
 
@@ -127,7 +138,7 @@ function App() {
           radius={radius}
           padding={padding}
           margin={margin}
-          domain={[15000, 110000]}
+          domain={[0, 120000]}
         />
       </div>
 
@@ -139,7 +150,7 @@ function App() {
           radius={radius}
           padding={padding}
           margin={margin}
-          domain={[15000, 110000]}
+          domain={[0, 120000]}
         />
       </div>
     </div>
