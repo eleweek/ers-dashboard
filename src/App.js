@@ -75,6 +75,13 @@ const BeeswarmChart = ({
   return <svg ref={svgRef} width={width} height={height} />;
 };
 
+function renamePartyIfNeeded(party) {
+  if (party === "Lab Co-op") {
+    return "Lab";
+  }
+  return party;
+}
+
 function processData(data) {
   const constituencyData = {};
 
@@ -87,7 +94,7 @@ function processData(data) {
     const name = constituency["$"].name;
     const electorate = parseInt(constituency["$"].electorate);
     const turnout = parseInt(constituency["$"].turnout);
-    const winningParty = constituency["$"].winningParty;
+    const winningParty = renamePartyIfNeeded(constituency["$"].winningParty);
 
     if (!partyStats[winningParty]) {
       partyStats[winningParty] = {
@@ -98,7 +105,8 @@ function processData(data) {
 
     for (const candidate of constituency.Candidate) {
       const partyData = candidate.Party[0]["$"];
-      const party = candidate.Party[0]["$"].abbreviation;
+      let party = renamePartyIfNeeded(candidate.Party[0]["$"].abbreviation);
+
       const votes = parseInt(partyData.votes);
 
       if (!partyStats[party]) {
@@ -133,6 +141,30 @@ function App() {
   const { constituencyData, partyStats } = processData(data);
   console.log("Parties", partyStats);
   console.log("Processed data", constituencyData);
+
+  const totalVotes = Object.values(partyStats).reduce(
+    (sum, party) => sum + party.votes,
+    0
+  );
+  const totalSeats = Object.values(partyStats).reduce(
+    (sum, party) => sum + party.seats,
+    0
+  );
+
+  console.log("Parties with seats and over 50,000 votes:");
+  for (const [party, stats] of Object.entries(partyStats)) {
+    if (stats.seats > 0 && stats.votes > 50000) {
+      const votePercentage = ((stats.votes / totalVotes) * 100).toFixed(2);
+      const seatPercentage = ((stats.seats / totalSeats) * 100).toFixed(2);
+      console.log(
+        `${party}: ${votePercentage}% votes, ${seatPercentage}% seats`
+      );
+    }
+  }
+
+  console.log("Total votes", totalVotes);
+  console.log("Total seats", totalSeats);
+
   const dataForBeeswarmTurnout = Object.entries(constituencyData).map(
     ([name, data]) => ({
       name,
