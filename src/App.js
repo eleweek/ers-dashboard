@@ -78,7 +78,7 @@ const BeeswarmChart = ({
 function processData(data) {
   const constituencyData = {};
 
-  const parties = new Set();
+  const partyStats = {};
 
   // Process the current election data
   for (const singleConstituencyData of data) {
@@ -88,27 +88,38 @@ function processData(data) {
     const electorate = parseInt(constituency["$"].electorate);
     const turnout = parseInt(constituency["$"].turnout);
     const winningParty = constituency["$"].winningParty;
-    parties.add(winningParty);
 
-    let totalCast = 0;
-    for (const candidate of constituency.Candidate) {
-      const votes = parseInt(candidate.Party[0]["$"].votes);
-      totalCast += votes;
+    if (!partyStats[winningParty]) {
+      partyStats[winningParty] = {
+        votes: 0,
+        seats: 0,
+      };
     }
 
-    const computedTurnout = totalCast / electorate;
+    for (const candidate of constituency.Candidate) {
+      const partyData = candidate.Party[0]["$"];
+      const party = candidate.Party[0]["$"].abbreviation;
+      const votes = parseInt(partyData.votes);
+
+      if (!partyStats[party]) {
+        partyStats[party] = {
+          votes: 0,
+          seats: 0,
+        };
+      }
+      partyStats[party].votes += votes;
+    }
+
+    partyStats[winningParty].seats += 1;
 
     constituencyData[name] = {
       electorate,
       turnout,
-      computedTurnout,
       winningParty,
     };
   }
 
-  console.log("Parties", parties);
-
-  return { constituencyData, parties };
+  return { constituencyData, partyStats };
 }
 
 const width = 1000;
@@ -119,8 +130,8 @@ const margin = { top: 20, right: 20, bottom: 30, left: 20 };
 
 function App() {
   console.log("Raw data", data);
-  const { constituencyData, parties } = processData(data);
-  console.log("Parties", parties);
+  const { constituencyData, partyStats } = processData(data);
+  console.log("Parties", partyStats);
   console.log("Processed data", constituencyData);
   const dataForBeeswarmTurnout = Object.entries(constituencyData).map(
     ([name, data]) => ({
