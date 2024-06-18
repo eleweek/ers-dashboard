@@ -81,7 +81,7 @@ function processData(data) {
   const parties = new Set();
 
   // Process the current election data
-  data.forEach((singleConstituencyData) => {
+  for (const singleConstituencyData of data) {
     const constituency = singleConstituencyData.Election[0].Constituency[0];
 
     const name = constituency["$"].name;
@@ -104,11 +104,11 @@ function processData(data) {
       computedTurnout,
       winningParty,
     };
-  });
+  }
 
   console.log("Parties", parties);
 
-  return constituencyData;
+  return { constituencyData, parties };
 }
 
 const width = 1000;
@@ -119,9 +119,10 @@ const margin = { top: 20, right: 20, bottom: 30, left: 20 };
 
 function App() {
   console.log("Raw data", data);
-  const processedData = processData(data);
-  console.log("Processed data", processedData);
-  const dataForBeeswarmTurnout = Object.entries(processedData).map(
+  const { constituencyData, parties } = processData(data);
+  console.log("Parties", parties);
+  console.log("Processed data", constituencyData);
+  const dataForBeeswarmTurnout = Object.entries(constituencyData).map(
     ([name, data]) => ({
       name,
       value: data.turnout,
@@ -129,7 +130,7 @@ function App() {
     })
   );
 
-  const dataForBeeswarmElectorate = Object.entries(processedData).map(
+  const dataForBeeswarmElectorate = Object.entries(constituencyData).map(
     ([name, data]) => ({
       name,
       value: data.electorate,
