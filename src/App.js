@@ -8,6 +8,20 @@ import data from "./data_array.json";
 import * as d3 from "d3";
 import { AccurateBeeswarm } from "accurate-beeswarm-plot";
 
+const getPartyColor = (party) => {
+  if (party === "C") {
+    return "rgb(0, 135, 220)";
+  } else if (party === "Lab") {
+    return "rgb(220, 36, 31)";
+  } else if (party === "SNP") {
+    return "rgb(191 177 26)";
+  } else if (party === "LD") {
+    return "rgb(250, 166, 26)";
+  } else {
+    return "black";
+  }
+};
+
 const BeeswarmChart = ({
   data,
   width,
@@ -41,20 +55,6 @@ const BeeswarmChart = ({
       .calculateYPositions()
       .map(({ datum, x, y }) => ({ data: datum, x, y }));
 
-    const getColor = (party) => {
-      if (party === "C") {
-        return "rgb(0, 135, 220)";
-      } else if (party === "Lab") {
-        return "rgb(220, 36, 31)";
-      } else if (party === "SNP") {
-        return "rgb(191 177 26)";
-      } else if (party === "LD") {
-        return "rgb(250, 166, 26)";
-      } else {
-        return "black";
-      }
-    };
-
     svg.append("g").call(xAxis);
 
     const circles = svg
@@ -65,7 +65,7 @@ const BeeswarmChart = ({
       .attr("cx", (d) => d.x)
       .attr("cy", (d) => height * 0.915 - d.y)
       .attr("r", radius)
-      .attr("fill", (d) => getColor(d.data.winningParty));
+      .attr("fill", (d) => getPartyColor(d.data.winningParty));
 
     return () => {
       circles.remove();
