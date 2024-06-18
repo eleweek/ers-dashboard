@@ -93,7 +93,7 @@ function processData(data) {
 }
 
 const width = 500;
-const height = 540;
+const height = 470;
 const radius = 3;
 const padding = 1.5;
 const margin = { top: 20, right: 20, bottom: 30, left: 20 };
@@ -127,7 +127,7 @@ function App() {
           radius={radius}
           padding={padding}
           margin={margin}
-          domain={[0, 120000]}
+          domain={[15000, 110000]}
         />
       </div>
 
@@ -139,7 +139,7 @@ function App() {
           radius={radius}
           padding={padding}
           margin={margin}
-          domain={[10000, 110000]}
+          domain={[15000, 110000]}
         />
       </div>
     </div>
