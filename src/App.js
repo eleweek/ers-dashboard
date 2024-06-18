@@ -8,7 +8,16 @@ import data from "./data_array.json";
 import * as d3 from "d3";
 import { AccurateBeeswarm } from "accurate-beeswarm-plot";
 
-const BeeswarmChart = ({ data, width, height, radius, padding, margin }) => {
+const BeeswarmChart = ({
+  data,
+  width,
+  height,
+  radius,
+  padding,
+  margin,
+  color,
+  domain,
+}) => {
   const svgRef = useRef();
 
   useEffect(() => {
@@ -18,7 +27,7 @@ const BeeswarmChart = ({ data, width, height, radius, padding, margin }) => {
 
     const x = d3
       .scaleLinear()
-      .domain(d3.extent(data, (d) => d.value))
+      .domain(domain || d3.extent(data, (d) => d.value))
       .range([margin.left, width - margin.right]);
 
     const xAxis = (g) =>
@@ -34,7 +43,7 @@ const BeeswarmChart = ({ data, width, height, radius, padding, margin }) => {
 
     svg.append("g").call(xAxis);
 
-    svg
+    const circles = svg
       .append("g")
       .selectAll("circle")
       .data(beeswarmData)
@@ -42,9 +51,12 @@ const BeeswarmChart = ({ data, width, height, radius, padding, margin }) => {
       .attr("cx", (d) => d.x)
       .attr("cy", (d) => height / 2 + d.y)
       .attr("r", radius)
-      .append("title")
-      .text((d) => d.data.name);
-  }, [data, width, height, radius, padding, margin]);
+      .attr("fill", color);
+
+    return () => {
+      circles.remove();
+    };
+  }, [data, width, height, radius, padding, margin, color, domain]);
 
   return <svg ref={svgRef} width={width} height={height} />;
 };
@@ -81,7 +93,7 @@ function processData(data) {
 }
 
 const width = 500;
-const height = 440;
+const height = 540;
 const radius = 3;
 const padding = 1.5;
 const margin = { top: 20, right: 20, bottom: 30, left: 20 };
@@ -90,22 +102,46 @@ function App() {
   console.log("Raw data", data);
   const processedData = processData(data);
   console.log("Processed data", processedData);
-  const dataForBeeswarm = Object.entries(processedData).map(([name, data]) => ({
-    name,
-    value: data.turnout,
-  }));
+  const dataForBeeswarmTurnout = Object.entries(processedData).map(
+    ([name, data]) => ({
+      name,
+      value: data.turnout,
+    })
+  );
+
+  const dataForBeeswarmElectorate = Object.entries(processedData).map(
+    ([name, data]) => ({
+      name,
+      value: data.electorate,
+    })
+  );
 
   return (
     <div>
       <h1>Beeswarm Chart</h1>
-      <BeeswarmChart
-        data={dataForBeeswarm}
-        width={width}
-        height={height}
-        radius={radius}
-        padding={padding}
-        margin={margin}
-      />
+      <div>
+        <BeeswarmChart
+          data={dataForBeeswarmTurnout}
+          width={width}
+          height={height}
+          radius={radius}
+          padding={padding}
+          margin={margin}
+          domain={[0, 120000]}
+        />
+      </div>
+
+      <div>
+        <BeeswarmChart
+          data={dataForBeeswarmElectorate}
+          width={width}
+          height={height}
+          radius={radius}
+          padding={padding}
+          margin={margin}
+          domain={[10000, 110000]}
+        />
+      </div>
     </div>
   );
 }
