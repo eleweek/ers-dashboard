@@ -45,6 +45,10 @@ const BeeswarmChart = ({
         return "rgb(0, 135, 220)";
       } else if (party === "Lab") {
         return "rgb(220, 36, 31)";
+      } else if (party === "SNP") {
+        return "rgb(191 177 26)";
+      } else if (party === "LD") {
+        return "rgb(250, 166, 26)";
       } else {
         return "black";
       }
@@ -73,6 +77,8 @@ const BeeswarmChart = ({
 function processData(data) {
   const constituencyData = {};
 
+  const parties = new Set();
+
   // Process the current election data
   data.forEach((singleConstituencyData) => {
     const constituency = singleConstituencyData.Election[0].Constituency[0];
@@ -81,6 +87,7 @@ function processData(data) {
     const electorate = parseInt(constituency["$"].electorate);
     const turnout = parseInt(constituency["$"].turnout);
     const winningParty = constituency["$"].winningParty;
+    parties.add(winningParty);
 
     let totalCast = 0;
     for (const candidate of constituency.Candidate) {
@@ -97,6 +104,8 @@ function processData(data) {
       winningParty,
     };
   });
+
+  console.log("Parties", parties);
 
   return constituencyData;
 }
