@@ -22,6 +22,114 @@ const getPartyColor = (party) => {
   }
 };
 
+const DotPlot = ({ data }) => {
+  const width = 600;
+  const height = 400;
+  const margin = { top: 20, right: 20, bottom: 40, left: 100 };
+  const plotWidth = width - margin.left - margin.right;
+  const plotHeight = height - margin.top - margin.bottom;
+
+  const parties = data.map((d) => d.party);
+  const votesPercentage = data.map((d) => d.votesPercentage);
+  const seatsPercentage = data.map((d) => d.seatsPercentage);
+
+  console.log("Data", data);
+  console.log("Parties", parties);
+  console.log("Votes percentage", votesPercentage);
+  console.log("Seats percentage", seatsPercentage);
+
+  const xScale = d3
+    .scaleLinear()
+    .domain([0, d3.max(votesPercentage.concat(seatsPercentage))])
+    .range([0, plotWidth]);
+
+  const yScale = d3
+    .scalePoint()
+    .domain(parties)
+    .range([0, plotHeight])
+    .padding(1);
+
+  const colorScale = d3
+    .scaleOrdinal()
+    .domain(parties)
+    .range(d3.schemeCategory10);
+
+  return (
+    <svg width={width} height={height}>
+      <g transform={`translate(${margin.left}, ${margin.top})`}>
+        {/* X-axis */}
+        <g transform={`translate(0, ${plotHeight})`}>
+          <line x1={0} y1={0} x2={plotWidth} y2={0} stroke="black" />
+          {xScale.ticks(5).map((tick) => (
+            <g key={tick} transform={`translate(${xScale(tick)}, 0)`}>
+              <line x1={0} y1={0} x2={0} y2={5} stroke="black" />
+              <text x={0} y={20} textAnchor="middle">
+                {tick}%
+              </text>
+            </g>
+          ))}
+        </g>
+
+        {/* Y-axis */}
+        <g>
+          {parties.map((party, i) => (
+            <text
+              key={party}
+              x={-10}
+              y={yScale(party)}
+              textAnchor="end"
+              alignmentBaseline="middle"
+            >
+              {party}
+            </text>
+          ))}
+        </g>
+
+        {/* Dots and arrows */}
+        {data.map((d, i) => (
+          <g key={d.party}>
+            <circle
+              cx={xScale(d.votesPercentage)}
+              cy={yScale(d.party)}
+              r={5}
+              fill={colorScale(d.party)}
+            />
+            <circle
+              cx={xScale(d.seatsPercentage)}
+              cy={yScale(d.party)}
+              r={5}
+              fill={colorScale(d.party)}
+            />
+            <line
+              x1={xScale(d.votesPercentage)}
+              y1={yScale(d.party)}
+              x2={xScale(d.seatsPercentage)}
+              y2={yScale(d.party)}
+              stroke={colorScale(d.party)}
+              strokeWidth={2}
+              markerEnd="url(#arrowhead)"
+            />
+          </g>
+        ))}
+
+        {/* Arrow marker */}
+        <defs>
+          <marker
+            id="arrowhead"
+            markerWidth="10"
+            markerHeight="7"
+            refX="0"
+            refY="3.5"
+            orient="auto"
+          >
+            <polygon points="0 0, 10 3.5, 0 7" fill="black" />
+          </marker>
+        </defs>
+      </g>
+    </svg>
+  );
+};
+
 const BeeswarmChart = ({
   data,
   width,
@@ -181,6 +289,15 @@ function App() {
     })
   );
 
+  const dataForDotPlot = Object.entries(partyStats)
+    .map(([party, stats]) => ({
+      party,
+      votesPercentage: (stats.votes / totalVotes) * 100,
+      seatsPercentage: (stats.seats / totalSeats) * 100,
+    }))
+    .sort((a, b) => b.seatsPercentage - a.seatsPercentage)
+    .slice(0, 10);
+
   return (
     <div>
       <h1>Beeswarm Chart</h1>
@@ -218,6 +335,9 @@ function App() {
           margin={margin}
           domain={[0, 120000]}
         />
+      </div>
+      <div>
+        <DotPlot data={dataForDotPlot} />
       </div>
     </div>
   );
