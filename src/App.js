@@ -18,7 +18,7 @@ const getPartyColor = (party) => {
   } else if (party === "LD") {
     return "rgb(250, 166, 26)";
   } else {
-    return "black";
+    return null;
   }
 };
 
@@ -32,11 +32,6 @@ const DotPlot = ({ data }) => {
   const parties = data.map((d) => d.party);
   const votesPercentage = data.map((d) => d.votesPercentage);
   const seatsPercentage = data.map((d) => d.seatsPercentage);
-
-  console.log("Data", data);
-  console.log("Parties", parties);
-  console.log("Votes percentage", votesPercentage);
-  console.log("Seats percentage", seatsPercentage);
 
   const xScale = d3
     .scaleLinear()
@@ -52,7 +47,12 @@ const DotPlot = ({ data }) => {
   const colorScale = d3
     .scaleOrdinal()
     .domain(parties)
-    .range(d3.schemeCategory10);
+    .range(
+      parties.map(
+        (party) =>
+          getPartyColor(party) || d3.schemeCategory10[parties.indexOf(party)]
+      )
+    );
 
   return (
     <svg width={width} height={height}>
@@ -86,45 +86,55 @@ const DotPlot = ({ data }) => {
         </g>
 
         {/* Dots and arrows */}
-        {data.map((d, i) => (
-          <g key={d.party}>
-            <circle
-              cx={xScale(d.votesPercentage)}
-              cy={yScale(d.party)}
-              r={5}
-              fill={colorScale(d.party)}
-            />
-            <circle
-              cx={xScale(d.seatsPercentage)}
-              cy={yScale(d.party)}
-              r={5}
-              fill={colorScale(d.party)}
-            />
-            <line
-              x1={xScale(d.votesPercentage)}
-              y1={yScale(d.party)}
-              x2={xScale(d.seatsPercentage)}
-              y2={yScale(d.party)}
-              stroke={colorScale(d.party)}
-              strokeWidth={2}
-              markerEnd="url(#arrowhead)"
-            />
-          </g>
-        ))}
+        {data.map((d, i) => {
+          const gradientId = `gradient-${i}`;
+          const color = colorScale(d.party);
+          const lightColor = `rgba(${d3.rgb(color).r}, ${d3.rgb(color).g}, ${
+            d3.rgb(color).b
+          }, 0.5)`;
 
-        {/* Arrow marker */}
-        <defs>
-          <marker
-            id="arrowhead"
-            markerWidth="10"
-            markerHeight="7"
-            refX="0"
-            refY="3.5"
-            orient="auto"
-          >
-            <polygon points="0 0, 10 3.5, 0 7" fill="black" />
-          </marker>
-        </defs>
+          return (
+            <g key={d.party}>
+              <defs>
+                <linearGradient
+                  id={gradientId}
+                  x1="0%"
+                  y1="0%"
+                  x2="100%"
+                  y2="0%"
+                >
+                  <stop offset="0%" stopColor={lightColor} />
+                  <stop offset="100%" stopColor={color} />
+                </linearGradient>
+              </defs>
+              <circle
+                cx={xScale(d.votesPercentage)}
+                cy={yScale(d.party)}
+                r={5}
+                fill={lightColor}
+              />
+              <rect
+                x={xScale(d.seatsPercentage) - 5}
+                y={yScale(d.party) - 5}
+                width={10}
+                height={10}
+                fill={color}
+                transform={`rotate(45 ${xScale(d.seatsPercentage)} ${yScale(
+                  d.party
+                )})`}
+              />
+              <line
+                x1={xScale(d.votesPercentage)}
+                y1={yScale(d.party)}
+                x2={xScale(d.seatsPercentage)}
+                y2={yScale(d.party)}
+                stroke={`url(#${gradientId})`}
+                strokeWidth={2}
+                markerEnd="url(#arrowhead)"
+              />
+            </g>
+          );
+        })}
       </g>
     </svg>
   );
@@ -173,7 +183,7 @@ const BeeswarmChart = ({
       .attr("cx", (d) => d.x)
       .attr("cy", (d) => height * 0.915 - d.y)
       .attr("r", radius)
-      .attr("fill", (d) => getPartyColor(d.data.winningParty));
+      .attr("fill", (d) => getPartyColor(d.data.winningParty) || "black");
 
     return () => {
       circles.remove();
