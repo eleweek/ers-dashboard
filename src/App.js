@@ -206,7 +206,22 @@ const BeeswarmChart = ({
   return <svg ref={svgRef} width={width} height={height} />;
 };
 
-const StackedBarChart = ({ data }) => {
+function arrangeParties(parties) {
+  const res = [];
+  res.push("C");
+  res.push("Green");
+  res.push("LD");
+  for (const party of parties) {
+    if (!["C", "Green", "LD", "Lab"].includes(party)) {
+      res.push(party);
+    }
+  }
+  res.push("Lab");
+
+  return res;
+}
+
+const StackedBarChart = ({ data, parties }) => {
   const svgRef = React.useRef(null);
 
   React.useEffect(() => {
@@ -215,31 +230,36 @@ const StackedBarChart = ({ data }) => {
     const marginBottom = 30;
     const marginLeft = 50;
 
+    const width = 1400;
+
     const transformedData = data
-      .map((d) => ({
-        name: d.name,
-        parties: {
-          C: d.parties.C || { percentageShare: 0 },
-          Lab: d.parties.Lab || { percentageShare: 0 },
-          /* FIXME TODO XXX: look at the percentages not summing to 100 later */
-          Other: {
-            percentageShare:
-              100 -
-              ((d.parties.C?.percentageShare || 0) +
-                (d.parties.Lab?.percentageShare || 0)),
+      .map((d) => {
+        const sumTotalPercentage = Object.values(d.parties).reduce(
+          (sum, party) => sum + party.percentageShare,
+          0
+        );
+        return {
+          name: d.name,
+          parties: {
+            ...d.parties,
+            Misc: {
+              percentageShare: 100 - sumTotalPercentage,
+            },
           },
-        },
-      }))
+        };
+      })
       .sort(
-        (a, b) => b.parties.C.percentageShare - a.parties.C.percentageShare
+        (a, b) =>
+          (b.parties.C?.percentageShare || 0) -
+          (a.parties.C?.percentageShare || 0)
       );
 
     console.log("Transformed data", transformedData);
 
     const series = d3
       .stack()
-      .keys(["C", "Other", "Lab"])
-      .value((d, key) => d.parties[key].percentageShare)
+      .keys(arrangeParties(parties))
+      .value((d, key) => d.parties[key]?.percentageShare || 0)
       .offset(d3.stackOffsetExpand)(transformedData);
 
     const height = 400;
@@ -283,7 +303,7 @@ const StackedBarChart = ({ data }) => {
       .text(
         (d) =>
           `${d.data.name} ${d.key}\n${formatValue(
-            d.data.parties[d.key].percentageShare
+            d.data.parties[d.key]?.percentageShare || "N/A"
           )}`
       );
 
@@ -477,7 +497,7 @@ function App() {
         <DotPlot data={dataForDotPlot} />
       </div>
       <h1>Constituency Stacked Bar Chart</h1>
-      <StackedBarChart data={barChartData} />
+      <StackedBarChart parties={Object.keys(partyStats)} data={barChartData} />
     </div>
   );
 }
