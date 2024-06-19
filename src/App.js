@@ -14,9 +14,13 @@ const getPartyColor = (party) => {
   } else if (party === "Lab") {
     return "rgb(220, 36, 31)";
   } else if (party === "SNP") {
-    return "rgb(191 177 26)";
+    return "rgb(191, 177, 26)";
   } else if (party === "LD") {
     return "rgb(250, 166, 26)";
+  } else if (party === "Green") {
+    return "rgb(106, 176, 35)";
+  } else if (party === "Plaid Cymru") {
+    return "rgb(0, 129, 66)";
   } else {
     return null;
   }
@@ -128,7 +132,7 @@ const DotPlot = ({ data }) => {
                 y1={yScale(d.party)}
                 x2={xScale(d.seatsPercentage)}
                 y2={yScale(d.party)}
-                stroke={`url(#${gradientId})`}
+                stroke={getPartyColor(d.party) || "black"}
                 strokeWidth={2}
                 markerEnd="url(#arrowhead)"
               />
