@@ -215,7 +215,6 @@ function renamePartyIfNeeded(party) {
 
 function processData(data) {
   const constituencyData = {};
-
   const partyStats = {};
 
   // Process the current election data
@@ -234,11 +233,14 @@ function processData(data) {
       };
     }
 
+    const parties = {};
+
     for (const candidate of constituency.Candidate) {
       const partyData = candidate.Party[0]["$"];
       let party = renamePartyIfNeeded(candidate.Party[0]["$"].abbreviation);
 
       const votes = parseInt(partyData.votes);
+      const percentageShare = parseFloat(partyData.percentageShare);
 
       if (!partyStats[party]) {
         partyStats[party] = {
@@ -247,6 +249,11 @@ function processData(data) {
         };
       }
       partyStats[party].votes += votes;
+
+      parties[party] = {
+        percentageShare,
+        votes,
+      };
     }
 
     partyStats[winningParty].seats += 1;
@@ -255,6 +262,7 @@ function processData(data) {
       electorate,
       turnout,
       winningParty,
+      parties,
     };
   }
 
