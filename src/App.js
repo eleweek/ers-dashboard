@@ -65,7 +65,7 @@ const DotPlot = ({ data }) => {
           const color = getPartyColor(d.party) || colorScale(d.party);
           const lightColor = `rgba(${d3.rgb(color).r}, ${d3.rgb(color).g}, ${
             d3.rgb(color).b
-          }, 0.2)`;
+          }, 0.3)`;
 
           console.log(d);
           return (
@@ -114,11 +114,13 @@ const DotPlot = ({ data }) => {
 
         {/* Dots and arrows */}
         {data.map((d, i) => {
-          const gradientId = `gradient-${i}`;
           const color = colorScale(d.party);
           const lightColor = `rgba(${d3.rgb(color).r}, ${d3.rgb(color).g}, ${
             d3.rgb(color).b
           }, 0.3)`;
+
+          const hasLessSeats = d.seatsPercentage < d.votesPercentage;
+          const triangleRotation = hasLessSeats ? -90 : 90;
 
           return (
             <g key={d.party}>
@@ -128,15 +130,12 @@ const DotPlot = ({ data }) => {
                 r={3.5}
                 fill={lightColor}
               />
-              <rect
-                x={xScale(d.seatsPercentage) - 3}
-                y={yScale(d.party) - 3}
-                width={6}
-                height={6}
+              <path
+                d="M 0 -4 L 4 4 L -4 4 Z"
                 fill={color}
-                transform={`rotate(45 ${xScale(d.seatsPercentage)} ${yScale(
+                transform={`translate(${xScale(d.seatsPercentage)}, ${yScale(
                   d.party
-                )})`}
+                )}) rotate(${triangleRotation})`}
               />
               <line
                 x1={xScale(d.votesPercentage)}
