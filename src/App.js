@@ -210,11 +210,10 @@ const StackedBarChart = ({ data }) => {
   const svgRef = React.useRef(null);
 
   React.useEffect(() => {
-    const width = 928;
     const marginTop = 30;
     const marginRight = 20;
-    const marginBottom = 0;
-    const marginLeft = 150;
+    const marginBottom = 30;
+    const marginLeft = 50;
 
     const transformedData = data
       .map((d) => ({
@@ -243,20 +242,20 @@ const StackedBarChart = ({ data }) => {
       .value((d, key) => d.parties[key].percentageShare)
       .offset(d3.stackOffsetExpand)(transformedData);
 
-    const height = series[0].length * 25 + marginTop + marginBottom;
-
-    const x = d3
-      .scaleLinear()
-      .domain([0, d3.max(series, (d) => d3.max(d, (d) => d[1]))])
-      .range([marginLeft, width - marginRight]);
+    const height = 400;
 
     const y = d3
+      .scaleLinear()
+      .domain([0, d3.max(series, (d) => d3.max(d, (d) => d[1]))])
+      .range([height - marginBottom, marginTop]);
+
+    const x = d3
       .scaleBand()
       .domain(transformedData.map((d) => d.name))
-      .range([marginTop, height - marginBottom])
-      .padding(0.08);
+      .range([marginLeft, width - marginRight])
+      .padding(0);
 
-    const color = (d) => getPartyColor(d.key);
+    const color = (d) => getPartyColor(d.key) || "gray";
 
     const formatValue = (x) => (isNaN(x) ? "N/A" : `${x.toFixed(2)}%`);
 
@@ -276,10 +275,10 @@ const StackedBarChart = ({ data }) => {
       .selectAll("rect")
       .data((D) => D.map((d) => ((d.key = D.key), d)))
       .join("rect")
-      .attr("x", (d) => x(d[0]))
-      .attr("y", (d) => y(d.data.name))
-      .attr("height", y.bandwidth())
-      .attr("width", (d) => x(d[1]) - x(d[0]))
+      .attr("x", (d) => x(d.data.name))
+      .attr("y", (d) => y(d[1]))
+      .attr("width", x.bandwidth())
+      .attr("height", (d) => y(d[0]) - y(d[1]))
       .append("title")
       .text(
         (d) =>
@@ -288,16 +287,18 @@ const StackedBarChart = ({ data }) => {
           )}`
       );
 
-    svg
-      .append("g")
-      .attr("transform", `translate(0,${marginTop})`)
-      .call(d3.axisTop(x).ticks(width / 100, ".0%"))
-      .call((g) => g.selectAll(".domain").remove());
+    // svg
+    //   .append("g")
+    //   .attr("transform", `translate(0,${height - marginBottom})`)
+    //   .call(d3.axisBottom(x).tickSizeOuter(0))
+    //   .selectAll("text")
+    //   .attr("transform", "rotate(-45)")
+    //   .style("text-anchor", "end");
 
     svg
       .append("g")
       .attr("transform", `translate(${marginLeft},0)`)
-      .call(d3.axisLeft(y).tickSizeOuter(0))
+      .call(d3.axisLeft(y).ticks(height / 50, ".0%"))
       .call((g) => g.selectAll(".domain").remove());
   }, [data]);
 
