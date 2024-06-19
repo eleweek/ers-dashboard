@@ -214,24 +214,27 @@ const StackedBarChart = ({ data }) => {
     const marginTop = 30;
     const marginRight = 20;
     const marginBottom = 0;
-    const marginLeft = 30;
+    const marginLeft = 150;
 
-    const transformedData = data.map((d) => ({
-      name: d.name,
-      parties: {
-        C: d.parties.C || { percentageShare: 0 },
-        Lab: d.parties.Lab || { percentageShare: 0 },
-        Other: Object.entries(d.parties)
-          .filter(([key]) => key !== "C" && key !== "Lab")
-          .reduce(
-            (acc, [, value]) => {
-              acc.percentageShare += value.percentageShare;
-              return acc;
-            },
-            { percentageShare: 0 }
-          ),
-      },
-    }));
+    const transformedData = data
+      .map((d) => ({
+        name: d.name,
+        parties: {
+          C: d.parties.C || { percentageShare: 0 },
+          Lab: d.parties.Lab || { percentageShare: 0 },
+          Other: {
+            percentageShare:
+              100 -
+              ((d.parties.C?.percentageShare || 0) +
+                (d.parties.Lab?.percentageShare || 0)),
+          },
+        },
+      }))
+      .sort(
+        (a, b) => b.parties.C.percentageShare - a.parties.C.percentageShare
+      );
+
+    console.log("Transformed data", transformedData);
 
     const series = d3
       .stack()
