@@ -8,22 +8,24 @@ import data from "./data_array.json";
 import * as d3 from "d3";
 import { AccurateBeeswarm } from "accurate-beeswarm-plot";
 
+const PARTY_COLORS = {
+  C: "#0087DC",
+  Lab: "#DC241f",
+  SNP: "#FDF38E",
+  LD: "#FAA61A",
+  Green: "#6AB023",
+  DUP: "#D46A4C",
+  SF: "#326760",
+  SDLP: "#3A9E84",
+  UUP: "#48A5EE",
+  Alliance: "#F6CB2F",
+  UKIP: "#70147A",
+  Independent: "#535353",
+  PC: "#008142",
+};
+
 const getPartyColor = (party) => {
-  if (party === "C") {
-    return "rgb(0, 135, 220)";
-  } else if (party === "Lab") {
-    return "rgb(220, 36, 31)";
-  } else if (party === "SNP") {
-    return "rgb(191, 177, 26)";
-  } else if (party === "LD") {
-    return "rgb(250, 166, 26)";
-  } else if (party === "Green") {
-    return "rgb(106, 176, 35)";
-  } else if (party === "Plaid Cymru") {
-    return "rgb(0, 129, 66)";
-  } else {
-    return null;
-  }
+  return PARTY_COLORS[party] || null;
 };
 
 const DotPlot = ({ data }) => {
