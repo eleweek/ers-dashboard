@@ -60,6 +60,29 @@ const DotPlot = ({ data }) => {
 
   return (
     <svg width={width} height={height}>
+      <defs>
+        {data.map((d, i) => {
+          const color = getPartyColor(d.party) || colorScale(d.party);
+          const lightColor = `rgba(${d3.rgb(color).r}, ${d3.rgb(color).g}, ${
+            d3.rgb(color).b
+          }, 0.2)`;
+
+          console.log(d);
+          return (
+            <linearGradient
+              id={`gradient-${i}`}
+              x1={xScale(d.votesPercentage)}
+              y1={yScale(d.party)}
+              x2={xScale(d.seatsPercentage)}
+              y2={yScale(d.party)}
+              gradientUnits="userSpaceOnUse"
+            >
+              <stop stopColor={lightColor} offset="0" />
+              <stop stopColor={color} offset="1" />
+            </linearGradient>
+          );
+        })}
+      </defs>
       <g transform={`translate(${margin.left}, ${margin.top})`}>
         {/* X-axis */}
         <g transform={`translate(0, ${plotHeight})`}>
@@ -95,33 +118,21 @@ const DotPlot = ({ data }) => {
           const color = colorScale(d.party);
           const lightColor = `rgba(${d3.rgb(color).r}, ${d3.rgb(color).g}, ${
             d3.rgb(color).b
-          }, 0.5)`;
+          }, 0.3)`;
 
           return (
             <g key={d.party}>
-              <defs>
-                <linearGradient
-                  id={gradientId}
-                  x1="0%"
-                  y1="0%"
-                  x2="100%"
-                  y2="0%"
-                >
-                  <stop offset="0%" stopColor={lightColor} />
-                  <stop offset="100%" stopColor={color} />
-                </linearGradient>
-              </defs>
               <circle
                 cx={xScale(d.votesPercentage)}
                 cy={yScale(d.party)}
-                r={5}
+                r={3.5}
                 fill={lightColor}
               />
               <rect
-                x={xScale(d.seatsPercentage) - 5}
-                y={yScale(d.party) - 5}
-                width={10}
-                height={10}
+                x={xScale(d.seatsPercentage) - 3}
+                y={yScale(d.party) - 3}
+                width={6}
+                height={6}
                 fill={color}
                 transform={`rotate(45 ${xScale(d.seatsPercentage)} ${yScale(
                   d.party
@@ -132,9 +143,8 @@ const DotPlot = ({ data }) => {
                 y1={yScale(d.party)}
                 x2={xScale(d.seatsPercentage)}
                 y2={yScale(d.party)}
-                stroke={getPartyColor(d.party) || "black"}
-                strokeWidth={2}
-                markerEnd="url(#arrowhead)"
+                stroke={`url(#gradient-${i})`}
+                strokeWidth={1.5}
               />
             </g>
           );
