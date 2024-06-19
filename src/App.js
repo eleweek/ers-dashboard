@@ -206,6 +206,100 @@ const BeeswarmChart = ({
   return <svg ref={svgRef} width={width} height={height} />;
 };
 
+const StackedBarChart = ({ data }) => {
+  const svgRef = React.useRef(null);
+
+  React.useEffect(() => {
+    const width = 928;
+    const marginTop = 30;
+    const marginRight = 20;
+    const marginBottom = 0;
+    const marginLeft = 30;
+
+    const transformedData = data.map((d) => ({
+      name: d.name,
+      parties: {
+        C: d.parties.C || { percentageShare: 0 },
+        Lab: d.parties.Lab || { percentageShare: 0 },
+        Other: Object.entries(d.parties)
+          .filter(([key]) => key !== "C" && key !== "Lab")
+          .reduce(
+            (acc, [, value]) => {
+              acc.percentageShare += value.percentageShare;
+              return acc;
+            },
+            { percentageShare: 0 }
+          ),
+      },
+    }));
+
+    const series = d3
+      .stack()
+      .keys(["C", "Lab", "Other"])
+      .value((d, key) => d.parties[key].percentageShare)
+      .offset(d3.stackOffsetExpand)(transformedData);
+
+    const height = series[0].length * 25 + marginTop + marginBottom;
+
+    const x = d3
+      .scaleLinear()
+      .domain([0, d3.max(series, (d) => d3.max(d, (d) => d[1]))])
+      .range([marginLeft, width - marginRight]);
+
+    const y = d3
+      .scaleBand()
+      .domain(transformedData.map((d) => d.name))
+      .range([marginTop, height - marginBottom])
+      .padding(0.08);
+
+    const color = (d) => getPartyColor(d.key);
+
+    const formatValue = (x) => (isNaN(x) ? "N/A" : `${x.toFixed(2)}%`);
+
+    const svg = d3
+      .select(svgRef.current)
+      .attr("width", width)
+      .attr("height", height)
+      .attr("viewBox", [0, 0, width, height])
+      .attr("style", "max-width: 100%; height: auto;");
+
+    svg
+      .append("g")
+      .selectAll()
+      .data(series)
+      .join("g")
+      .attr("fill", color)
+      .selectAll("rect")
+      .data((D) => D.map((d) => ((d.key = D.key), d)))
+      .join("rect")
+      .attr("x", (d) => x(d[0]))
+      .attr("y", (d) => y(d.data.name))
+      .attr("height", y.bandwidth())
+      .attr("width", (d) => x(d[1]) - x(d[0]))
+      .append("title")
+      .text(
+        (d) =>
+          `${d.data.name} ${d.key}\n${formatValue(
+            d.data.parties[d.key].percentageShare
+          )}`
+      );
+
+    svg
+      .append("g")
+      .attr("transform", `translate(0,${marginTop})`)
+      .call(d3.axisTop(x).ticks(width / 100, ".0%"))
+      .call((g) => g.selectAll(".domain").remove());
+
+    svg
+      .append("g")
+      .attr("transform", `translate(${marginLeft},0)`)
+      .call(d3.axisLeft(y).tickSizeOuter(0))
+      .call((g) => g.selectAll(".domain").remove());
+  }, [data]);
+
+  return <svg ref={svgRef} />;
+};
+
 function renamePartyIfNeeded(party) {
   if (party === "Lab Co-op") {
     return "Lab";
@@ -329,6 +423,13 @@ function App() {
     .sort((a, b) => b.seatsPercentage - a.seatsPercentage)
     .slice(0, 10);
 
+  const barChartData = Object.entries(constituencyData).map(
+    ([name, constituency]) => ({
+      name,
+      parties: constituency.parties,
+    })
+  );
+
   return (
     <div>
       <h1>Beeswarm Chart</h1>
@@ -370,6 +471,8 @@ function App() {
       <div>
         <DotPlot data={dataForDotPlot} />
       </div>
+      <h1>Constituency Stacked Bar Chart</h1>
+      <StackedBarChart data={barChartData} />
     </div>
   );
 }
