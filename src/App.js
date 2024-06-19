@@ -222,6 +222,7 @@ const StackedBarChart = ({ data }) => {
         parties: {
           C: d.parties.C || { percentageShare: 0 },
           Lab: d.parties.Lab || { percentageShare: 0 },
+          /* FIXME TODO XXX: look at the percentages not summing to 100 later */
           Other: {
             percentageShare:
               100 -
@@ -238,7 +239,7 @@ const StackedBarChart = ({ data }) => {
 
     const series = d3
       .stack()
-      .keys(["C", "Lab", "Other"])
+      .keys(["C", "Other", "Lab"])
       .value((d, key) => d.parties[key].percentageShare)
       .offset(d3.stackOffsetExpand)(transformedData);
 
