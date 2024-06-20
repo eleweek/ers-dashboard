@@ -238,6 +238,7 @@ const StackedBarChart = ({ data, parties }) => {
     const marginLeft = 50;
 
     const width = 1400;
+    const height = 400;
 
     const transformedData = data
       .map((d) => {
@@ -261,28 +262,18 @@ const StackedBarChart = ({ data, parties }) => {
           (a.parties.C?.percentageShare || 0)
       );
 
-    const series = d3
-      .stack()
-      .keys(arrangeParties(parties))
-      .value((d, key) => d.parties[key]?.percentageShare || 0)
-      .offset(d3.stackOffsetExpand)(transformedData);
-
-    const height = 400;
-
     const y = d3
       .scaleLinear()
-      .domain([0, d3.max(series, (d) => d3.max(d, (d) => d[1]))])
+      .domain([0, 1])
       .range([height - marginBottom, marginTop]);
 
     const x = d3
       .scaleBand()
       .domain(transformedData.map((d) => d.name))
       .range([marginLeft, width - marginRight])
-      .padding(0);
+      .padding(0.1);
 
-    const color = (d) => getPartyColor(d.key) || "gray";
-
-    const formatValue = (x) => (isNaN(x) ? "N/A" : `${x.toFixed(2)}%`);
+    const color = (d) => getPartyColor(d) || "gray";
 
     const svg = d3
       .select(svgRef.current)
@@ -291,69 +282,62 @@ const StackedBarChart = ({ data, parties }) => {
       .attr("viewBox", [0, 0, width, height])
       .attr("style", "max-width: 100%; height: auto;");
 
-    const updateBars = (data) => {
-      svg.selectAll("*").remove();
-
+    const updateBars = (transitionDuration = 500) => {
       const series = d3
         .stack()
         .keys(arrangeParties(parties))
-        .value((d, key) => d.parties[key]?.percentageShare || 0)
-        .offset(d3.stackOffsetExpand)(data);
+        .value((d, key) =>
+          showWinnerTakesAll
+            ? key === d.winner
+              ? 100
+              : 0
+            : d.parties[key]?.percentageShare || 0
+        )
+        .offset(d3.stackOffsetExpand)(transformedData);
 
-      svg
-        .append("g")
-        .selectAll()
+      const barGroups = svg
+        .selectAll("g.bar-group")
         .data(series)
         .join("g")
-        .attr("fill", color)
+        .attr("class", "bar-group")
+        .attr("fill", (d) => color(d.key));
+
+      barGroups
         .selectAll("rect")
-        .data((D) => D.map((d) => ((d.key = D.key), d)))
+        .data((d) => d)
         .join("rect")
         .attr("x", (d) => x(d.data.name))
-        .attr("y", (d) => y(d[1]))
         .attr("width", x.bandwidth())
-        .attr("height", (d) => y(d[0]) - y(d[1]))
-        .append("title")
-        .text(
-          (d) =>
-            `${d.data.name} ${d.key}\n${formatValue(
-              d.data.parties[d.key]?.percentageShare || "N/A"
-            )}`
-        );
+        .transition()
+        .duration(transitionDuration)
+        .attr("y", (d) => y(d[1]))
+        .attr("height", (d) => y(d[0]) - y(d[1]));
 
       svg
-        .append("g")
+        .selectAll("g.axis")
+        .data([null])
+        .join("g")
+        .attr("class", "axis")
         .attr("transform", `translate(${marginLeft},0)`)
-        .call(d3.axisLeft(y).ticks(height / 50, ".0%"))
+        .call(d3.axisLeft(y).ticks(height / 50, "%"))
         .call((g) => g.selectAll(".domain").remove());
     };
 
-    const updateWinnerTakesAll = (data) => {
-      const winnerData = data.map((d) => {
-        const winner = Object.entries(d.parties).reduce((a, b) =>
-          a[1].percentageShare > b[1].percentageShare ? a : b
-        );
-        return {
-          name: d.name,
-          parties: {
-            [winner[0]]: { percentageShare: 100 },
-          },
-        };
-      });
+    // Calculate winners for each constituency
+    transformedData.forEach((d) => {
+      d.winner = Object.entries(d.parties).reduce((a, b) =>
+        b[1].percentageShare > a[1].percentageShare ? b : a
+      )[0];
+    });
 
-      updateBars(winnerData);
-    };
-
-    if (showWinnerTakesAll) {
-      updateWinnerTakesAll(transformedData);
-    } else {
-      updateBars(transformedData);
-    }
+    updateBars();
   }, [data, parties, showWinnerTakesAll]);
 
   return (
     <div>
-      <button onClick={toggleWinnerTakesAll}>Toggle Winner Takes All</button>
+      <button onClick={toggleWinnerTakesAll}>
+        {showWinnerTakesAll ? "Show All Parties" : "Show Winner Takes All"}
+      </button>
       <svg ref={svgRef} />
     </div>
   );
