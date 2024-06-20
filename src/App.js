@@ -1,7 +1,7 @@
 import logo from "./logo.svg";
 import "./App.css";
 
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
 import data from "./data_array.json";
 
@@ -225,6 +225,11 @@ function arrangeParties(parties) {
 
 const StackedBarChart = ({ data, parties }) => {
   const svgRef = React.useRef(null);
+  const [showWinnerTakesAll, setShowWinnerTakesAll] = useState(false);
+
+  const toggleWinnerTakesAll = () => {
+    setShowWinnerTakesAll(!showWinnerTakesAll);
+  };
 
   React.useEffect(() => {
     const marginTop = 30;
@@ -256,8 +261,6 @@ const StackedBarChart = ({ data, parties }) => {
           (a.parties.C?.percentageShare || 0)
       );
 
-    console.log("Transformed data", transformedData);
-
     const series = d3
       .stack()
       .keys(arrangeParties(parties))
@@ -288,43 +291,72 @@ const StackedBarChart = ({ data, parties }) => {
       .attr("viewBox", [0, 0, width, height])
       .attr("style", "max-width: 100%; height: auto;");
 
-    svg
-      .append("g")
-      .selectAll()
-      .data(series)
-      .join("g")
-      .attr("fill", color)
-      .selectAll("rect")
-      .data((D) => D.map((d) => ((d.key = D.key), d)))
-      .join("rect")
-      .attr("x", (d) => x(d.data.name))
-      .attr("y", (d) => y(d[1]))
-      .attr("width", x.bandwidth())
-      .attr("height", (d) => y(d[0]) - y(d[1]))
-      .append("title")
-      .text(
-        (d) =>
-          `${d.data.name} ${d.key}\n${formatValue(
-            d.data.parties[d.key]?.percentageShare || "N/A"
-          )}`
-      );
+    const updateBars = (data) => {
+      svg.selectAll("*").remove();
 
-    // svg
-    //   .append("g")
-    //   .attr("transform", `translate(0,${height - marginBottom})`)
-    //   .call(d3.axisBottom(x).tickSizeOuter(0))
-    //   .selectAll("text")
-    //   .attr("transform", "rotate(-45)")
-    //   .style("text-anchor", "end");
+      const series = d3
+        .stack()
+        .keys(arrangeParties(parties))
+        .value((d, key) => d.parties[key]?.percentageShare || 0)
+        .offset(d3.stackOffsetExpand)(data);
 
-    svg
-      .append("g")
-      .attr("transform", `translate(${marginLeft},0)`)
-      .call(d3.axisLeft(y).ticks(height / 50, ".0%"))
-      .call((g) => g.selectAll(".domain").remove());
-  }, [data]);
+      svg
+        .append("g")
+        .selectAll()
+        .data(series)
+        .join("g")
+        .attr("fill", color)
+        .selectAll("rect")
+        .data((D) => D.map((d) => ((d.key = D.key), d)))
+        .join("rect")
+        .attr("x", (d) => x(d.data.name))
+        .attr("y", (d) => y(d[1]))
+        .attr("width", x.bandwidth())
+        .attr("height", (d) => y(d[0]) - y(d[1]))
+        .append("title")
+        .text(
+          (d) =>
+            `${d.data.name} ${d.key}\n${formatValue(
+              d.data.parties[d.key]?.percentageShare || "N/A"
+            )}`
+        );
 
-  return <svg ref={svgRef} />;
+      svg
+        .append("g")
+        .attr("transform", `translate(${marginLeft},0)`)
+        .call(d3.axisLeft(y).ticks(height / 50, ".0%"))
+        .call((g) => g.selectAll(".domain").remove());
+    };
+
+    const updateWinnerTakesAll = (data) => {
+      const winnerData = data.map((d) => {
+        const winner = Object.entries(d.parties).reduce((a, b) =>
+          a[1].percentageShare > b[1].percentageShare ? a : b
+        );
+        return {
+          name: d.name,
+          parties: {
+            [winner[0]]: { percentageShare: 100 },
+          },
+        };
+      });
+
+      updateBars(winnerData);
+    };
+
+    if (showWinnerTakesAll) {
+      updateWinnerTakesAll(transformedData);
+    } else {
+      updateBars(transformedData);
+    }
+  }, [data, parties, showWinnerTakesAll]);
+
+  return (
+    <div>
+      <button onClick={toggleWinnerTakesAll}>Toggle Winner Takes All</button>
+      <svg ref={svgRef} />
+    </div>
+  );
 };
 
 function renamePartyIfNeeded(party) {
