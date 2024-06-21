@@ -406,6 +406,159 @@ function processData(data) {
   return { constituencyData, partyStats };
 }
 
+const HexMap = () => {
+  const hexmapRef = useRef(null);
+  const [isRendered, setIsRendered] = useState(false);
+
+  useEffect(() => {
+    setIsRendered(true);
+  }, []);
+
+  useEffect(() => {
+    if (isRendered && hexmapRef.current && window.OI) {
+      // Define a colour scale helper function
+      function ColourScale(c) {
+        var s = c;
+        var n = s.length;
+        this.getValue = function (v, min, max) {
+          var c, a, b;
+          v = (v - min) / (max - min);
+          if (v < 0) return "rgb(" + s[0].rgb.join(",") + ")";
+          if (v >= 1) return "rgb(" + s[n - 1].rgb.join(",") + ")";
+          for (c = 0; c < n - 1; c++) {
+            a = s[c];
+            b = s[c + 1];
+            if (v >= a.v && v < b.v) {
+              const pc = Math.min(1, (v - a.v) / (b.v - a.v));
+              const rgb = [
+                Math.round(a.rgb[0] + (b.rgb[0] - a.rgb[0]) * pc),
+                Math.round(a.rgb[1] + (b.rgb[1] - a.rgb[1]) * pc),
+                Math.round(a.rgb[2] + (b.rgb[2] - a.rgb[2]) * pc),
+              ];
+              return "rgb(" + rgb.join(",") + ")";
+            }
+          }
+        };
+        return this;
+      }
+
+      // Define the Viridis colour scale
+      const viridis = new ColourScale([
+        { rgb: [68, 1, 84], v: 0 },
+        { rgb: [72, 35, 116], v: 0.1 },
+        { rgb: [64, 67, 135], v: 0.2 },
+        { rgb: [52, 94, 141], v: 0.3 },
+        { rgb: [41, 120, 142], v: 0.4 },
+        { rgb: [32, 143, 140], v: 0.5 },
+        { rgb: [34, 167, 132], v: 0.6 },
+        { rgb: [66, 190, 113], v: 0.7 },
+        { rgb: [121, 209, 81], v: 0.8 },
+        { rgb: [186, 222, 39], v: 0.9 },
+        { rgb: [253, 231, 36], v: 1 },
+      ]);
+
+      // Create the hexagon layout
+      const hex = new window.OI.hexmap(hexmapRef.current, {
+        hexjson:
+          "https://open-innovations.github.io/oi.hexmap.js/resources/constituencies.hexjson",
+        ready: function () {
+          window.OI.ajax(
+            "https://open-innovations.github.io/oi.hexmap.js/resources/2017-9.json",
+            {
+              this: this,
+              dataType: "json",
+              success: function (data) {
+                var min = 1e100;
+                var max = -1e100;
+                for (var r in data) {
+                  min = Math.min(data[r], min);
+                  max = Math.max(data[r], max);
+                }
+                this.data = data;
+
+                this.updateColours(function (r) {
+                  return viridis.getValue(data[r], min, max);
+                });
+
+                this.updateBoundaries(function (n, props) {
+                  if (props.type === "country")
+                    return {
+                      stroke: "white",
+                      "stroke-width": 3,
+                      "stroke-dasharray": "4 4",
+                      "stroke-linecap": "round",
+                      opacity: 0.9,
+                    };
+                  if (props.type === "region")
+                    return {
+                      stroke: "white",
+                      "stroke-width": 3,
+                      "stroke-dasharray": "4 4",
+                      "stroke-linecap": "round",
+                      opacity: 0.4,
+                    };
+                });
+              },
+              error: function (e, attr) {
+                this.log("ERROR", "Unable to load ", attr.url, attr);
+              },
+            }
+          );
+        },
+      });
+
+      // Make a tooltip
+      hex.on("mouseover", function (e) {
+        var svg = e.data.hexmap.el;
+        var hex = e.target;
+        var tip = svg.querySelector(".tooltip");
+        if (!tip) {
+          tip = document.createElement("div");
+          tip.classList.add("tooltip");
+          svg.appendChild(tip);
+        }
+        tip.innerHTML =
+          e.data.data.n +
+          "<br />" +
+          e.data.hexmap.data[e.data.region].toLocaleString() +
+          " signatures<br />Coordinates: " +
+          e.data.data.q +
+          "," +
+          e.data.data.r +
+          "<br />Region: " +
+          e.data.data.a;
+        var bb = hex.getBoundingClientRect();
+        var bbo = svg.getBoundingClientRect();
+        tip.style.left =
+          Math.round(bb.left + bb.width / 2 - bbo.left + svg.scrollLeft) + "px";
+        tip.style.top = Math.round(bb.top + bb.height / 2 - bbo.top) + "px";
+      });
+    }
+  }, [isRendered]);
+
+  const hexmapStyle = `
+    #hexmap3 { height: 800px; width: 100%; margin-top: 1em; position: relative; animation-duration: 0.3s; }
+    #hexmap3 .hex-cell { stroke: black; stroke-width: 0; transition: fill 0.2s ease-in, stroke 0.2s ease-in, stroke-width 0.2s ease-in; }
+    #hexmap3 .hover path { stroke-width: 4px; }
+    @media only screen and (max-width: 700px) {
+      #hexmap3 .hex-label { display: none; }
+    }
+    #hexmap3 .tooltip { position: absolute; text-align: center; background: black; color: white; padding: 0.25em 0.5em; transform: translate3d(-50%,50%,0); transition: left 0.1s linear, top 0.1s linear; border-radius: 4px; }
+    #hexmap3 .tooltip::after { content: ""; position: absolute; bottom: auto; width: 0; height: 0; border: 0.5em solid transparent; left: 50%; top: 0%; transform: translate3d(-50%,-100%,0); border-color: transparent; border-bottom-color: black; }
+  `;
+
+  return (
+    <figure>
+      <style>{hexmapStyle}</style>
+      <div
+        id="hexmap3"
+        ref={hexmapRef}
+        style={{ visibility: isRendered ? "visible" : "hidden" }}
+      ></div>
+    </figure>
+  );
+};
+
 const width = 1000;
 const height = 450;
 const radius = 3.5;
@@ -516,6 +669,7 @@ function App() {
       </div>
       <h1>Constituency Stacked Bar Chart</h1>
       <StackedBarChart parties={Object.keys(partyStats)} data={barChartData} />
+      <HexMap />
     </div>
   );
 }
