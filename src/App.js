@@ -8,6 +8,10 @@ import data from "./data_array.json";
 import * as d3 from "d3";
 import { AccurateBeeswarm } from "accurate-beeswarm-plot";
 
+import hex2019 from "./2019-constituencies.json";
+import hex2024 from "./uk-constituencies-2023.json";
+console.log("Hex 2019", hex2019);
+
 const PARTY_COLORS = {
   C: "#0087DC",
   Lab: "#DC241f",
@@ -406,7 +410,7 @@ function processData(data) {
   return { constituencyData, partyStats };
 }
 
-const HexMap = () => {
+const HexMap = ({ hexjson }) => {
   const hexmapRef = useRef(null);
   const [isRendered, setIsRendered] = useState(false);
 
@@ -415,95 +419,34 @@ const HexMap = () => {
   }, []);
 
   useEffect(() => {
-    if (isRendered && hexmapRef.current && window.OI) {
-      // Define a colour scale helper function
-      function ColourScale(c) {
-        var s = c;
-        var n = s.length;
-        this.getValue = function (v, min, max) {
-          var c, a, b;
-          v = (v - min) / (max - min);
-          if (v < 0) return "rgb(" + s[0].rgb.join(",") + ")";
-          if (v >= 1) return "rgb(" + s[n - 1].rgb.join(",") + ")";
-          for (c = 0; c < n - 1; c++) {
-            a = s[c];
-            b = s[c + 1];
-            if (v >= a.v && v < b.v) {
-              const pc = Math.min(1, (v - a.v) / (b.v - a.v));
-              const rgb = [
-                Math.round(a.rgb[0] + (b.rgb[0] - a.rgb[0]) * pc),
-                Math.round(a.rgb[1] + (b.rgb[1] - a.rgb[1]) * pc),
-                Math.round(a.rgb[2] + (b.rgb[2] - a.rgb[2]) * pc),
-              ];
-              return "rgb(" + rgb.join(",") + ")";
-            }
-          }
-        };
-        return this;
-      }
-
-      // Define the Viridis colour scale
-      const viridis = new ColourScale([
-        { rgb: [68, 1, 84], v: 0 },
-        { rgb: [72, 35, 116], v: 0.1 },
-        { rgb: [64, 67, 135], v: 0.2 },
-        { rgb: [52, 94, 141], v: 0.3 },
-        { rgb: [41, 120, 142], v: 0.4 },
-        { rgb: [32, 143, 140], v: 0.5 },
-        { rgb: [34, 167, 132], v: 0.6 },
-        { rgb: [66, 190, 113], v: 0.7 },
-        { rgb: [121, 209, 81], v: 0.8 },
-        { rgb: [186, 222, 39], v: 0.9 },
-        { rgb: [253, 231, 36], v: 1 },
-      ]);
-
+    if (isRendered && hexmapRef.current && window.OI && hexjson) {
       // Create the hexagon layout
       const hex = new window.OI.hexmap(hexmapRef.current, {
-        hexjson:
-          "https://open-innovations.github.io/oi.hexmap.js/resources/constituencies.hexjson",
+        hexjson: hexjson,
         ready: function () {
-          window.OI.ajax(
-            "https://open-innovations.github.io/oi.hexmap.js/resources/2017-9.json",
-            {
-              this: this,
-              dataType: "json",
-              success: function (data) {
-                var min = 1e100;
-                var max = -1e100;
-                for (var r in data) {
-                  min = Math.min(data[r], min);
-                  max = Math.max(data[r], max);
-                }
-                this.data = data;
+          this.updateColours(function (r) {
+            // Use the colour from the provided hexjson
+            return hexjson.hexes[r].colour;
+          });
 
-                this.updateColours(function (r) {
-                  return viridis.getValue(data[r], min, max);
-                });
-
-                this.updateBoundaries(function (n, props) {
-                  if (props.type === "country")
-                    return {
-                      stroke: "white",
-                      "stroke-width": 3,
-                      "stroke-dasharray": "4 4",
-                      "stroke-linecap": "round",
-                      opacity: 0.9,
-                    };
-                  if (props.type === "region")
-                    return {
-                      stroke: "white",
-                      "stroke-width": 3,
-                      "stroke-dasharray": "4 4",
-                      "stroke-linecap": "round",
-                      opacity: 0.4,
-                    };
-                });
-              },
-              error: function (e, attr) {
-                this.log("ERROR", "Unable to load ", attr.url, attr);
-              },
-            }
-          );
+          this.updateBoundaries(function (n, props) {
+            if (props.type === "country")
+              return {
+                stroke: "white",
+                "stroke-width": 3,
+                "stroke-dasharray": "4 4",
+                "stroke-linecap": "round",
+                opacity: 0.9,
+              };
+            if (props.type === "region")
+              return {
+                stroke: "white",
+                "stroke-width": 3,
+                "stroke-dasharray": "4 4",
+                "stroke-linecap": "round",
+                opacity: 0.4,
+              };
+          });
         },
       });
 
@@ -519,9 +462,7 @@ const HexMap = () => {
         }
         tip.innerHTML =
           e.data.data.n +
-          "<br />" +
-          e.data.hexmap.data[e.data.region].toLocaleString() +
-          " signatures<br />Coordinates: " +
+          "<br />Coordinates: " +
           e.data.data.q +
           "," +
           e.data.data.r +
@@ -534,7 +475,7 @@ const HexMap = () => {
         tip.style.top = Math.round(bb.top + bb.height / 2 - bbo.top) + "px";
       });
     }
-  }, [isRendered]);
+  }, [isRendered, hexjson]);
 
   const hexmapStyle = `
     #hexmap3 { height: 800px; width: 100%; margin-top: 1em; position: relative; animation-duration: 0.3s; }
@@ -669,7 +610,8 @@ function App() {
       </div>
       <h1>Constituency Stacked Bar Chart</h1>
       <StackedBarChart parties={Object.keys(partyStats)} data={barChartData} />
-      <HexMap />
+      <HexMap hexjson={hex2019} />
+      <HexMap hexjson={hex2024} />
     </div>
   );
 }
