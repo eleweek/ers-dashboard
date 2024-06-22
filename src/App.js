@@ -432,17 +432,15 @@ const HexMap = ({ hexjson }) => {
           this.updateBoundaries(function (n, props) {
             if (props.type === "country")
               return {
-                stroke: "white",
-                "stroke-width": 3,
-                "stroke-dasharray": "4 4",
+                stroke: "black",
+                "stroke-width": 2,
                 "stroke-linecap": "round",
                 opacity: 0.9,
               };
             if (props.type === "region")
               return {
-                stroke: "white",
-                "stroke-width": 3,
-                "stroke-dasharray": "4 4",
+                stroke: "black",
+                "stroke-width": 2,
                 "stroke-linecap": "round",
                 opacity: 0.4,
               };
@@ -479,7 +477,7 @@ const HexMap = ({ hexjson }) => {
 
   const hexmapStyle = `
     #hexmap3 { height: 800px; width: 100%; margin-top: 1em; position: relative; animation-duration: 0.3s; }
-    #hexmap3 .hex-cell { stroke: black; stroke-width: 0; transition: fill 0.2s ease-in, stroke 0.2s ease-in, stroke-width 0.2s ease-in; }
+    #hexmap3 .hex-cell { stroke: black; stroke-width: 0.25; transition: fill 0.2s ease-in, stroke 0.2s ease-in, stroke-width 0.2s ease-in; }
     #hexmap3 .hover path { stroke-width: 4px; }
     @media only screen and (max-width: 700px) {
       #hexmap3 .hex-label { display: none; }
