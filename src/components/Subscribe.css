@@ -1,0 +1,90 @@
+#app {
+  overflow: hidden;
+}
+
+.popup {
+  position: fixed;
+  width: 100vw;
+  height: 100vh;
+  z-index: 200000;
+  top: 0;
+  left: 0;
+  overflow: scroll;
+  background-color: rgba(255, 255, 255, 0.8);
+}
+
+.popup-overlay {
+  position: fixed;
+  z-index: 1;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  cursor: pointer;
+}
+
+.popup-body {
+  position: relative;
+  z-index: 2;
+  top: 20px;
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 20px 10px;
+  background-color: white;
+  box-shadow: 2px 2px 20px rgba(0, 0, 0, 0.3);
+  border-radius: 4px;
+  margin-bottom: 20px;
+}
+
+@media only screen and (max-width: 640px) {
+  .popup-body {
+    box-shadow: none;
+    top: 0;
+  }
+}
+
+.subscribe-form-label {
+  text-align: right;
+}
+
+@media only screen and (max-width: 767px) {
+  .subscribe-form-label {
+    text-align: left;
+  }
+}
+
+.close-popup {
+  opacity: 0.4;
+  position: absolute;
+  top: 0;
+  right: 0;
+  padding: 20px;
+  cursor: pointer;
+}
+
+@media only screen and (max-width: 640px) {
+  .close-popup {
+    top: -10px;
+  }
+}
+
+.close-popup:hover {
+  opacity: 1;
+}
+
+#consent-radios .clickable {
+  cursor: pointer;
+}
+
+#consent-radios .clickable:hover {
+  opacity: 0.7;
+}
+
+#consent-radios span {
+  cursor: pointer;
+}
+
+.error {
+  margin-top: 10px;
+  font-weight: bold;
+}

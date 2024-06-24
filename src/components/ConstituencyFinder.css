@@ -1,0 +1,35 @@
+#constituency-finder-wrapper {
+  position: relative;
+}
+
+#constituency-finder-search-results {
+  min-width: 300px;
+  right: 0;
+  position: absolute;
+  border: solid 1px #aeaeae;
+  background: white;
+  border-radius: 4px;
+  margin-top: -1px;
+  max-height: calc(100vh - 100px);
+  overflow-y: scroll;
+}
+
+.constituency-finder-search-result {
+  font-size: 1rem;
+  border-bottom: solid 1px #aeaeae;
+  padding: 10px 20px;
+  cursor: pointer;
+}
+
+.constituency-finder-search-result:hover {
+  background-color: #f1f1f1;
+}
+
+.constituency-finder-search-result:last-child {
+  border-bottom: 0;
+}
+
+.constituency-finder-search-result-secondary {
+  font-weight: bold;
+  font-size: 0.8rem;
+}
