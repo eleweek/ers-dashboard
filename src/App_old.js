@@ -21,6 +21,7 @@ import Subscribe from "./components/Subscribe";
 import ConstituencyFinder from "./components/ConstituencyFinder";
 
 import "./App_old.css";
+import "bootstrap/dist/css/bootstrap.min.css";
 
 const BACKEND_HOST = `${window.location.protocol}//${window.location.hostname}:8080`;
 // const BACKEND_HOST = "https://ge2019.electoral-reform.org.uk";
@@ -30,7 +31,7 @@ const FRONTEND_HOST = `${BACKEND_HOST}${
 
 function App() {
   const [subscribePopupOpened, setSubscribePopupOpened] = useState(false);
-  const [electionStarted, setElectionStarted] = useState(false);
+  const [electionStarted] = useState(true);
   const [countdown, setCountdown] = useState(null);
   const [frontendHost] = useState(FRONTEND_HOST);
   const [backendHost] = useState(BACKEND_HOST);
@@ -95,38 +96,10 @@ function App() {
     }
 
     await loadStaticData();
-    updateElectionStarted();
-
-    if (!electionStarted) {
-      launchCountdown();
-    }
 
     await loadAndProcessData();
 
     setDataLoaded(true);
-  };
-
-  const launchCountdown = () => {
-    const interval = setInterval(() => {
-      updateElectionStarted();
-
-      if (electionStarted) {
-        clearInterval(interval);
-      }
-    }, 1000);
-  };
-
-  const updateElectionStarted = () => {
-    const diff = moment(staticData.electionStarts).diff(moment());
-    const electionStartsIn = moment.duration(diff);
-
-    setElectionStarted(diff < 0);
-    setCountdown({
-      days: electionStartsIn.days(),
-      hours: electionStartsIn.hours(),
-      minutes: electionStartsIn.minutes(),
-      seconds: electionStartsIn.seconds(),
-    });
   };
 
   const loadAndProcessData = async () => {
@@ -146,7 +119,9 @@ function App() {
 
   const loadStaticData = async () => {
     const results = await axios.get(`${BACKEND_HOST}/static-data`);
+    console.log("results", results.data);
     setStaticData(results.data);
+    return results.data;
   };
 
   const partyColourByAbbr = (partyAbbr) => {
@@ -868,9 +843,15 @@ function App() {
     yorkshire_and_the_humber: "Yorkshire and The Humber",
   };
 
+  console.log("setSubscribePopupOpened", typeof setSubscribePopupOpened);
+
   return (
     <div id="app" style={{ position: "relative" }}>
-      <Subscribe />
+      <Subscribe
+        setSubscribePopupOpened={setSubscribePopupOpened}
+        subscribePopupOpened={subscribePopupOpened}
+        backendHost={backendHost}
+      />
       <div className="container-fluid top-menu">
         <div className="row">
           <div className="col-lg-3 col-xs-3">
@@ -972,48 +953,7 @@ function App() {
         </div>
       </div>
       <div className="top-menu-marginer"></div>
-      {!electionStarted && countdown && (
-        <div className="countdown">
-          <div className="gap-40"></div>
-          <div className="container-fluid text-center">
-            <div className="row">
-              <div className="col-lg-3"></div>
-              <div className="col-lg-6">
-                <h2>
-                  Welcome to the Electoral Reform Society's 2019 general
-                  election results hub.
-                </h2>
-                <p>
-                  As soon as results start being declared, from around 11pm on
-                  Thursday 12 December, we will keep you up to date with all the
-                  latest developments.
-                  <br />
-                  Voting closes in:
-                </p>
-              </div>
-            </div>
-            <div className="row">
-              <div className="col-lg-4"></div>
-              <div className="col-lg-1">
-                <h1 style={{ padding: 0 }}>{countdown.days}</h1>
-                <div>days</div>
-              </div>
-              <div className="col-lg-1">
-                <h1 style={{ padding: 0 }}>{countdown.hours}</h1>
-                <div>hours</div>
-              </div>
-              <div className="col-lg-1">
-                <h1 style={{ padding: 0 }}>{countdown.minutes}</h1>
-                <div>minutes</div>
-              </div>
-              <div className="col-lg-1">
-                <h1 style={{ padding: 0 }}>{countdown.seconds}</h1>
-                <div>seconds</div>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
+
       {electionStarted && dataLoaded && (
         <>
           {page === "constituency" && (

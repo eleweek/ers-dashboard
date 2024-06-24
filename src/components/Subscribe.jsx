@@ -20,6 +20,10 @@ const Subscribe = ({
   setSubscribePopupOpened,
   backendHost,
 }) => {
+  console.log(
+    "setSubscribePopupOpened in Subscribe",
+    typeof setSubscribePopupOpened
+  );
   const [consent, setConsent] = useState(null);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
