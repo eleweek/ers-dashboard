@@ -938,7 +938,12 @@ function App() {
             )}
           </div>
           <div className="col-lg-3 col-xs-9">
-            {page !== "constituency" && <ConstituencyFinder />}
+            {page !== "constituency" && (
+              <ConstituencyFinder
+                staticData={staticData}
+                escapeString={escapeString}
+              />
+            )}
             {page === "constituency" && (
               <div className="text-right">
                 <a

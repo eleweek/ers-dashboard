@@ -14,12 +14,14 @@ const POSTCODES_REGEX =
 const ConstituencyFinder = ({ staticData, escapeString }) => {
   const [constituencyQuery, setConstituencyQuery] = useState("");
   const [results, setResults] = useState([]);
+  console.log("constituencyFinder", results);
   const [hover, setHover] = useState(false);
   const hoverTimeoutRef = useRef(null);
   const navigate = useNavigate();
 
   const search = async () => {
     const query = constituencyQuery.trim();
+    console.log("search: query", query);
 
     if (!query.length) {
       setResults([]);
@@ -27,6 +29,7 @@ const ConstituencyFinder = ({ staticData, escapeString }) => {
     }
 
     if (query.match(POSTCODES_REGEX)) {
+      console.log("query matches postcode regex", query);
       try {
         const response = await axios.get(
           `https://api.postcodes.io/postcodes/${query}`
@@ -48,17 +51,19 @@ const ConstituencyFinder = ({ staticData, escapeString }) => {
         setResults([]);
       }
     } else {
+      console.log("query doesn't match postcode regex", query);
       try {
         const response = await axios.get(
           `${BACKEND_HOST}/search?query=${query}`
         );
-        setResults(
-          response.data.map((result) => ({
-            ...result,
-            constituencyNameEscaped: escapeString(result.constituencyName),
-          }))
-        );
+        console.log("search response", response);
+        const results = response.data.map((result) => ({
+          ...result,
+          constituencyNameEscaped: escapeString(result.constituencyName),
+        }));
+        setResults(results);
       } catch (error) {
+        console.log("search error", error);
         setResults([]);
       }
     }
@@ -116,6 +121,7 @@ const ConstituencyFinder = ({ staticData, escapeString }) => {
         value={constituencyQuery}
         onChange={(e) => setConstituencyQuery(e.target.value)}
         onKeyUp={(e) => {
+          console.log("key up", e.key);
           search();
           if (e.key === "Enter") navigateIfOnlyOneResult();
         }}
