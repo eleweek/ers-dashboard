@@ -23,6 +23,9 @@ import ConstituencyFinder from "./components/ConstituencyFinder";
 import "./App_old.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 
+import oldData from "./old-data.json";
+import staticData from "./old-static-data.json";
+
 const BACKEND_HOST = `${window.location.protocol}//${window.location.hostname}:8080`;
 // const BACKEND_HOST = "https://ge2019.electoral-reform.org.uk";
 const FRONTEND_HOST = `${BACKEND_HOST}${
@@ -30,29 +33,14 @@ const FRONTEND_HOST = `${BACKEND_HOST}${
 }`;
 
 function App() {
+  const electionStarted = true;
   const [subscribePopupOpened, setSubscribePopupOpened] = useState(false);
-  const [electionStarted] = useState(true);
-  const [countdown, setCountdown] = useState(null);
   const [frontendHost] = useState(FRONTEND_HOST);
   const [backendHost] = useState(BACKEND_HOST);
   const [othersColor] = useState("#A6A6A6");
-  const [fullData, setFullData] = useState({ constituencies: [] });
-  const [data, setData] = useState({
-    constituencies: [],
-    constituenciesIndexedByNumber: {},
-    parties: [],
-    partiesExtended: [],
-    totalVotes: 0,
-    totalSeats: 0,
-    totalSeatsPrev: 0,
-    totalVotesPrev: 0,
-    wastedVotes: 0,
-  });
-  const [staticData, setStaticData] = useState({
-    constituenciesNumbersToPcon18cdMap: {},
-    partiesAbbreviationsToColours: {},
-    electionStartsIn: null,
-  });
+  const [fullData, setFullData] = useState({ ...oldData, constituencies: [] });
+  const [data, setData] = useState(oldData);
+
   const [dataLoaded, setDataLoaded] = useState(null);
   const [postcode, setPostcode] = useState("");
   const [postcodeError, setPostcodeError] = useState(false);
@@ -95,33 +83,18 @@ function App() {
       navigate(window.location.pathname.replace(/\/$/, ""));
     }
 
-    await loadStaticData();
-
     await loadAndProcessData();
 
     setDataLoaded(true);
   };
 
   const loadAndProcessData = async () => {
-    await loadData();
     processFullAndStaticData();
     recalculateData();
   };
 
   const recalculateData = () => {
     processData();
-  };
-
-  const loadData = async () => {
-    const results = await axios.get(`${BACKEND_HOST}/data`);
-    setFullData(results.data);
-  };
-
-  const loadStaticData = async () => {
-    const results = await axios.get(`${BACKEND_HOST}/static-data`);
-    console.log("results", results.data);
-    setStaticData(results.data);
-    return results.data;
   };
 
   const partyColourByAbbr = (partyAbbr) => {
