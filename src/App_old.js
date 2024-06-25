@@ -1495,7 +1495,7 @@ function App() {
         page={window.location.pathname}
         frontendHost={frontendHost}
       />
-      <JoinNewsletter />
+      <JoinNewsletter setSubscribePopupOpened={setSubscribePopupOpened} />
       <div className="divider"></div>
       <div className="container-fluid non-constituency-page">
         <div className="row">
