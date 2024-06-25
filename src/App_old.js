@@ -56,7 +56,7 @@ function App() {
   const [postcodeInSearch, setPostcodeInSearch] = useState(false);
   const [page, setPage] = useState("");
   const [pageParam, setPageParam] = useState("");
-  const [selectedConstituency, setSelectedConstituency] = useState({});
+  const [selectedConstituency, setSelectedConstituency] = useState(null);
   const [
     selectedConstituencyWinningParty,
     setSelectedConstituencyWinningParty,
@@ -145,6 +145,8 @@ function App() {
     const currentPathPieces = window.location.pathname.split("/");
 
     let newData = { ...data };
+    let newSelectedConstituency = null;
+
     newData.electorate = 0;
     setPage(currentPathPieces[1]);
     setPageParam(
@@ -190,9 +192,9 @@ function App() {
       );
 
       if (page === "constituency" && newData.constituencies[0]) {
-        setSelectedConstituency(
-          newData.constituencies[0].data.Election[0].Constituency[0]
-        );
+        newSelectedConstituency =
+          newData.constituencies[0].data.Election[0].Constituency[0];
+        setSelectedConstituency(newSelectedConstituency);
         setSelectedConstituencyPreviouslyWinningParty(
           newData.parties.find((party) => {
             const partyAbbr =
@@ -357,7 +359,7 @@ function App() {
       setSelectedConstituencyWinningParty(
         newData.parties.filter((party) => {
           const partyAbbr =
-            selectedConstituency.Candidate[0].Party[0].$.abbreviation;
+            newSelectedConstituency.Candidate[0].Party[0].$.abbreviation;
           if (party.abbreviation === "Lab Co-op") {
             return partyAbbr === "Lab" || partyAbbr === "Lab Co-op";
           }
@@ -625,6 +627,12 @@ function App() {
   };
 
   const getSelectedConstituencyRankBy = (field) => {
+    console.log("getSelectedConstituencyRankBy", field, selectedConstituency);
+
+    if (!selectedConstituency) {
+      return 0;
+    }
+
     return (
       orderBy(fullData.constituencies, field).findIndex(
         (constituency) =>
@@ -996,7 +1004,7 @@ function App() {
           )}
           {data.constituencies.length > 0 && (
             <>
-              {page === "constituency" && (
+              {page === "constituency" && selectedConstituency && (
                 <div className="container-fluid">
                   <div className="row text-center">
                     <div className="col-lg-12">
