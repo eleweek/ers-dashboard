@@ -38,8 +38,16 @@ function App() {
   const [frontendHost] = useState(FRONTEND_HOST);
   const [backendHost] = useState(BACKEND_HOST);
   const [othersColor] = useState("#A6A6A6");
-  const [fullData, setFullData] = useState({ ...oldData, constituencies: [] });
-  const [data, setData] = useState(oldData);
+  const [fullData, setFullData] = useState({
+    ...oldData,
+    parties: [],
+    partiesExtend: [],
+  });
+  const [data, setData] = useState({
+    ...oldData,
+    parties: [],
+    partiesExtended: [],
+  });
 
   const [dataLoaded, setDataLoaded] = useState(null);
   const [postcode, setPostcode] = useState("");
@@ -425,6 +433,8 @@ function App() {
       ["createdAt"],
       ["desc"]
     ).slice(0, 5);
+
+    console.log("Setting data", newData);
 
     setData(newData);
   };
@@ -1048,7 +1058,15 @@ function App() {
                     </div>
                   </div>
                   <div className="gap-40"></div>
-                  <SignPetition />
+                  <SignPetition
+                    oneDecimal={oneDecimal}
+                    wastedVotes={wastedVotes}
+                    page={page}
+                    data={data}
+                    selectedConstituency={selectedConstituency}
+                    getPlaceName={getPlaceName}
+                    selectedRegionName={selectedConstituencyRegionName}
+                  />
                   <div className="gap-40"></div>
                   <div className="container-fluid">
                     <div className="row text-center">
@@ -1134,7 +1152,7 @@ function App() {
                           },
                         }}
                       />
-                      <SeatsDeclared />
+                      <SeatsDeclared data={data} />
                     </div>
                     <div className="col-lg-4">
                       {data.constituencies.length <
@@ -1184,7 +1202,7 @@ function App() {
                           ))}
                         </tbody>
                       </table>
-                      <SeatsDeclared />
+                      <SeatsDeclared data={data} />
                     </div>
                   </div>
                   <div className="gap-40"></div>
@@ -1272,7 +1290,7 @@ function App() {
                             )}
                           </tbody>
                         </table>
-                        <SeatsDeclared />
+                        <SeatsDeclared data={data} />
                         <div className="gap-40"></div>
                         <h2>
                           Top 10: Smallest Share of the Vote Needed to Win
@@ -1324,7 +1342,7 @@ function App() {
                             )}
                           </tbody>
                         </table>
-                        <SeatsDeclared />
+                        <SeatsDeclared data={data} />
                       </div>
                       <div className="col-lg-5">
                         <div className="gap-40"></div>
@@ -1334,7 +1352,15 @@ function App() {
                     </div>
                   </div>
                   <div className="gap-40"></div>
-                  <SignPetition />
+                  <SignPetition
+                    oneDecimal={oneDecimal}
+                    wastedVotes={wastedVotes}
+                    page={page}
+                    data={data}
+                    selectedConstituency={selectedConstituency}
+                    getPlaceName={getPlaceName}
+                    selectedRegionName={selectedConstituencyRegionName}
+                  />{" "}
                   <div className="gap-40"></div>
                   <div className="container-fluid">
                     <div className="row">
@@ -1378,7 +1404,10 @@ function App() {
                             },
                           }}
                         />
-                        <SeatsDeclared style={{ marginBottom: "40px" }} />
+                        <SeatsDeclared
+                          data={data}
+                          style={{ marginBottom: "40px" }}
+                        />
                       </div>
                       <div className="col-lg-8">
                         <h2>Full Results</h2>
@@ -1405,7 +1434,7 @@ function App() {
                             ))}
                           </tbody>
                         </table>
-                        <SeatsDeclared />
+                        <SeatsDeclared data={data} />
                       </div>
                     </div>
                     <div className="row">
@@ -1449,7 +1478,7 @@ function App() {
                               },
                             }}
                           />
-                          <SeatsDeclared />
+                          <SeatsDeclared data={data} />
                         </div>
                       )}
                     </div>
