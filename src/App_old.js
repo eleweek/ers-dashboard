@@ -4,6 +4,7 @@ import {
   Route,
   Link,
   useNavigate,
+  useLocation,
   Routes,
 } from "react-router-dom";
 import axios from "axios";
@@ -80,6 +81,24 @@ function App() {
   useEffect(() => {
     init();
   }, []);
+
+  const location = useLocation();
+
+  useEffect(() => {
+    const currentPathPieces = location.pathname.split("/");
+    const newPage = currentPathPieces[1] || "";
+    const newPageParam = currentPathPieces[2]
+      ? currentPathPieces[2].toLowerCase()
+      : "";
+
+    // Check if the page or pageParam has changed
+    if (page !== newPage || pageParam !== newPageParam) {
+      setPage(newPage);
+      setPageParam(newPageParam);
+      recalculateData();
+      scrollToTop();
+    }
+  }, [location, page, pageParam]);
 
   useEffect(() => {
     recalculateData();
