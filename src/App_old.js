@@ -22,7 +22,6 @@ import Subscribe from "./components/Subscribe";
 import ConstituencyFinder from "./components/ConstituencyFinder";
 
 import "./App_old.css";
-import "bootstrap/dist/css/bootstrap.min.css";
 
 import oldData from "./old-data.json";
 import staticData from "./old-static-data.json";
