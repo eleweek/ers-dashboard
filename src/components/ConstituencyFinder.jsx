@@ -4,6 +4,8 @@ import { useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUser } from "@fortawesome/free-solid-svg-icons";
 
+import entireData from "../old-data.json";
+
 import "./ConstituencyFinder.css";
 
 const BACKEND_HOST = `${window.location.protocol}//${window.location.hostname}:8080`;
@@ -52,20 +54,32 @@ const ConstituencyFinder = ({ staticData, escapeString }) => {
       }
     } else {
       console.log("query doesn't match postcode regex", query);
-      try {
-        const response = await axios.get(
-          `${BACKEND_HOST}/search?query=${query}`
-        );
-        console.log("search response", response);
-        const results = response.data.map((result) => ({
-          ...result,
-          constituencyNameEscaped: escapeString(result.constituencyName),
-        }));
-        setResults(results);
-      } catch (error) {
-        console.log("search error", error);
-        setResults([]);
-      }
+      // Local search implementation
+      const searchResults = entireData.constituencies
+        .filter((constituency) => {
+          const constituencyObj = constituency.data.Election[0].Constituency[0];
+          const constituencyData = constituencyObj.$;
+          const winnerData = constituencyObj.Candidate[0].$;
+
+          const constituencyName = constituencyData.name.toLowerCase();
+          const winnerName =
+            `${winnerData.firstName} ${winnerData.surname}`.toLowerCase();
+
+          return constituencyName.includes(query) || winnerName.includes(query);
+        })
+        .map((constituency) => {
+          const constituencyObj = constituency.data.Election[0].Constituency[0];
+          const constituencyData = constituencyObj.$;
+          const winnerData = constituencyObj.Candidate[0].$;
+
+          return {
+            constituencyName: constituencyData.name,
+            constituencyNameEscaped: escapeString(constituencyData.name),
+            winnerName: `${winnerData.firstName} ${winnerData.surname}`,
+          };
+        });
+
+      setResults(searchResults);
     }
   };
 
