@@ -1142,98 +1142,105 @@ function App() {
                 </div>
               )}
               {page !== "constituency" && (
-                <div className="container-fluid non-constituency-page">
-                  <div className="row">
-                    <div className="col-lg-8">
-                      <h1 style={{ paddingTop: 0 }}>
-                        {page !== "region"
-                          ? "2019 General Election Results"
-                          : `2019 General Election in ${getPlaceName(
-                              selectedRegionName,
-                              true
-                            )}`}
-                      </h1>
-                      <div>
-                        <div
-                          className="custom-badge"
-                          style={{ backgroundColor: othersColor, opacity: 0.6 }}
-                        ></div>
-                        % Votes
-                        <div className="text-gap"></div>
-                        <div
-                          className="custom-badge"
-                          style={{ backgroundColor: othersColor }}
-                        ></div>
-                        % Seats
+                <>
+                  <div className="container-fluid non-constituency-page">
+                    <div className="row">
+                      <div className="col-lg-8">
+                        <h1 style={{ paddingTop: 0 }}>
+                          {page !== "region"
+                            ? "2019 General Election Results"
+                            : `2019 General Election in ${getPlaceName(
+                                selectedRegionName,
+                                true
+                              )}`}
+                        </h1>
+                        <div>
+                          <div
+                            className="custom-badge"
+                            style={{
+                              backgroundColor: othersColor,
+                              opacity: 0.6,
+                            }}
+                          ></div>
+                          % Votes
+                          <div className="text-gap"></div>
+                          <div
+                            className="custom-badge"
+                            style={{ backgroundColor: othersColor }}
+                          ></div>
+                          % Seats
+                        </div>
+                        <Chart
+                          width={"100%"}
+                          height={"400px"}
+                          chartType="ColumnChart"
+                          loader={<div>Loading Chart</div>}
+                          data={partiesChartData}
+                          options={{
+                            legend: { position: "none" },
+                            chartArea: {
+                              width: "100%",
+                              left: 20,
+                              top: 60,
+                              bottom: 40,
+                              height: "100%",
+                            },
+                          }}
+                        />
+                        <SeatsDeclared data={data} />
                       </div>
-                      <Chart
-                        width={"100%"}
-                        height={"400px"}
-                        chartType="ColumnChart"
-                        loader={<div>Loading Chart</div>}
-                        data={partiesChartData}
-                        options={{
-                          legend: { position: "none" },
-                          chartArea: {
-                            width: "100%",
-                            left: 20,
-                            top: 60,
-                            bottom: 40,
-                            height: "100%",
-                          },
-                        }}
-                      />
-                      <SeatsDeclared data={data} />
-                    </div>
-                    <div className="col-lg-4">
-                      {data.constituencies.length <
-                        data.constituenciesTotal && (
-                        <table className="table table-bordered table-condensed">
+                      <div className="col-lg-4">
+                        {data.constituencies.length <
+                          data.constituenciesTotal && (
+                          <table className="table table-bordered table-condensed">
+                            <thead>
+                              <tr>
+                                <th>Latest results</th>
+                                <th></th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              {data.latestResults.map((constituency) => (
+                                <tr key={`constituency-${constituency.name}`}>
+                                  <td>
+                                    <Link
+                                      to={`/constituency/${constituency.nameEscaped}`}
+                                    >
+                                      {constituency.name}
+                                    </Link>
+                                  </td>
+                                  <td>{constituency.ago}</td>
+                                </tr>
+                              ))}
+                            </tbody>
+                          </table>
+                        )}
+                        <table className="table table-bordered parties-stats-table table-condensed">
                           <thead>
                             <tr>
-                              <th>Latest results</th>
-                              <th></th>
+                              <th>Party</th>
+                              <th className="parties-stats-table-seats">
+                                Seats
+                              </th>
                             </tr>
                           </thead>
                           <tbody>
-                            {data.latestResults.map((constituency) => (
-                              <tr key={`constituency-${constituency.name}`}>
+                            {data.parties.map((party) => (
+                              <tr key={`party-${party.name}`}>
                                 <td>
-                                  <Link
-                                    to={`/constituency/${constituency.nameEscaped}`}
-                                  >
-                                    {constituency.name}
-                                  </Link>
+                                  <div
+                                    className="custom-badge"
+                                    style={{ backgroundColor: party.colour }}
+                                  ></div>
+                                  {party.name}
                                 </td>
-                                <td>{constituency.ago}</td>
+                                <td>{party.totalSeats}</td>
                               </tr>
                             ))}
                           </tbody>
                         </table>
-                      )}
-                      <table className="table table-bordered parties-stats-table table-condensed">
-                        <thead>
-                          <tr>
-                            <th>Party</th>
-                            <th className="parties-stats-table-seats">Seats</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {data.parties.map((party) => (
-                            <tr key={`party-${party.name}`}>
-                              <td>
-                                <div
-                                  className="custom-badge"
-                                  style={{ backgroundColor: party.colour }}
-                                ></div>
-                                {party.name}
-                              </td>
-                              <td>{party.totalSeats}</td>
-                            </tr>
-                          ))}
-                        </tbody>
-                      </table>
-                      <SeatsDeclared data={data} />
+                        <SeatsDeclared data={data} />
+                      </div>
                     </div>
                   </div>
                   <div className="gap-40"></div>
@@ -1553,7 +1560,7 @@ function App() {
                       )}
                     </div>
                   </div>
-                </div>
+                </>
               )}
             </>
           )}
