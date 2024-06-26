@@ -53,7 +53,6 @@ const ConstituencyFinder = ({ staticData, escapeString }) => {
         setResults([]);
       }
     } else {
-      console.log("query doesn't match postcode regex", query);
       // Local search implementation
       const searchResults = entireData.constituencies
         .filter((constituency) => {
@@ -65,7 +64,10 @@ const ConstituencyFinder = ({ staticData, escapeString }) => {
           const winnerName =
             `${winnerData.firstName} ${winnerData.surname}`.toLowerCase();
 
-          return constituencyName.includes(query) || winnerName.includes(query);
+          return (
+            constituencyName.includes(query.toLocaleLowerCase()) ||
+            winnerName.includes(query.toLowerCase())
+          );
         })
         .map((constituency) => {
           const constituencyObj = constituency.data.Election[0].Constituency[0];
