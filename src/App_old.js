@@ -25,7 +25,7 @@ import TopMenu, { englandSubRegionSelector } from "./components/TopMenu";
 
 import "./App_old.css";
 
-import oldData from "./old-data.json";
+import fullData from "./old-data.json";
 import staticData from "./old-static-data.json";
 import { FullResultsTable } from "./components/FullResultsTable";
 
@@ -242,7 +242,7 @@ function App() {
   const [subscribePopupOpened, setSubscribePopupOpened] = useState(false);
 
   const [data, setData] = useState({
-    ...oldData,
+    ...fullData,
     parties: [],
     partiesExtended: [],
   });
@@ -279,7 +279,7 @@ function App() {
   }, [location, page, pageParam]);
 
   const processData = (page, pageParam) => {
-    let newData = { ...data };
+    let newData = { ...fullData };
 
     newData.constituencies = processConstituencies(newData.constituencies);
     newData.constituencies = filterConstituenciesByPage(
