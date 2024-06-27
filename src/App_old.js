@@ -951,27 +951,7 @@ function App() {
               </div>
             </div>
           )}
-          {!data.constituencies.length && (
-            <div className="container-fluid">
-              <div className="row">
-                <div className="col-lg-3"></div>
-                <div className="col-lg-6 text-center">
-                  <div className="gap-40"></div>
-                  <h2>
-                    Welcome to the Electoral Reform Society's 2019 general
-                    election results hub.
-                  </h2>
-                  <p>
-                    Voting in the 2019 General Election is now closed! As soon
-                    as results start being declared, around 11pm, we will keep
-                    you up to date with all the latest developments. You will
-                    also be able to explore the outcome in your constituency,
-                    wider nation or region and across the UK as a whole.
-                  </p>
-                </div>
-              </div>
-            </div>
-          )}
+          {!data.constituencies.length && <h1>No data</h1>}
           {data.constituencies.length > 0 && (
             <>
               {page === "constituency" && selectedConstituency && (
