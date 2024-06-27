@@ -421,10 +421,6 @@ function App() {
     window.scrollTo(0, 0);
   };
 
-  const turnoutPercentage = useMemo(() => {
-    return oneDecimal(percentage(data.totalVotes / data.electorate));
-  }, [data.totalVotes, data.electorate]);
-
   const seatsVsVotesChangeChartData = useMemo(() => {
     if (!dataLoaded) return [];
     const table = [
@@ -470,29 +466,6 @@ function App() {
 
     return table;
   }, [dataLoaded, data.parties]);
-
-  const turnoutHistoryChartData = useMemo(() => {
-    if (!dataLoaded) return [];
-
-    const turnoutHistory = { ...staticData.turnoutHistory };
-
-    turnoutHistory[2019] = turnoutPercentage;
-
-    const table = [["Year", "Turnout", { role: "style" }]];
-    const turnoutHistoryOrdered = orderBy(
-      map(turnoutHistory, (totalTurnout, year) => ({
-        year: year.toString(),
-        totalTurnout: parseFloat(totalTurnout),
-      })),
-      ["year"]
-    );
-
-    turnoutHistoryOrdered.forEach((entry) => {
-      table.push([entry.year, entry.totalTurnout, `color: ${othersColor}`]);
-    });
-
-    return table;
-  }, [dataLoaded, staticData.turnoutHistory, turnoutPercentage, othersColor]);
 
   const wastedVotes = useMemo(() => {
     return percentage(data.wastedVotes / data.totalVotes);
@@ -679,7 +652,10 @@ function App() {
                     <div className="row text-center">
                       <div className="col-lg-4">
                         <h1 style={{ padding: "0 0 20px 0" }}>
-                          {turnoutPercentage}%
+                          {oneDecimal(
+                            percentage(data.totalVotes / data.electorate)
+                          )}
+                          %
                         </h1>
                         <strong>Turnout</strong>
                       </div>
