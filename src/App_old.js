@@ -32,12 +32,11 @@ const FRONTEND_HOST = `${BACKEND_HOST}${
   window.location.port ? `:${window.location.port}` : ""
 }`;
 
+const othersColor = "#A6A6A6";
 function App() {
   const electionStarted = true;
   const [subscribePopupOpened, setSubscribePopupOpened] = useState(false);
-  const [frontendHost] = useState(FRONTEND_HOST);
-  const [backendHost] = useState(BACKEND_HOST);
-  const [othersColor] = useState("#A6A6A6");
+
   const [fullData, setFullData] = useState({
     ...oldData,
     parties: [],
@@ -50,9 +49,7 @@ function App() {
   });
 
   const [dataLoaded, setDataLoaded] = useState(null);
-  const [postcode, setPostcode] = useState("");
-  const [postcodeError, setPostcodeError] = useState(false);
-  const [postcodeInSearch, setPostcodeInSearch] = useState(false);
+
   const [page, setPage] = useState("");
   const [pageParam, setPageParam] = useState("");
   const [selectedConstituency, setSelectedConstituency] = useState(null);
@@ -463,32 +460,6 @@ function App() {
     return `${candidateProps.firstName} ${candidateProps.surname}`;
   };
 
-  const findConstituencyByPostcode = () => {
-    setPostcodeInSearch(true);
-
-    axios
-      .get(`https://api.postcodes.io/postcodes/${postcode}`)
-      .then((results) => {
-        const constituencyPcon18cd =
-          results.data.result.codes.parliamentary_constituency;
-        const constituencyName =
-          staticData.constituenciesPcon18ToNames[constituencyPcon18cd];
-        const constituencyNameEscaped = escapeString(constituencyName);
-
-        navigate(`/constituency/${constituencyNameEscaped}`);
-      })
-      .catch(() => {
-        setPostcodeError(true);
-
-        setTimeout(() => {
-          setPostcodeError(false);
-        }, 2000);
-      })
-      .finally(() => {
-        setPostcodeInSearch(false);
-      });
-  };
-
   const calculatePartiesData = (resourceParties, newData) => {
     newData[resourceParties] = newData[resourceParties].map((party) => ({
       ...party,
@@ -859,7 +830,7 @@ function App() {
       <Subscribe
         setSubscribePopupOpened={setSubscribePopupOpened}
         subscribePopupOpened={subscribePopupOpened}
-        backendHost={backendHost}
+        backendHost={BACKEND_HOST}
       />
       <div className="container-fluid top-menu">
         <div className="row">
@@ -1245,9 +1216,9 @@ function App() {
                   </div>
                   <div className="gap-40"></div>
                   <MagicButtons
-                    backendHost={backendHost}
+                    backendHost={BACKEND_HOST}
                     page={window.location.pathname}
-                    frontendHost={frontendHost}
+                    frontendHost={FRONTEND_HOST}
                   />
                   <div className="gap-40"></div>
                   <div className="container-fluid">
@@ -1568,9 +1539,9 @@ function App() {
       )}
       <div className="gap-40"></div>
       <MagicButtons
-        backendHost={backendHost}
+        backendHost={BACKEND_HOST}
         page={window.location.pathname}
-        frontendHost={frontendHost}
+        frontendHost={FRONTEND_HOST}
       />
       <JoinNewsletter setSubscribePopupOpened={setSubscribePopupOpened} />
       <div className="divider"></div>
