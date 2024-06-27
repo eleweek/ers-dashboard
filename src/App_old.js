@@ -34,7 +34,6 @@ const FRONTEND_HOST = `${BACKEND_HOST}${
 
 const othersColor = "#A6A6A6";
 function App() {
-  const electionStarted = true;
   const [subscribePopupOpened, setSubscribePopupOpened] = useState(false);
 
   const [fullData, setFullData] = useState({
@@ -939,7 +938,7 @@ function App() {
       </div>
       <div className="top-menu-marginer"></div>
 
-      {electionStarted && dataLoaded && (
+      {dataLoaded && (
         <>
           {page === "constituency" && (
             <div className="container-fluid">
