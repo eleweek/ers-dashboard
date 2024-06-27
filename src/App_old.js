@@ -35,6 +35,11 @@ const FRONTEND_HOST = `${BACKEND_HOST}${
   window.location.port ? `:${window.location.port}` : ""
 }`;
 
+const constituenciesEscapedNameToPcons = {};
+forEach(staticData.constituenciesPcon18ToNames, (name, pcon) => {
+  constituenciesEscapedNameToPcons[escapeString(name)] = pcon;
+});
+
 const othersColor = "#A6A6A6";
 function App() {
   const [subscribePopupOpened, setSubscribePopupOpened] = useState(false);
@@ -50,17 +55,16 @@ function App() {
   const [page, setPage] = useState("");
   const [pageParam, setPageParam] = useState("");
 
-  const [selectedRegionName, setSelectedRegionName] = useState("");
-  const [selectedConstituencyRegionName, setSelectedConstituencyRegionName] =
-    useState("");
-
   const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
-    init();
+    if (location.search) {
+      navigate(location.pathname.replace(/\/$/, ""));
+    }
+    processData();
+    setDataLoaded(true);
   }, []);
-
-  const location = useLocation();
 
   useEffect(() => {
     const currentPathPieces = location.pathname.split("/");
@@ -76,21 +80,6 @@ function App() {
       scrollToTop();
     }
   }, [location, page, pageParam]);
-
-  useEffect(() => {
-    processData();
-    scrollToTop();
-  }, [page, pageParam]);
-
-  const init = async () => {
-    if (window.location.search) {
-      navigate(window.location.pathname.replace(/\/$/, ""));
-    }
-
-    processData();
-
-    setDataLoaded(true);
-  };
 
   const partyColourByAbbr = (partyAbbr) => {
     const partyColour = staticData.partiesAbbreviationsToColours[partyAbbr];
@@ -116,19 +105,6 @@ function App() {
           constituency.data.Election[0].Constituency[0].$.nameEscaped ===
           pageParam
       );
-
-      const constituenciesEscapedNameToPcons = {};
-      forEach(staticData.constituenciesPcon18ToNames, (name, pcon) => {
-        constituenciesEscapedNameToPcons[escapeString(name)] = pcon;
-      });
-
-      setSelectedConstituencyRegionName(
-        staticData.constituenciesNumbersToRegions[
-          staticData.constituenciesPcon18ToNumbers[
-            constituenciesEscapedNameToPcons[pageParam]
-          ]
-        ]
-      );
     }
 
     if (page === "region") {
@@ -143,13 +119,7 @@ function App() {
             constituency.data.Election[0].Constituency[0].$.regionEscaped
           ) !== -1
       );
-      setSelectedRegionName(
-        pageParam !== "england"
-          ? values(staticData.constituenciesNumbersToRegions).find(
-              (regionName) => escapeString(regionName) === pageParam
-            )
-          : "England"
-      );
+
       newData.constituenciesTotal = values(
         staticData.constituenciesNumbersToRegions
       ).filter(
@@ -244,14 +214,6 @@ function App() {
 
     calculatePartiesData("parties", newData);
     calculatePartiesData("partiesExtended", newData);
-
-    newData.constituencies.forEach((constituency) => {
-      const electionConstituency =
-        constituency.data.Election[0].Constituency[0];
-      electionConstituency.$.smallestMarginOfWinning =
-        electionConstituency.Candidate[0].Party[0].$.votes -
-        electionConstituency.Candidate[1].Party[0].$.votes;
-    });
 
     newData.constituencies.forEach((constituency) => {
       newData.electorate += parseInt(
@@ -456,6 +418,24 @@ function App() {
       })
     : null;
 
+  const selectedConstituencyRegionName =
+    page === "constituency"
+      ? staticData.constituenciesNumbersToRegions[
+          staticData.constituenciesPcon18ToNumbers[
+            constituenciesEscapedNameToPcons[pageParam]
+          ]
+        ]
+      : "";
+
+  const selectedRegionName =
+    page === "region"
+      ? pageParam !== "england"
+        ? values(staticData.constituenciesNumbersToRegions).find(
+            (regionName) => escapeString(regionName) === pageParam
+          )
+        : "England"
+      : "";
+
   return (
     <div id="app" style={{ position: "relative" }}>
       <Subscribe
@@ -567,7 +547,7 @@ function App() {
                     page={page}
                     data={data}
                     selectedConstituency={selectedConstituency}
-                    selectedRegionName={selectedConstituencyRegionName}
+                    selectedRegionName={selectedRegionName}
                   />
                   <div className="gap-40"></div>
                   <div className="container-fluid">
@@ -679,7 +659,7 @@ function App() {
                     page={page}
                     data={data}
                     selectedConstituency={selectedConstituency}
-                    selectedRegionName={selectedConstituencyRegionName}
+                    selectedRegionName={selectedRegionName}
                   />{" "}
                   <div className="gap-40"></div>
                   <div className="container-fluid">
