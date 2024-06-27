@@ -54,7 +54,6 @@ function App() {
     selectedConstituencyWinningParty,
     setSelectedConstituencyWinningParty,
   ] = useState({});
-  const [selectedConstituencyName, setSelectedConstituencyName] = useState("");
   const [selectedRegionName, setSelectedRegionName] = useState("");
   const [selectedConstituencyRegionName, setSelectedConstituencyRegionName] =
     useState("");
@@ -79,7 +78,6 @@ function App() {
       ? currentPathPieces[2].toLowerCase()
       : "";
 
-    // Check if the page or pageParam has changed
     if (page !== newPage || pageParam !== newPageParam) {
       setPage(newPage);
       setPageParam(newPageParam);
@@ -129,12 +127,6 @@ function App() {
         (constituency) =>
           constituency.data.Election[0].Constituency[0].$.nameEscaped ===
           pageParam
-      );
-
-      setSelectedConstituencyName(
-        values(staticData.constituenciesPcon18ToNames).find(
-          (constituencyName) => escapeString(constituencyName) === pageParam
-        )
       );
 
       const constituenciesEscapedNameToPcons = {};
@@ -477,7 +469,7 @@ function App() {
   }, [data.partiesExtended, partiesTableColumns]);
 
   console.log("setSubscribePopupOpened", typeof setSubscribePopupOpened);
-
+  console.log("SelectedConstituency", selectedConstituency);
   return (
     <div id="app" style={{ position: "relative" }}>
       <Subscribe
@@ -486,7 +478,7 @@ function App() {
         backendHost={BACKEND_HOST}
       />
       <TopMenu
-        selectedConstituencyName={selectedConstituencyName}
+        selectedConstituencyName={selectedConstituency?.$?.name}
         selectedConstituencyRegionName={selectedConstituencyRegionName}
         page={page}
         pageParam={pageParam}
@@ -494,16 +486,6 @@ function App() {
 
       {dataLoaded && (
         <>
-          {page === "constituency" && (
-            <div className="container-fluid">
-              <div className="row hidden-lg-up text-center">
-                <h2 style={{ padding: 0, paddingTop: "20px" }}>
-                  <i className="fa fa-map-marked-alt"></i>
-                </h2>
-                <h2 style={{ padding: 0 }}>{selectedConstituencyName}</h2>
-              </div>
-            </div>
-          )}
           {!data.constituencies.length && <h1>No data</h1>}
           {data.constituencies.length > 0 && (
             <>
