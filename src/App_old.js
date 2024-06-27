@@ -39,11 +39,6 @@ const othersColor = "#A6A6A6";
 function App() {
   const [subscribePopupOpened, setSubscribePopupOpened] = useState(false);
 
-  const [fullData, setFullData] = useState({
-    ...oldData,
-    parties: [],
-    partiesExtend: [],
-  });
   const [data, setData] = useState({
     ...oldData,
     parties: [],
@@ -109,7 +104,6 @@ function App() {
   };
 
   const loadAndProcessData = async () => {
-    processFullAndStaticData();
     recalculateData();
   };
 
@@ -120,18 +114,6 @@ function App() {
   const partyColourByAbbr = (partyAbbr) => {
     const partyColour = staticData.partiesAbbreviationsToColours[partyAbbr];
     return partyColour || othersColor;
-  };
-
-  const processFullAndStaticData = () => {
-    const constituenciesIndexedByNumber = {};
-    fullData.constituencies.forEach((constituency, index) => {
-      const number = constituency.data.Election[0].Constituency[0].$.number;
-      constituenciesIndexedByNumber[number] = index;
-    });
-    setFullData((prevData) => ({
-      ...prevData,
-      constituenciesIndexedByNumber,
-    }));
   };
 
   const processData = () => {
@@ -145,7 +127,7 @@ function App() {
     setPageParam(
       currentPathPieces[1] !== "" ? currentPathPieces[2].toLowerCase() : ""
     );
-    newData.constituencies = fullData.constituencies;
+    newData.constituencies = data.constituencies;
 
     newData.constituencies.forEach((constituency) => {
       const constituencyData = constituency.data.Election[0].Constituency[0].$;
@@ -226,21 +208,6 @@ function App() {
     } else {
       newData.constituenciesTotal = 650;
     }
-
-    newData.constituenciesIndexedByNumber = {};
-    newData.constituencies.forEach((constituency, index) => {
-      const number = constituency.data.Election[0].Constituency[0].$.number;
-      newData.constituenciesIndexedByNumber[number] = index;
-      setFullData((prevFullData) => ({
-        ...prevFullData,
-        electorate:
-          prevFullData.electorate +
-          parseInt(
-            constituency.data.Election[0].Constituency[0].$.electorate,
-            10
-          ),
-      }));
-    });
 
     const parties = {};
     let wastedVotes = 0;
@@ -330,7 +297,7 @@ function App() {
     calculatePartiesData("parties", newData);
     calculatePartiesData("partiesExtended", newData);
 
-    fullData.constituencies.forEach((constituency) => {
+    newData.constituencies.forEach((constituency) => {
       const electionConstituency =
         constituency.data.Election[0].Constituency[0];
       electionConstituency.$.smallestMarginOfWinning =
@@ -663,7 +630,7 @@ function App() {
                   </div>
                   <div className="gap-40"></div>
                   <div className="text-muted text-center">
-                    Seats declared: {fullData.constituencies.length} out of 650
+                    Seats declared: {data.constituencies.length} out of 650
                   </div>
                 </div>
               )}
