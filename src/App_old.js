@@ -897,51 +897,6 @@ function App() {
                         <SeatsDeclared data={data} />
                       </div>
                     </div>
-                    <div className="row">
-                      <div className={page === "" ? "col-lg-3" : "col-lg-12"}>
-                        <br />
-                        <h2>
-                          Turnout in
-                          {page !== "region"
-                            ? " the UK"
-                            : ` ${getPlaceName(selectedRegionName, true)}`}
-                          {data.constituencies.length <
-                            data.constituenciesTotal && " so far"}
-                        </h2>
-                        <div>{commas(data.totalVotes)}</div>
-                        <h1 style={{ paddingTop: 0 }}>{turnoutPercentage}%</h1>
-                      </div>
-                      {page === "" && (
-                        <div className="col-lg-9">
-                          <br />
-                          <div>
-                            <div
-                              className="custom-badge"
-                              style={{ backgroundColor: othersColor }}
-                            ></div>
-                            % Turnout
-                          </div>
-                          <Chart
-                            width={"100%"}
-                            height={"400px"}
-                            chartType="LineChart"
-                            loader={<div>Loading Chart</div>}
-                            data={turnoutHistoryChartData}
-                            options={{
-                              legend: { position: "none" },
-                              chartArea: {
-                                width: "100%",
-                                left: 35,
-                                top: 20,
-                                bottom: 40,
-                                height: "100%",
-                              },
-                            }}
-                          />
-                          <SeatsDeclared data={data} />
-                        </div>
-                      )}
-                    </div>
                   </div>
                 </>
               )}
