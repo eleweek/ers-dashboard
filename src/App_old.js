@@ -1,16 +1,16 @@
 import React, { useState, useEffect, useMemo } from "react";
-import {
-  BrowserRouter as Router,
-  Route,
-  Link,
-  useNavigate,
-  useLocation,
-  Routes,
-} from "react-router-dom";
-import axios from "axios";
+import { useNavigate, useLocation } from "react-router-dom";
 import { orderBy, values, pick, forEach, map } from "lodash";
-import moment from "moment";
 import { Chart } from "react-google-charts";
+
+import {
+  fixPartyName,
+  getPlaceName,
+  escapeString,
+  percentage,
+  oneDecimal,
+  commas,
+} from "./utils";
 
 // Import components (these will need to be converted to React as well)
 import SignPetition from "./components/SignPetition";
@@ -370,10 +370,6 @@ function App() {
     setData(newData);
   };
 
-  const getCandidateName = (candidateProps) => {
-    return `${candidateProps.firstName} ${candidateProps.surname}`;
-  };
-
   const calculatePartiesData = (resourceParties, newData) => {
     newData[resourceParties] = newData[resourceParties].map((party) => ({
       ...party,
@@ -428,150 +424,8 @@ function App() {
     newData[destination] = condensedParties;
   };
 
-  const fixPartyName = (partyName) => {
-    if (partyName === "No description") {
-      return "";
-    }
-
-    if (partyName.match(/^independent/i)) {
-      return "Independent";
-    }
-
-    if (partyName === "Green") {
-      return "Green Party";
-    }
-
-    if (partyName === "Sinn Fein") {
-      return "Sinn Féin";
-    }
-
-    return partyName;
-  };
-
-  const getPlaceName = (place, withThe) => {
-    if (place === "Eastern") {
-      return `${withThe ? "the " : ""}East of England`;
-    }
-
-    if (
-      withThe &&
-      [
-        "South East",
-        "West Midlands",
-        "North West",
-        "East Midlands",
-        "South West",
-        "North East",
-      ].indexOf(place) !== -1
-    ) {
-      return `the ${place}`;
-    }
-
-    return place;
-  };
-
-  const highlightConstituencyInMap = (event) => {
-    const object = event.propagatedFrom;
-    const pcon16cd = object.feature.properties.pcon16cd;
-    const constituencyNumber =
-      staticData.constituenciesPcon18ToNumbers[pcon16cd];
-    const constituency =
-      data.constituencies[
-        data.constituenciesIndexedByNumber[constituencyNumber]
-      ];
-
-    if (!constituency) {
-      return;
-    }
-
-    const name = constituency.data.Election[0].Constituency[0].$.name;
-
-    object.bindPopup(name);
-    object.openPopup();
-    object.setStyle({
-      fillOpacity: 0.7,
-    });
-  };
-
-  const unhighlightConstituencyInMap = (event) => {
-    const object = event.propagatedFrom;
-
-    object.closePopup();
-    event.propagatedFrom.setStyle({
-      fillOpacity: 1,
-    });
-  };
-
   const scrollToTop = () => {
     window.scrollTo(0, 0);
-  };
-
-  const escapeString = (string) => {
-    return string.toLowerCase().replace(/\s/g, "_");
-  };
-
-  const getSelectedConstituencyRankBy = (field) => {
-    console.log("getSelectedConstituencyRankBy", field, selectedConstituency);
-
-    if (!selectedConstituency) {
-      return 0;
-    }
-
-    return (
-      orderBy(fullData.constituencies, field).findIndex(
-        (constituency) =>
-          constituency.data.Election[0].Constituency[0].$.nameEscaped ===
-          selectedConstituency.$.nameEscaped
-      ) + 1
-    );
-  };
-
-  const forcePlusSign = (number) => {
-    const stringNum = number.toString().replace(/-/, "");
-
-    if (number < 0) {
-      return `<span class='text-danger'><strong>-</strong> ${stringNum}</span>`;
-    }
-
-    return `<span class='text-success'><strong>+</strong> ${stringNum}</span>`;
-  };
-
-  const nth = (number) => {
-    const lastDigit = number % 10;
-    const lastTwoDigits = number % 100;
-    const isTeen = lastTwoDigits >= 10 && lastTwoDigits < 20;
-
-    if (isTeen) {
-      return "th";
-    }
-
-    if (lastDigit === 1) {
-      return "st";
-    }
-
-    if (lastDigit === 2) {
-      return "nd";
-    }
-
-    if (lastDigit === 3) {
-      return "rd";
-    }
-
-    return "th";
-  };
-
-  const percentage = (number) => {
-    return number * 100;
-  };
-
-  const oneDecimal = (number) => {
-    return Math.round(number * 10) / 10;
-  };
-
-  const commas = (number) => {
-    const parts = number.toString().split(".");
-    parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-    return parts.join(".");
   };
 
   const turnoutPercentage = useMemo(() => {
