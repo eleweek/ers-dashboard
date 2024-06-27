@@ -49,19 +49,10 @@ function App() {
 
   const [page, setPage] = useState("");
   const [pageParam, setPageParam] = useState("");
-  const [selectedConstituency, setSelectedConstituency] = useState(null);
-  const [
-    selectedConstituencyWinningParty,
-    setSelectedConstituencyWinningParty,
-  ] = useState({});
+
   const [selectedRegionName, setSelectedRegionName] = useState("");
   const [selectedConstituencyRegionName, setSelectedConstituencyRegionName] =
     useState("");
-
-  const [
-    selectedConstituencyPreviouslyWinningParty,
-    setSelectedConstituencyPreviouslyWinningParty,
-  ] = useState(null);
 
   const navigate = useNavigate();
 
@@ -108,11 +99,8 @@ function App() {
 
   const processData = () => {
     let newData = { ...data };
-    let newSelectedConstituency = null;
 
     newData.electorate = 0;
-
-    newData.constituencies = data.constituencies;
 
     newData.constituencies.forEach((constituency) => {
       const constituencyData = constituency.data.Election[0].Constituency[0].$;
@@ -141,23 +129,6 @@ function App() {
           ]
         ]
       );
-
-      if (page === "constituency" && newData.constituencies[0]) {
-        newSelectedConstituency =
-          newData.constituencies[0].data.Election[0].Constituency[0];
-        setSelectedConstituency(newSelectedConstituency);
-        setSelectedConstituencyPreviouslyWinningParty(
-          newData.parties.find((party) => {
-            const partyAbbr =
-              newData.constituencies[0].data.PreviousElection[0].Constituency[0]
-                .Candidate[0].Party[0].$.abbreviation;
-            if (party.abbreviation === "Lab Co-op") {
-              return partyAbbr === "Lab" || partyAbbr === "Lab Co-op";
-            }
-            return party.abbreviation === partyAbbr;
-          })
-        );
-      }
     }
 
     if (page === "region") {
@@ -191,46 +162,44 @@ function App() {
     const parties = {};
     let wastedVotes = 0;
 
-    newData.constituencies.forEach((constituency) => {
-      constituency.data.Election[0].Constituency[0].Candidate.forEach(
-        (candidate) => {
-          const partyData = candidate.Party[0].$;
-          const partyAbbr = partyData.abbreviation;
-          const partyName =
-            partyAbbr === "Lab Co-op" ? "Labour" : partyData.name;
-          const partyNameProcessed =
-            partyAbbr === "Lab Co-op" ? "Labour" : fixPartyName(partyName);
+    for (const constituency of newData.constituencies) {
+      for (const candidate of constituency.data.Election[0].Constituency[0]
+        .Candidate) {
+        const partyData = candidate.Party[0].$;
+        const partyAbbr = partyData.abbreviation;
+        const partyName = partyAbbr === "Lab Co-op" ? "Labour" : partyData.name;
+        const partyNameProcessed =
+          partyAbbr === "Lab Co-op" ? "Labour" : fixPartyName(partyName);
 
-          if (!parties[partyName]) {
-            parties[partyName] = {
-              colour: partyColourByAbbr(partyAbbr),
-              name: partyNameProcessed,
-              candidate: `${candidate.$.firstName} ${candidate.$.surname}`,
-              abbreviation: partyAbbr,
-              totalSeats: 0,
-              totalVotes: 0,
-              totalSeatsPrev: 0,
-              totalVotesPrev: 0,
-            };
-          }
-
-          if (candidate.$.elected) {
-            parties[partyName].totalSeats += 1;
-          } else {
-            wastedVotes += parseFloat(partyData.votes);
-          }
-
-          parties[partyName].totalVotes += parseFloat(partyData.votes);
+        if (!parties[partyName]) {
+          parties[partyName] = {
+            colour: partyColourByAbbr(partyAbbr),
+            name: partyNameProcessed,
+            candidate: `${candidate.$.firstName} ${candidate.$.surname}`,
+            abbreviation: partyAbbr,
+            totalSeats: 0,
+            totalVotes: 0,
+            totalSeatsPrev: 0,
+            totalVotesPrev: 0,
+          };
         }
-      );
-    });
+
+        if (candidate.$.elected) {
+          parties[partyName].totalSeats += 1;
+        } else {
+          wastedVotes += parseFloat(partyData.votes);
+        }
+
+        parties[partyName].totalVotes += parseFloat(partyData.votes);
+      }
+    }
 
     newData.totalVotes = 0;
     newData.totalSeats = 0;
     newData.totalVotesPrev = 0;
     newData.totalSeatsPrev = 0;
 
-    newData.constituencies.forEach((constituency) => {
+    for (const constituency of newData.constituencies) {
       newData.totalVotesPrev += parseInt(
         constituency.data.PreviousElection[0].Constituency[0].$.turnout,
         10
@@ -254,7 +223,7 @@ function App() {
           parties[partyName].totalVotesPrev += parseFloat(partyData.votes);
         }
       );
-    });
+    }
 
     newData.wastedVotes = wastedVotes;
     newData.parties = values(parties);
@@ -290,19 +259,6 @@ function App() {
         10
       );
     });
-
-    if (page === "constituency") {
-      setSelectedConstituencyWinningParty(
-        newData.parties.filter((party) => {
-          const partyAbbr =
-            newSelectedConstituency.Candidate[0].Party[0].$.abbreviation;
-          if (party.abbreviation === "Lab Co-op") {
-            return partyAbbr === "Lab" || partyAbbr === "Lab Co-op";
-          }
-          return party.abbreviation === partyAbbr;
-        })[0]
-      );
-    }
 
     console.log("Setting data", newData);
 
@@ -469,7 +425,37 @@ function App() {
   }, [data.partiesExtended, partiesTableColumns]);
 
   console.log("setSubscribePopupOpened", typeof setSubscribePopupOpened);
-  console.log("SelectedConstituency", selectedConstituency);
+
+  const selectedConstituency =
+    page === "constituency" &&
+    data.constituencies[0].data.Election[0].Constituency[0];
+
+  console.log("selectedConstituency", selectedConstituency);
+
+  const selectedConstituencyWinningParty = selectedConstituency
+    ? data.parties.find((party) => {
+        const partyAbbr =
+          data.constituencies[0].data.PreviousElection[0].Constituency[0]
+            .Candidate[0].Party[0].$.abbreviation;
+        if (party.abbreviation === "Lab Co-op") {
+          return partyAbbr === "Lab" || partyAbbr === "Lab Co-op";
+        }
+        return party.abbreviation === partyAbbr;
+      })
+    : null;
+
+  const selectedConstituencyPreviouslyWinningParty = selectedConstituency
+    ? data.parties.find((party) => {
+        const partyAbbr =
+          data.constituencies[0].data.PreviousElection[0].Constituency[0]
+            .Candidate[0].Party[0].$.abbreviation;
+        if (party.abbreviation === "Lab Co-op") {
+          return partyAbbr === "Lab" || partyAbbr === "Lab Co-op";
+        }
+        return party.abbreviation === partyAbbr;
+      })
+    : null;
+
   return (
     <div id="app" style={{ position: "relative" }}>
       <Subscribe
