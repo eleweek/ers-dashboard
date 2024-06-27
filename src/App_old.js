@@ -204,18 +204,13 @@ const condenseParties = (parties, resourceParties, page, pageParam) => {
   return condensedParties;
 };
 
-const calculatePartiesData = (
+const calculatePartyPercentagesAndVotesPerSeat = (
   parties,
   totalSeats,
   totalVotes,
   totalSeatsPrev,
   totalVotesPrev
 ) => {
-  if (!Array.isArray(parties)) {
-    console.error("Expected parties to be an array, but got:", parties);
-    return [];
-  }
-
   return parties.map((party) => ({
     ...party,
     totalSeatsShare: percentage(party.totalSeats / totalSeats),
@@ -329,7 +324,7 @@ function App() {
       );
     }
 
-    newData.parties = calculatePartiesData(
+    newData.parties = calculatePartyPercentagesAndVotesPerSeat(
       newData.parties,
       newData.totalSeats,
       newData.totalVotes,
@@ -337,7 +332,7 @@ function App() {
       newData.totalVotesPrev
     );
 
-    newData.partiesExtended = calculatePartiesData(
+    newData.partiesExtended = calculatePartyPercentagesAndVotesPerSeat(
       newData.partiesExtended,
       newData.totalSeats,
       newData.totalVotes,
