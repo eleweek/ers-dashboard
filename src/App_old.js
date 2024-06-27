@@ -83,13 +83,13 @@ function App() {
     if (page !== newPage || pageParam !== newPageParam) {
       setPage(newPage);
       setPageParam(newPageParam);
-      recalculateData();
+      processData();
       scrollToTop();
     }
   }, [location, page, pageParam]);
 
   useEffect(() => {
-    recalculateData();
+    processData();
     scrollToTop();
   }, [page, pageParam]);
 
@@ -98,17 +98,9 @@ function App() {
       navigate(window.location.pathname.replace(/\/$/, ""));
     }
 
-    await loadAndProcessData();
+    processData();
 
     setDataLoaded(true);
-  };
-
-  const loadAndProcessData = async () => {
-    recalculateData();
-  };
-
-  const recalculateData = () => {
-    processData();
   };
 
   const partyColourByAbbr = (partyAbbr) => {
@@ -117,16 +109,11 @@ function App() {
   };
 
   const processData = () => {
-    const currentPathPieces = window.location.pathname.split("/");
-
     let newData = { ...data };
     let newSelectedConstituency = null;
 
     newData.electorate = 0;
-    setPage(currentPathPieces[1]);
-    setPageParam(
-      currentPathPieces[1] !== "" ? currentPathPieces[2].toLowerCase() : ""
-    );
+
     newData.constituencies = data.constituencies;
 
     newData.constituencies.forEach((constituency) => {
