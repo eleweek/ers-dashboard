@@ -700,22 +700,6 @@ function App() {
     }));
   }, [data.partiesExtended, partiesTableColumns]);
 
-  const constituencyRankForWinningMargin = useMemo(() => {
-    if (page !== "constituency") return 0;
-
-    return getSelectedConstituencyRankBy(
-      "data.Election[0].Constituency[0].$.smallestMarginOfWinning"
-    );
-  }, [page, getSelectedConstituencyRankBy]);
-
-  const constituencyRankForPercentNeededToWin = useMemo(() => {
-    if (page !== "constituency") return 0;
-
-    return getSelectedConstituencyRankBy(
-      "data.Election[0].Constituency[0].Candidate[0].Party[0].$.percentageShare"
-    );
-  }, [page, getSelectedConstituencyRankBy]);
-
   const regionSelector = {
     wales: "Wales",
     scotland: "Scotland",
@@ -969,32 +953,6 @@ function App() {
                           {turnoutPercentage}%
                         </h1>
                         <strong>Turnout</strong>
-                      </div>
-                      <div className="col-lg-4">
-                        <h1
-                          className="with-sup"
-                          style={{ padding: "0 0 20px 0" }}
-                        >
-                          {constituencyRankForWinningMargin}
-                          <div className="sup">
-                            {nth(constituencyRankForWinningMargin)}
-                          </div>
-                        </h1>
-                        <strong>Smallest Margin of Victory</strong>
-                      </div>
-                      <div className="col-lg-4">
-                        <h1
-                          className="with-sup"
-                          style={{ padding: "0 0 20px 0" }}
-                        >
-                          {constituencyRankForPercentNeededToWin}
-                          <div className="sup">
-                            {nth(constituencyRankForPercentNeededToWin)}
-                          </div>
-                        </h1>
-                        <strong>
-                          Smallest Share of the Vote Needed to Win
-                        </strong>
                       </div>
                     </div>
                   </div>
