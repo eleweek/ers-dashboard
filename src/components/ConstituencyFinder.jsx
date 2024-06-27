@@ -5,15 +5,14 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUser } from "@fortawesome/free-solid-svg-icons";
 
 import entireData from "../old-data.json";
+import staticData from "../old-static-data.json";
 
 import "./ConstituencyFinder.css";
 
-const BACKEND_HOST = `${window.location.protocol}//${window.location.hostname}:8080`;
-// const BACKEND_HOST = `https://ge2019.electoral-reform.org.uk/`;
 const POSTCODES_REGEX =
   /([Gg][Ii][Rr] 0[Aa]{2})|((([A-Za-z][0-9]{1,2})|(([A-Za-z][A-Ha-hJ-Yj-y][0-9]{1,2})|(([A-Za-z][0-9][A-Za-z])|([A-Za-z][A-Ha-hJ-Yj-y][0-9][A-Za-z]?))))\s?[0-9][A-Za-z]{2})/;
 
-const ConstituencyFinder = ({ staticData, escapeString }) => {
+const ConstituencyFinder = ({ escapeString }) => {
   const [constituencyQuery, setConstituencyQuery] = useState("");
   const [results, setResults] = useState([]);
   console.log("constituencyFinder", results);

@@ -1,5 +1,7 @@
 import React from "react";
-import { Link } from "react-router-dom";
+
+import { getPlaceName } from "../utils";
+
 import SeatsDeclared from "./SeatsDeclared";
 
 const SignPetition = ({
@@ -8,7 +10,6 @@ const SignPetition = ({
   page,
   data,
   selectedConstituencyName,
-  getPlaceName,
   selectedRegionName,
 }) => {
   const place = () => {
