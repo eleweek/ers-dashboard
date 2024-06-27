@@ -27,6 +27,7 @@ import "./App_old.css";
 
 import oldData from "./old-data.json";
 import staticData from "./old-static-data.json";
+import { FullResultsTable } from "./components/FullResultsTable";
 
 const BACKEND_HOST = `${window.location.protocol}//${window.location.hostname}:8080`;
 // const BACKEND_HOST = "https://ge2019.electoral-reform.org.uk";
@@ -832,68 +833,13 @@ function App() {
                       </div>
                       <div className="col-lg-8">
                         <h2>Full Results</h2>
-                        <table className="table table-condensed parties-table">
-                          <thead>
-                            <tr>
-                              {partiesTableFields.map((field) => (
-                                <th key={field.key}>{field.label}</th>
-                              ))}
-                            </tr>
-                          </thead>
-                          <tbody>
-                            {partiesExtendedTableItems.map((item, index) => (
-                              <tr key={index}>
-                                {partiesTableColumns.map((column) => {
-                                  switch (column) {
-                                    case "name":
-                                      return (
-                                        <td
-                                          key={column}
-                                          dangerouslySetInnerHTML={{
-                                            __html: item[column],
-                                          }}
-                                        />
-                                      );
-                                    case "totalVotes":
-                                    case "totalVotesPerSeat":
-                                      return (
-                                        <td key={column}>
-                                          {commas(item[column])}
-                                        </td>
-                                      );
-                                    case "totalVotesShare":
-                                      return (
-                                        <td key={column}>
-                                          {!oneDecimal(item[column]) ? (
-                                            <>
-                                              <span
-                                                style={{ fontFamily: "Arial" }}
-                                              >
-                                                &lt;
-                                              </span>
-                                              <span> 0.1</span>
-                                            </>
-                                          ) : (
-                                            oneDecimal(item[column])
-                                          )}
-                                        </td>
-                                      );
-                                    case "totalSeatsShare":
-                                      return (
-                                        <td key={column}>
-                                          {oneDecimal(item[column])}
-                                        </td>
-                                      );
-                                    default:
-                                      return (
-                                        <td key={column}>{item[column]}</td>
-                                      );
-                                  }
-                                })}
-                              </tr>
-                            ))}
-                          </tbody>
-                        </table>
+
+                        <FullResultsTable
+                          partiesExtendedTableItems={partiesExtendedTableItems}
+                          partiesTableFields={partiesTableFields}
+                          partiesTableColumns={partiesTableColumns}
+                        />
+
                         <SeatsDeclared data={data} />
                       </div>
                     </div>
