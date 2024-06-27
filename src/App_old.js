@@ -35,10 +35,207 @@ const FRONTEND_HOST = `${BACKEND_HOST}${
   window.location.port ? `:${window.location.port}` : ""
 }`;
 
+const partyColourByAbbr = (partyAbbr) => {
+  const partyColour = staticData.partiesAbbreviationsToColours[partyAbbr];
+  return partyColour || othersColor;
+};
+
 const constituenciesEscapedNameToPcons = {};
 forEach(staticData.constituenciesPcon18ToNames, (name, pcon) => {
   constituenciesEscapedNameToPcons[escapeString(name)] = pcon;
 });
+
+const filterConstituenciesByPage = (constituencies, page, pageParam) => {
+  if (page === "constituency") {
+    return constituencies.filter(
+      (constituency) =>
+        constituency.data.Election[0].Constituency[0].$.nameEscaped ===
+        pageParam
+    );
+  }
+  if (page === "region") {
+    const lookupBy =
+      pageParam !== "england"
+        ? [pageParam]
+        : Object.keys(englandSubRegionSelector);
+    return constituencies.filter(
+      (constituency) =>
+        lookupBy.indexOf(
+          constituency.data.Election[0].Constituency[0].$.regionEscaped
+        ) !== -1
+    );
+  }
+  return constituencies;
+};
+
+const processConstituencies = (constituencies) => {
+  return constituencies.map((constituency) => {
+    const constituencyDeepData = constituency.data.Election[0].Constituency[0];
+    return {
+      ...constituency,
+      data: {
+        ...constituency.data,
+        Election: [
+          {
+            Constituency: [
+              {
+                ...constituencyDeepData,
+                $: {
+                  ...constituencyDeepData.$,
+                  region:
+                    staticData.constituenciesNumbersToRegions[
+                      constituencyDeepData.$.number
+                    ],
+                  regionEscaped: escapeString(
+                    staticData.constituenciesNumbersToRegions[
+                      constituencyDeepData.$.number
+                    ]
+                  ),
+                  nameEscaped: escapeString(constituencyDeepData.$.name),
+                },
+              },
+            ],
+          },
+        ],
+      },
+    };
+  });
+};
+
+const calculatePartyData = (constituencies) => {
+  const parties = {};
+  let wastedVotes = 0;
+  let totalVotes = 0;
+  let totalVotesPrev = 0;
+
+  constituencies.forEach((constituency) => {
+    console.log("constituency", constituency);
+    const candidates = constituency.data.Election[0].Constituency[0].Candidate;
+    const prevCandidates =
+      constituency.data.PreviousElection[0].Constituency[0].Candidate;
+
+    totalVotesPrev += parseInt(
+      constituency.data.PreviousElection[0].Constituency[0].$.turnout,
+      10
+    );
+
+    candidates.forEach((candidate) => {
+      const partyData = candidate.Party[0].$;
+      const partyAbbr = partyData.abbreviation;
+      const partyName = partyAbbr === "Lab Co-op" ? "Labour" : partyData.name;
+      const partyNameProcessed =
+        partyAbbr === "Lab Co-op" ? "Labour" : fixPartyName(partyName);
+
+      if (!parties[partyName]) {
+        parties[partyName] = {
+          colour: partyColourByAbbr(partyAbbr),
+          name: partyNameProcessed,
+          candidate: `${candidate.$.firstName} ${candidate.$.surname}`,
+          abbreviation: partyAbbr,
+          totalSeats: 0,
+          totalVotes: 0,
+          totalSeatsPrev: 0,
+          totalVotesPrev: 0,
+        };
+      }
+
+      if (candidate.$.elected) {
+        parties[partyName].totalSeats += 1;
+      } else {
+        wastedVotes += parseFloat(partyData.votes);
+      }
+
+      parties[partyName].totalVotes += parseFloat(partyData.votes);
+      totalVotes += parseFloat(partyData.votes);
+    });
+
+    prevCandidates.forEach((candidate, index) => {
+      const partyData = candidate.Party[0].$;
+      const partyAbbr = partyData.abbreviation;
+      const partyName = partyAbbr === "Lab Co-op" ? "Labour" : partyData.name;
+
+      if (parties[partyName]) {
+        if (index === 0) {
+          parties[partyName].totalSeatsPrev += 1;
+        }
+        parties[partyName].totalVotesPrev += parseFloat(partyData.votes);
+      }
+    });
+  });
+
+  return {
+    parties: Object.values(parties),
+    wastedVotes,
+    totalVotes,
+    totalVotesPrev,
+  };
+};
+
+const condenseParties = (parties, resourceParties, page, pageParam) => {
+  const condensedParties = [];
+  const otherParties = {
+    abbreviation: "Others",
+    name: "Others",
+    colour: othersColor,
+    totalSeats: 0,
+    totalVotes: 0,
+    totalSeatsPrev: 0,
+    totalVotesPrev: 0,
+  };
+
+  const partiesList =
+    page === "region" && pageParam === "northern_ireland"
+      ? staticData.niParties
+      : staticData[resourceParties];
+
+  parties.forEach((party) => {
+    if (partiesList.indexOf(party.abbreviation) > -1) {
+      condensedParties.push(party);
+    } else {
+      otherParties.totalSeats += party.totalSeats;
+      otherParties.totalVotes += party.totalVotes;
+      otherParties.totalSeatsPrev += party.totalSeatsPrev;
+      otherParties.totalVotesPrev += party.totalVotesPrev;
+    }
+  });
+
+  condensedParties.push(otherParties);
+
+  return condensedParties;
+};
+
+const calculatePartiesData = (
+  parties,
+  totalSeats,
+  totalVotes,
+  totalSeatsPrev,
+  totalVotesPrev
+) => {
+  if (!Array.isArray(parties)) {
+    console.error("Expected parties to be an array, but got:", parties);
+    return [];
+  }
+
+  return parties.map((party) => ({
+    ...party,
+    totalSeatsShare: percentage(party.totalSeats / totalSeats),
+    totalVotesShare: percentage(party.totalVotes / totalVotes),
+    totalSeatsSharePrev: percentage(party.totalSeatsPrev / totalSeatsPrev),
+    totalVotesSharePrev: percentage(party.totalVotesPrev / totalVotesPrev),
+    totalSeatsShareChange: oneDecimal(
+      percentage(party.totalSeats / totalSeats) -
+        percentage(party.totalSeatsPrev / totalSeatsPrev)
+    ),
+    totalVotesShareChange: oneDecimal(
+      percentage(party.totalVotes / totalVotes) -
+        percentage(party.totalVotesPrev / totalVotesPrev)
+    ),
+    totalVotesPerSeat:
+      party.totalSeats > 0
+        ? Math.floor(party.totalVotes / party.totalSeats)
+        : "n/a",
+  }));
+};
 
 const othersColor = "#A6A6A6";
 function App() {
@@ -76,209 +273,89 @@ function App() {
     if (page !== newPage || pageParam !== newPageParam) {
       setPage(newPage);
       setPageParam(newPageParam);
-      processData();
+      processData(newPage, newPageParam);
       scrollToTop();
     }
   }, [location, page, pageParam]);
 
-  const partyColourByAbbr = (partyAbbr) => {
-    const partyColour = staticData.partiesAbbreviationsToColours[partyAbbr];
-    return partyColour || othersColor;
-  };
-
-  const processData = () => {
+  const processData = (page, pageParam) => {
     let newData = { ...data };
 
-    newData.electorate = 0;
+    newData.constituencies = processConstituencies(newData.constituencies);
+    newData.constituencies = filterConstituenciesByPage(
+      newData.constituencies,
+      page,
+      pageParam
+    );
 
-    newData.constituencies.forEach((constituency) => {
-      const constituencyData = constituency.data.Election[0].Constituency[0].$;
-      constituencyData.region =
-        staticData.constituenciesNumbersToRegions[constituencyData.number];
-      constituencyData.regionEscaped = escapeString(constituencyData.region);
-      constituencyData.nameEscaped = escapeString(constituencyData.name);
-    });
+    const lookupBy =
+      pageParam !== "england"
+        ? [pageParam]
+        : Object.keys(englandSubRegionSelector);
 
-    if (page === "constituency") {
-      newData.constituencies = newData.constituencies.filter(
-        (constituency) =>
-          constituency.data.Election[0].Constituency[0].$.nameEscaped ===
-          pageParam
-      );
-    }
+    newData.constituenciesTotal =
+      page === "region"
+        ? values(staticData.constituenciesNumbersToRegions).filter(
+            (regionName) => lookupBy.indexOf(escapeString(regionName)) !== -1
+          ).length
+        : 650;
 
-    if (page === "region") {
-      const lookupBy =
-        pageParam !== "england"
-          ? [pageParam]
-          : Object.keys(englandSubRegionSelector);
+    const { parties, wastedVotes, totalVotes, totalVotesPrev } =
+      calculatePartyData(newData.constituencies);
 
-      newData.constituencies = newData.constituencies.filter(
-        (constituency) =>
-          lookupBy.indexOf(
-            constituency.data.Election[0].Constituency[0].$.regionEscaped
-          ) !== -1
-      );
-
-      newData.constituenciesTotal = values(
-        staticData.constituenciesNumbersToRegions
-      ).filter(
-        (regionName) => lookupBy.indexOf(escapeString(regionName)) !== -1
-      ).length;
-    } else {
-      newData.constituenciesTotal = 650;
-    }
-
-    const parties = {};
-    let wastedVotes = 0;
-
-    for (const constituency of newData.constituencies) {
-      for (const candidate of constituency.data.Election[0].Constituency[0]
-        .Candidate) {
-        const partyData = candidate.Party[0].$;
-        const partyAbbr = partyData.abbreviation;
-        const partyName = partyAbbr === "Lab Co-op" ? "Labour" : partyData.name;
-        const partyNameProcessed =
-          partyAbbr === "Lab Co-op" ? "Labour" : fixPartyName(partyName);
-
-        if (!parties[partyName]) {
-          parties[partyName] = {
-            colour: partyColourByAbbr(partyAbbr),
-            name: partyNameProcessed,
-            candidate: `${candidate.$.firstName} ${candidate.$.surname}`,
-            abbreviation: partyAbbr,
-            totalSeats: 0,
-            totalVotes: 0,
-            totalSeatsPrev: 0,
-            totalVotesPrev: 0,
-          };
-        }
-
-        if (candidate.$.elected) {
-          parties[partyName].totalSeats += 1;
-        } else {
-          wastedVotes += parseFloat(partyData.votes);
-        }
-
-        parties[partyName].totalVotes += parseFloat(partyData.votes);
-      }
-    }
-
-    newData.totalVotes = 0;
-    newData.totalSeats = 0;
-    newData.totalVotesPrev = 0;
-    newData.totalSeatsPrev = 0;
-
-    for (const constituency of newData.constituencies) {
-      newData.totalVotesPrev += parseInt(
-        constituency.data.PreviousElection[0].Constituency[0].$.turnout,
-        10
-      );
-
-      constituency.data.PreviousElection[0].Constituency[0].Candidate.forEach(
-        (candidate, candidateIndex) => {
-          const partyData = candidate.Party[0].$;
-          const partyAbbr = partyData.abbreviation;
-          const partyName =
-            partyAbbr === "Lab Co-op" ? "Labour" : partyData.name;
-
-          if (!parties[partyName]) {
-            return;
-          }
-
-          if (candidateIndex === 0) {
-            parties[partyName].totalSeatsPrev += 1;
-          }
-
-          parties[partyName].totalVotesPrev += parseFloat(partyData.votes);
-        }
-      );
-    }
-
+    newData.parties = orderBy(parties, ["totalSeats"], ["desc"]);
+    console.log("newData.parties", newData.parties);
     newData.wastedVotes = wastedVotes;
-    newData.parties = values(parties);
-
-    newData.parties.forEach((party) => {
-      newData.totalVotes += party.totalVotes;
-      newData.totalSeats += party.totalSeats;
-    });
-
+    newData.totalVotes = totalVotes;
+    newData.totalVotesPrev = totalVotesPrev;
+    newData.totalSeats = newData.parties.reduce(
+      (sum, party) => sum + party.totalSeats,
+      0
+    );
     newData.totalSeatsPrev = newData.constituencies.length;
 
-    newData.parties = orderBy(newData.parties, ["totalSeats"], ["desc"]);
-
     if (page !== "constituency") {
-      condenseParties("extendedParties", "partiesExtended", newData);
-      condenseParties("mainParties", "parties", newData);
+      newData.partiesExtended = condenseParties(
+        newData.parties,
+        "extendedParties",
+        page,
+        pageParam
+      );
+      newData.parties = condenseParties(
+        newData.parties,
+        "mainParties",
+        page,
+        pageParam
+      );
     }
 
-    calculatePartiesData("parties", newData);
-    calculatePartiesData("partiesExtended", newData);
+    newData.parties = calculatePartiesData(
+      newData.parties,
+      newData.totalSeats,
+      newData.totalVotes,
+      newData.totalSeatsPrev,
+      newData.totalVotesPrev
+    );
 
-    newData.constituencies.forEach((constituency) => {
-      newData.electorate += parseInt(
-        constituency.data.Election[0].Constituency[0].$.electorate,
-        10
-      );
-    });
+    newData.partiesExtended = calculatePartiesData(
+      newData.partiesExtended,
+      newData.totalSeats,
+      newData.totalVotes,
+      newData.totalSeatsPrev,
+      newData.totalVotesPrev
+    );
 
-    console.log("Setting data", newData);
+    newData.electorate = newData.constituencies.reduce(
+      (sum, constituency) =>
+        sum +
+        parseInt(
+          constituency.data.Election[0].Constituency[0].$.electorate,
+          10
+        ),
+      0
+    );
 
     setData(newData);
-  };
-
-  const calculatePartiesData = (resourceParties, newData) => {
-    newData[resourceParties] = newData[resourceParties].map((party) => ({
-      ...party,
-      totalSeatsShare: percentage(party.totalSeats / newData.totalSeats),
-      totalVotesShare: percentage(party.totalVotes / newData.totalVotes),
-      totalSeatsSharePrev: percentage(
-        party.totalSeatsPrev / newData.totalSeatsPrev
-      ),
-      totalVotesSharePrev: percentage(
-        party.totalVotesPrev / newData.totalVotesPrev
-      ),
-      totalSeatsShareChange: oneDecimal(
-        percentage(party.totalSeats / newData.totalSeats) -
-          percentage(party.totalSeatsPrev / newData.totalSeatsPrev)
-      ),
-      totalVotesShareChange: oneDecimal(
-        percentage(party.totalVotes / newData.totalVotes) -
-          percentage(party.totalVotesPrev / newData.totalVotesPrev)
-      ),
-      totalVotesPerSeat:
-        party.totalSeats > 0
-          ? Math.floor(party.totalVotes / party.totalSeats)
-          : "n/a",
-    }));
-  };
-
-  const condenseParties = (resourceParties, destination, newData) => {
-    const condensedParties = [];
-    const otherParties = {
-      abbreviation: "Others",
-      name: "Others",
-      colour: othersColor,
-      totalSeats: 0,
-      totalVotes: 0,
-    };
-    const partiesList =
-      page === "region" && pageParam === "northern_ireland"
-        ? staticData.niParties
-        : staticData[resourceParties];
-
-    newData.parties.forEach((party) => {
-      if (partiesList.indexOf(party.abbreviation) > -1) {
-        condensedParties.push(party);
-        return;
-      }
-
-      otherParties.totalSeats += party.totalSeats;
-      otherParties.totalVotes += party.totalVotes;
-    });
-    condensedParties.push(otherParties);
-
-    newData[destination] = condensedParties;
   };
 
   const scrollToTop = () => {
