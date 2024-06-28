@@ -43,8 +43,13 @@ const FRONTEND_HOST = `${BACKEND_HOST}${
 }`;
 
 const constituenciesEscapedNameToPcons = {};
+const constituenciesNumbersToPcons = {};
 forEach(staticData.constituenciesPcon18ToNames, (name, pcon) => {
   constituenciesEscapedNameToPcons[escapeString(name)] = pcon;
+});
+
+forEach(staticData.constituenciesPcon18ToNumbers, (number, pcon) => {
+  constituenciesNumbersToPcons[number] = pcon;
 });
 
 const filterConstituenciesByPage = (constituencies, page, pageParam) => {
@@ -501,6 +506,16 @@ function RegionAndUKPage({ data, page, pageParam }) {
         : "England"
       : "";
 
+  const majorityHexMapData = Object.fromEntries(
+    data.constituencies.map((constituency) => {
+      const constituencyData = constituency.data.Election[0].Constituency[0].$;
+      return [
+        constituenciesNumbersToPcons[constituency.id],
+        parseFloat(constituencyData.majority),
+      ];
+    })
+  );
+
   return (
     <>
       <div className="container-fluid non-constituency-page">
@@ -517,7 +532,7 @@ function RegionAndUKPage({ data, page, pageParam }) {
             <DotPlot parties={data.parties} />
             <VotesPerMPBarChart parties={data.parties} />
             <VotesTypesGroupedBarChart parties={data.parties} />
-            <HexMap hexjson={hex2019} />
+            <HexMap hexjson={hex2019} data={majorityHexMapData} />
           </div>
           <div className="col-lg-4">
             <table className="table table-bordered parties-stats-table table-condensed">
