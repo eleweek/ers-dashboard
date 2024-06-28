@@ -275,11 +275,13 @@ function ConstituencyPage({ data, selectedConstituency, page }) {
     data
   );
 
+  console.log("Const page data", data);
+
   const selectedConstituencyWinningParty = selectedConstituency
     ? data.parties.find((party) => {
         const partyAbbr =
-          data.constituencies[0].data.PreviousElection[0].Constituency[0]
-            .Candidate[0].Party[0].$.abbreviation;
+          data.constituencies[0].data.Election[0].Constituency[0].Candidate[0]
+            .Party[0].$.abbreviation;
         if (party.abbreviation === "Lab Co-op") {
           return partyAbbr === "Lab" || partyAbbr === "Lab Co-op";
         }
