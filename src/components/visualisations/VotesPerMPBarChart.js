@@ -12,7 +12,7 @@ export default function VotesPerMPBarChart({ parties }) {
   console.log("VotesPerMPBarChart", parties);
 
   const createChart = () => {
-    const barHeight = 30;
+    const barHeight = 35;
     const marginTop = 30;
     const marginRight = 60;
     const marginBottom = 10;
@@ -29,11 +29,11 @@ export default function VotesPerMPBarChart({ parties }) {
       .attr("width", width)
       .attr("height", height)
       .attr("viewBox", [0, 0, width, height])
-      .attr("style", "max-width: 100%; height: auto; font: 10px sans-serif;");
+      .attr("style", "max-width: 100%; height: auto; font: 16px sans-serif;");
 
     const x = d3
       .scaleLinear()
-      .domain([0, d3.max(parties, (d) => d.totalVotesPerSeat)])
+      .domain([0, 1.1 * d3.max(parties, (d) => d.totalVotesPerSeat)])
       .range([marginLeft, width - marginRight]);
 
     const y = d3
@@ -84,7 +84,12 @@ export default function VotesPerMPBarChart({ parties }) {
     svg
       .append("g")
       .attr("transform", `translate(${marginLeft},0)`)
-      .call(d3.axisLeft(y).tickSizeOuter(0));
+      .call(d3.axisLeft(y).tickSizeOuter(0))
+      .call((g) =>
+        g
+          .selectAll(".tick text") // Select all tick texts
+          .attr("font-size", "16px")
+      );
 
     // Add a title
     // svg
