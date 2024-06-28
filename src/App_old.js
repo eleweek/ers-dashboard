@@ -139,6 +139,9 @@ const calculatePartyData = (constituencies) => {
           totalVotes: 0,
           totalSeatsPrev: 0,
           totalVotesPrev: 0,
+          wastedVotes: 0,
+          surplusVotes: 0,
+          decisiveVotes: 0,
         };
       }
 
@@ -154,7 +157,7 @@ const calculatePartyData = (constituencies) => {
         );
 
         parties[partyName].wastedVotes =
-          (parties[partyName]?.wastedVotes || 0) + parseFloat(partyData.votes);
+          parties[partyName].wastedVotes + parseFloat(partyData.votes);
       }
 
       parties[partyName].totalVotes += parseFloat(partyData.votes);
@@ -162,12 +165,12 @@ const calculatePartyData = (constituencies) => {
     });
 
     parties[winningPartyName].surplusVotes =
-      (parties[winningPartyName]?.surplusVotes || 0) +
+      parties[winningPartyName].surplusVotes +
       winningPartyVotes -
       secondPlaceVotes;
 
     parties[winningPartyName].decisiveVotes =
-      (parties[winningPartyName]?.decisiveVotes || 0) + secondPlaceVotes;
+      parties[winningPartyName].decisiveVotes + secondPlaceVotes;
 
     prevCandidates.forEach((candidate, index) => {
       const partyData = candidate.Party[0].$;
@@ -201,6 +204,9 @@ const condenseParties = (parties, resourceParties, page, pageParam) => {
     totalVotes: 0,
     totalSeatsPrev: 0,
     totalVotesPrev: 0,
+    wastedVotes: 0,
+    surplusVotes: 0,
+    decisiveVotes: 0,
   };
 
   const partiesList =
@@ -216,6 +222,10 @@ const condenseParties = (parties, resourceParties, page, pageParam) => {
       otherParties.totalVotes += party.totalVotes;
       otherParties.totalSeatsPrev += party.totalSeatsPrev;
       otherParties.totalVotesPrev += party.totalVotesPrev;
+
+      otherParties.wastedVotes += party.wastedVotes;
+      otherParties.surplusVotes += party.surplusVotes;
+      otherParties.decisiveVotes += party.decisiveVotes;
     }
   });
 
