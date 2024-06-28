@@ -15,7 +15,7 @@ export default function VotesTypesGroupedBarChart({ parties }) {
 
   const createChart = () => {
     const width = 928;
-    const height = 600;
+    const height = 400;
     const marginTop = 30;
     const marginRight = 100;
     const marginBottom = 30;
