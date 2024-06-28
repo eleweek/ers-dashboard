@@ -1,3 +1,12 @@
+import staticData from "./old-static-data.json";
+
+export const othersColor = "#A6A6A6";
+
+export const partyColourByAbbr = (partyAbbr) => {
+  const partyColour = staticData.partiesAbbreviationsToColours[partyAbbr];
+  return partyColour || othersColor;
+};
+
 export const fixPartyName = (partyName) => {
   if (partyName === "No description") {
     return "";

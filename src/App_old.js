@@ -10,6 +10,8 @@ import {
   percentage,
   oneDecimal,
   commas,
+  partyColourByAbbr,
+  othersColor,
 } from "./utils";
 
 // Import components (these will need to be converted to React as well)
@@ -34,11 +36,6 @@ const BACKEND_HOST = `${window.location.protocol}//${window.location.hostname}:8
 const FRONTEND_HOST = `${BACKEND_HOST}${
   window.location.port ? `:${window.location.port}` : ""
 }`;
-
-const partyColourByAbbr = (partyAbbr) => {
-  const partyColour = staticData.partiesAbbreviationsToColours[partyAbbr];
-  return partyColour || othersColor;
-};
 
 const constituenciesEscapedNameToPcons = {};
 forEach(staticData.constituenciesPcon18ToNames, (name, pcon) => {
@@ -109,7 +106,6 @@ const calculatePartyData = (constituencies) => {
   let totalVotesPrev = 0;
 
   constituencies.forEach((constituency) => {
-    console.log("constituency", constituency);
     const candidates = constituency.data.Election[0].Constituency[0].Candidate;
     const prevCandidates =
       constituency.data.PreviousElection[0].Constituency[0].Candidate;
@@ -211,6 +207,7 @@ const calculatePartyPercentagesAndVotesPerSeat = (
   totalSeatsPrev,
   totalVotesPrev
 ) => {
+  console.log("cpppavps parties", parties);
   return parties.map((party) => ({
     ...party,
     totalSeatsShare: percentage(party.totalSeats / totalSeats),
@@ -232,7 +229,404 @@ const calculatePartyPercentagesAndVotesPerSeat = (
   }));
 };
 
-const othersColor = "#A6A6A6";
+function getPartiesTableSettings(partiesTableColumns, data) {
+  const columnsToLabels = {
+    name: "Party",
+    totalSeats: "Seats",
+    totalSeatsShare: "Seats %",
+    totalVotesShare: "Votes %",
+    totalVotes: "Votes",
+    totalVotesPerSeat: "Votes per Seat",
+    totalVotesShareChange: "Votes % Change",
+  };
+
+  const partiesTableFields = partiesTableColumns.map((column) => ({
+    key: column,
+    label: columnsToLabels[column],
+    sortable: column !== "name",
+  }));
+
+  const partiesTableItems = data.parties.map((party) => ({
+    ...pick(party, partiesTableColumns),
+    name: `<div class="custom-badge" style="background-color: ${party.colour}"></div>${party.name}`,
+  }));
+
+  const partiesExtendedTableItems = data.partiesExtended.map((party) => ({
+    ...pick(party, partiesTableColumns),
+    name: `<div class="custom-badge" style="background-color: ${party.colour}"></div>${party.name}`,
+  }));
+
+  return { partiesTableFields, partiesTableItems, partiesExtendedTableItems };
+}
+
+function ConstituencyPage({ data, selectedConstituency, page }) {
+  const wastedVotes = percentage(data.wastedVotes / data.totalVotes);
+
+  const partiesTableColumns = [
+    "name",
+    "candidate",
+    "totalVotes",
+    "totalVotesShare",
+    "totalVotesShareChange",
+  ];
+
+  const { partiesTableFields, partiesTableItems } = getPartiesTableSettings(
+    partiesTableColumns,
+    data
+  );
+
+  const selectedConstituencyWinningParty = selectedConstituency
+    ? data.parties.find((party) => {
+        const partyAbbr =
+          data.constituencies[0].data.PreviousElection[0].Constituency[0]
+            .Candidate[0].Party[0].$.abbreviation;
+        if (party.abbreviation === "Lab Co-op") {
+          return partyAbbr === "Lab" || partyAbbr === "Lab Co-op";
+        }
+        return party.abbreviation === partyAbbr;
+      })
+    : null;
+
+  const selectedConstituencyPreviouslyWinningParty = selectedConstituency
+    ? data.parties.find((party) => {
+        const partyAbbr =
+          data.constituencies[0].data.PreviousElection[0].Constituency[0]
+            .Candidate[0].Party[0].$.abbreviation;
+        if (party.abbreviation === "Lab Co-op") {
+          return partyAbbr === "Lab" || partyAbbr === "Lab Co-op";
+        }
+        return party.abbreviation === partyAbbr;
+      })
+    : null;
+
+  return (
+    <div className="container-fluid">
+      <div className="row text-center">
+        <div className="col-lg-12">
+          <div className="gap-40"></div>
+          <h3>Winning party</h3>
+        </div>
+        <div className="col-lg-12">
+          <div
+            className="party-winner"
+            data-party={selectedConstituencyWinningParty.name}
+            style={{
+              backgroundColor: selectedConstituencyWinningParty.colour,
+            }}
+          >
+            <div className="party-winner-name">
+              {selectedConstituencyWinningParty.name}
+            </div>
+            {selectedConstituency.$.gainOrHold === "hold" ? (
+              <div>
+                <i className="fa fa-hand-rock"></i> Hold
+              </div>
+            ) : (
+              <div>
+                <i className="fa fa-trophy"></i> Gain
+                {selectedConstituencyPreviouslyWinningParty && (
+                  <span>
+                    {" "}
+                    from {selectedConstituencyPreviouslyWinningParty.name}
+                  </span>
+                )}
+              </div>
+            )}
+          </div>
+        </div>
+        <div className="col-lg-12">
+          Candidate elected:
+          <strong>
+            {" "}
+            {selectedConstituency.Candidate[0].$.firstName}{" "}
+            {selectedConstituency.Candidate[0].$.surname}
+          </strong>
+        </div>
+        <div className="col-lg-12">
+          Majority:
+          <strong> {commas(selectedConstituency.$.majority)}</strong>
+          <br />
+          <br />
+        </div>
+      </div>
+      <div className="row">
+        <div className="col-lg-12">
+          <h2>2019 General Election Results</h2>
+          <table className="table table-bordered">
+            <thead>
+              <tr>
+                {partiesTableFields.map((field) => (
+                  <th key={field.key}>{field.label}</th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {partiesTableItems.map((item, index) => (
+                <tr key={index}>
+                  {partiesTableColumns.map((column) => (
+                    <td
+                      key={column}
+                      dangerouslySetInnerHTML={{
+                        __html: item[column],
+                      }}
+                    ></td>
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div className="gap-40"></div>
+      <SignPetition
+        oneDecimal={oneDecimal}
+        wastedVotes={wastedVotes}
+        page={page}
+        data={data}
+        selectedConstituency={selectedConstituency}
+        selectedRegionName={null}
+      />
+      <div className="gap-40"></div>
+      <div className="container-fluid">
+        <div className="row text-center">
+          <div className="col-lg-4">
+            <h1 style={{ padding: "0 0 20px 0" }}>
+              {oneDecimal(percentage(data.totalVotes / data.electorate))}%
+            </h1>
+            <strong>Turnout</strong>
+          </div>
+        </div>
+      </div>
+      <div className="gap-40"></div>
+      <div className="text-muted text-center">
+        Seats declared: {data.constituencies.length} out of 650
+      </div>
+    </div>
+  );
+}
+
+function RegionAndUKPage({ data, page, pageParam }) {
+  console.log("data", data);
+
+  const wastedVotes = percentage(data.wastedVotes / data.totalVotes);
+
+  const partiesTableColumns = [
+    "name",
+    "totalSeats",
+    "totalSeatsShare",
+    "totalVotesShare",
+    "totalVotes",
+    "totalVotesPerSeat",
+  ];
+
+  const { partiesTableFields, partiesExtendedTableItems } =
+    getPartiesTableSettings(partiesTableColumns, data);
+
+  const seatsVsVotesChangeChartData = useMemo(() => {
+    const table = [
+      [
+        "Party",
+        "Votes % Change",
+        { role: "style" },
+        "Seats % Change",
+        { role: "style" },
+      ],
+    ];
+
+    data.parties.forEach((party) => {
+      if (party.name === "Others") return;
+
+      table.push([
+        party.name,
+        party.totalVotesShareChange,
+        `color: ${party.colour}; opacity: 0.6; stroke-width: 0`,
+        party.totalSeatsShareChange,
+        `color: ${party.colour}; stroke-width: 0`,
+      ]);
+    });
+
+    return table;
+  }, [data.parties]);
+
+  const partiesChartData = useMemo(() => {
+    const table = [
+      ["Party", "Votes %", { role: "style" }, "Seats %", { role: "style" }],
+    ];
+
+    data.parties.forEach((party) => {
+      table.push([
+        party.name,
+        oneDecimal(party.totalVotesShare),
+        `color: ${party.colour}; opacity: 0.6; stroke-width: 0`,
+        oneDecimal(party.totalSeatsShare),
+        `color: ${party.colour}; stroke-width: 0`,
+      ]);
+    });
+
+    return table;
+  }, [data.parties]);
+
+  const selectedRegionName =
+    page === "region"
+      ? pageParam !== "england"
+        ? values(staticData.constituenciesNumbersToRegions).find(
+            (regionName) => escapeString(regionName) === pageParam
+          )
+        : "England"
+      : "";
+
+  return (
+    <>
+      <div className="container-fluid non-constituency-page">
+        <div className="row">
+          <div className="col-lg-8">
+            <h1 style={{ paddingTop: 0 }}>
+              {page !== "region"
+                ? "2019 General Election Results"
+                : `2019 General Election in ${getPlaceName(
+                    selectedRegionName,
+                    true
+                  )}`}
+            </h1>
+            <div>
+              <div
+                className="custom-badge"
+                style={{
+                  backgroundColor: othersColor,
+                  opacity: 0.6,
+                }}
+              ></div>
+              % Votes
+              <div className="text-gap"></div>
+              <div
+                className="custom-badge"
+                style={{ backgroundColor: othersColor }}
+              ></div>
+              % Seats
+            </div>
+            <Chart
+              width={"100%"}
+              height={"400px"}
+              chartType="ColumnChart"
+              loader={<div>Loading Chart</div>}
+              data={partiesChartData}
+              options={{
+                legend: { position: "none" },
+                chartArea: {
+                  width: "100%",
+                  left: 20,
+                  top: 60,
+                  bottom: 40,
+                  height: "100%",
+                },
+              }}
+            />
+            <SeatsDeclared data={data} />
+          </div>
+          <div className="col-lg-4">
+            <table className="table table-bordered parties-stats-table table-condensed">
+              <thead>
+                <tr>
+                  <th>Party</th>
+                  <th className="parties-stats-table-seats">Seats</th>
+                </tr>
+              </thead>
+              <tbody>
+                {data.parties.map((party) => (
+                  <tr key={`party-${party.name}`}>
+                    <td>
+                      <div
+                        className="custom-badge"
+                        style={{ backgroundColor: party.colour }}
+                      ></div>
+                      {party.name}
+                    </td>
+                    <td>{party.totalSeats}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+            <SeatsDeclared data={data} />
+          </div>
+        </div>
+      </div>
+      <div className="gap-40"></div>
+      <MagicButtons
+        backendHost={BACKEND_HOST}
+        page={window.location.pathname}
+        frontendHost={FRONTEND_HOST}
+      />
+      <div className="gap-40"></div>
+      <SignPetition
+        oneDecimal={oneDecimal}
+        wastedVotes={wastedVotes}
+        page={page}
+        data={data}
+        selectedConstituency={null}
+        selectedRegionName={selectedRegionName}
+      />{" "}
+      <div className="gap-40"></div>
+      <div className="container-fluid">
+        <div className="row">
+          <div className="col-lg-4">
+            <h2>Percentage change since 2017</h2>
+            <div>
+              <div
+                className="custom-badge"
+                style={{
+                  backgroundColor: othersColor,
+                  opacity: 0.6,
+                }}
+              ></div>
+              % Votes change
+              <div className="text-gap"></div>
+              <div
+                className="custom-badge"
+                style={{ backgroundColor: othersColor }}
+              ></div>
+              % Seats change
+            </div>
+            <Chart
+              width={"100%"}
+              height={"400px"}
+              chartType="BarChart"
+              loader={<div>Loading Chart</div>}
+              data={seatsVsVotesChangeChartData}
+              options={{
+                legend: { position: "none" },
+                hAxis: {
+                  viewWindow: {
+                    min: -20,
+                    max: 20,
+                  },
+                },
+                chartArea: {
+                  width: "100%",
+                  left: 80,
+                  top: 20,
+                  height: "100%",
+                },
+              }}
+            />
+            <SeatsDeclared data={data} style={{ marginBottom: "40px" }} />
+          </div>
+          <div className="col-lg-8">
+            <h2>Full Results</h2>
+
+            <FullResultsTable
+              partiesExtendedTableItems={partiesExtendedTableItems}
+              partiesTableFields={partiesTableFields}
+              partiesTableColumns={partiesTableColumns}
+            />
+
+            <SeatsDeclared data={data} />
+          </div>
+        </div>
+      </div>
+    </>
+  );
+}
+
 function App() {
   const [subscribePopupOpened, setSubscribePopupOpened] = useState(false);
 
@@ -300,6 +694,8 @@ function App() {
 
     newData.parties = orderBy(parties, ["totalSeats"], ["desc"]);
     console.log("newData.parties", newData.parties);
+    console.log("parties", parties);
+
     newData.wastedVotes = wastedVotes;
     newData.totalVotes = totalVotes;
     newData.totalVotesPrev = totalVotesPrev;
@@ -324,6 +720,9 @@ function App() {
       );
     }
 
+    console.log("newData.parties", newData.parties);
+    console.log("parties", parties);
+
     newData.parties = calculatePartyPercentagesAndVotesPerSeat(
       newData.parties,
       newData.totalSeats,
@@ -332,13 +731,17 @@ function App() {
       newData.totalVotesPrev
     );
 
-    newData.partiesExtended = calculatePartyPercentagesAndVotesPerSeat(
-      newData.partiesExtended,
-      newData.totalSeats,
-      newData.totalVotes,
-      newData.totalSeatsPrev,
-      newData.totalVotesPrev
-    );
+    if (newData.partiesExtended) {
+      newData.partiesExtended = calculatePartyPercentagesAndVotesPerSeat(
+        newData.partiesExtended,
+        newData.totalSeats,
+        newData.totalVotes,
+        newData.totalSeatsPrev,
+        newData.totalVotesPrev
+      );
+    } else {
+      newData.partiesExtended = [];
+    }
 
     newData.electorate = newData.constituencies.reduce(
       (sum, constituency) =>
@@ -357,107 +760,6 @@ function App() {
     window.scrollTo(0, 0);
   };
 
-  const seatsVsVotesChangeChartData = useMemo(() => {
-    if (!dataLoaded) return [];
-    const table = [
-      [
-        "Party",
-        "Votes % Change",
-        { role: "style" },
-        "Seats % Change",
-        { role: "style" },
-      ],
-    ];
-
-    data.parties.forEach((party) => {
-      if (party.name === "Others") return;
-
-      table.push([
-        party.name,
-        party.totalVotesShareChange,
-        `color: ${party.colour}; opacity: 0.6; stroke-width: 0`,
-        party.totalSeatsShareChange,
-        `color: ${party.colour}; stroke-width: 0`,
-      ]);
-    });
-
-    return table;
-  }, [dataLoaded, data.parties]);
-
-  const partiesChartData = useMemo(() => {
-    if (!dataLoaded) return [];
-    const table = [
-      ["Party", "Votes %", { role: "style" }, "Seats %", { role: "style" }],
-    ];
-
-    data.parties.forEach((party) => {
-      table.push([
-        party.name,
-        oneDecimal(party.totalVotesShare),
-        `color: ${party.colour}; opacity: 0.6; stroke-width: 0`,
-        oneDecimal(party.totalSeatsShare),
-        `color: ${party.colour}; stroke-width: 0`,
-      ]);
-    });
-
-    return table;
-  }, [dataLoaded, data.parties]);
-
-  const wastedVotes = useMemo(() => {
-    return percentage(data.wastedVotes / data.totalVotes);
-  }, [data.wastedVotes, data.totalVotes]);
-
-  const partiesTableColumns = useMemo(() => {
-    return page !== "constituency"
-      ? [
-          "name",
-          "totalSeats",
-          "totalSeatsShare",
-          "totalVotesShare",
-          "totalVotes",
-          "totalVotesPerSeat",
-        ]
-      : [
-          "name",
-          "candidate",
-          "totalVotes",
-          "totalVotesShare",
-          "totalVotesShareChange",
-        ];
-  }, [page]);
-
-  const partiesTableFields = useMemo(() => {
-    const columnsToLabels = {
-      name: "Party",
-      totalSeats: "Seats",
-      totalSeatsShare: "Seats %",
-      totalVotesShare: "Votes %",
-      totalVotes: "Votes",
-      totalVotesPerSeat: "Votes per Seat",
-      totalVotesShareChange: "Votes % Change",
-    };
-
-    return partiesTableColumns.map((column) => ({
-      key: column,
-      label: columnsToLabels[column],
-      sortable: column !== "name",
-    }));
-  }, [partiesTableColumns]);
-
-  const partiesTableItems = useMemo(() => {
-    return data.parties.map((party) => ({
-      ...pick(party, partiesTableColumns),
-      name: `<div class="custom-badge" style="background-color: ${party.colour}"></div>${party.name}`,
-    }));
-  }, [data.parties, partiesTableColumns]);
-
-  const partiesExtendedTableItems = useMemo(() => {
-    return data.partiesExtended.map((party) => ({
-      ...pick(party, partiesTableColumns),
-      name: `<div class="custom-badge" style="background-color: ${party.colour}"></div>${party.name}`,
-    }));
-  }, [data.partiesExtended, partiesTableColumns]);
-
   console.log("setSubscribePopupOpened", typeof setSubscribePopupOpened);
 
   const selectedConstituency =
@@ -466,30 +768,6 @@ function App() {
 
   console.log("selectedConstituency", selectedConstituency);
 
-  const selectedConstituencyWinningParty = selectedConstituency
-    ? data.parties.find((party) => {
-        const partyAbbr =
-          data.constituencies[0].data.PreviousElection[0].Constituency[0]
-            .Candidate[0].Party[0].$.abbreviation;
-        if (party.abbreviation === "Lab Co-op") {
-          return partyAbbr === "Lab" || partyAbbr === "Lab Co-op";
-        }
-        return party.abbreviation === partyAbbr;
-      })
-    : null;
-
-  const selectedConstituencyPreviouslyWinningParty = selectedConstituency
-    ? data.parties.find((party) => {
-        const partyAbbr =
-          data.constituencies[0].data.PreviousElection[0].Constituency[0]
-            .Candidate[0].Party[0].$.abbreviation;
-        if (party.abbreviation === "Lab Co-op") {
-          return partyAbbr === "Lab" || partyAbbr === "Lab Co-op";
-        }
-        return party.abbreviation === partyAbbr;
-      })
-    : null;
-
   const selectedConstituencyRegionName =
     page === "constituency"
       ? staticData.constituenciesNumbersToRegions[
@@ -497,15 +775,6 @@ function App() {
             constituenciesEscapedNameToPcons[pageParam]
           ]
         ]
-      : "";
-
-  const selectedRegionName =
-    page === "region"
-      ? pageParam !== "england"
-        ? values(staticData.constituenciesNumbersToRegions).find(
-            (regionName) => escapeString(regionName) === pageParam
-          )
-        : "England"
       : "";
 
   return (
@@ -528,273 +797,18 @@ function App() {
           {data.constituencies.length > 0 && (
             <>
               {page === "constituency" && selectedConstituency && (
-                <div className="container-fluid">
-                  <div className="row text-center">
-                    <div className="col-lg-12">
-                      <div className="gap-40"></div>
-                      <h3>Winning party</h3>
-                    </div>
-                    <div className="col-lg-12">
-                      <div
-                        className="party-winner"
-                        data-party={selectedConstituencyWinningParty.name}
-                        style={{
-                          backgroundColor:
-                            selectedConstituencyWinningParty.colour,
-                        }}
-                      >
-                        <div className="party-winner-name">
-                          {selectedConstituencyWinningParty.name}
-                        </div>
-                        {selectedConstituency.$.gainOrHold === "hold" ? (
-                          <div>
-                            <i className="fa fa-hand-rock"></i> Hold
-                          </div>
-                        ) : (
-                          <div>
-                            <i className="fa fa-trophy"></i> Gain
-                            {selectedConstituencyPreviouslyWinningParty && (
-                              <span>
-                                {" "}
-                                from{" "}
-                                {
-                                  selectedConstituencyPreviouslyWinningParty.name
-                                }
-                              </span>
-                            )}
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                    <div className="col-lg-12">
-                      Candidate elected:
-                      <strong>
-                        {" "}
-                        {selectedConstituency.Candidate[0].$.firstName}{" "}
-                        {selectedConstituency.Candidate[0].$.surname}
-                      </strong>
-                    </div>
-                    <div className="col-lg-12">
-                      Majority:
-                      <strong>
-                        {" "}
-                        {commas(selectedConstituency.$.majority)}
-                      </strong>
-                      <br />
-                      <br />
-                    </div>
-                  </div>
-                  <div className="row">
-                    <div className="col-lg-12">
-                      <h2>2019 General Election Results</h2>
-                      <table className="table table-bordered">
-                        <thead>
-                          <tr>
-                            {partiesTableFields.map((field) => (
-                              <th key={field.key}>{field.label}</th>
-                            ))}
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {partiesTableItems.map((item, index) => (
-                            <tr key={index}>
-                              {partiesTableColumns.map((column) => (
-                                <td
-                                  key={column}
-                                  dangerouslySetInnerHTML={{
-                                    __html: item[column],
-                                  }}
-                                ></td>
-                              ))}
-                            </tr>
-                          ))}
-                        </tbody>
-                      </table>
-                    </div>
-                  </div>
-                  <div className="gap-40"></div>
-                  <SignPetition
-                    oneDecimal={oneDecimal}
-                    wastedVotes={wastedVotes}
-                    page={page}
-                    data={data}
-                    selectedConstituency={selectedConstituency}
-                    selectedRegionName={selectedRegionName}
-                  />
-                  <div className="gap-40"></div>
-                  <div className="container-fluid">
-                    <div className="row text-center">
-                      <div className="col-lg-4">
-                        <h1 style={{ padding: "0 0 20px 0" }}>
-                          {oneDecimal(
-                            percentage(data.totalVotes / data.electorate)
-                          )}
-                          %
-                        </h1>
-                        <strong>Turnout</strong>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="gap-40"></div>
-                  <div className="text-muted text-center">
-                    Seats declared: {data.constituencies.length} out of 650
-                  </div>
-                </div>
+                <ConstituencyPage
+                  data={data}
+                  selectedConstituency={selectedConstituency}
+                  page={page}
+                />
               )}
               {page !== "constituency" && (
-                <>
-                  <div className="container-fluid non-constituency-page">
-                    <div className="row">
-                      <div className="col-lg-8">
-                        <h1 style={{ paddingTop: 0 }}>
-                          {page !== "region"
-                            ? "2019 General Election Results"
-                            : `2019 General Election in ${getPlaceName(
-                                selectedRegionName,
-                                true
-                              )}`}
-                        </h1>
-                        <div>
-                          <div
-                            className="custom-badge"
-                            style={{
-                              backgroundColor: othersColor,
-                              opacity: 0.6,
-                            }}
-                          ></div>
-                          % Votes
-                          <div className="text-gap"></div>
-                          <div
-                            className="custom-badge"
-                            style={{ backgroundColor: othersColor }}
-                          ></div>
-                          % Seats
-                        </div>
-                        <Chart
-                          width={"100%"}
-                          height={"400px"}
-                          chartType="ColumnChart"
-                          loader={<div>Loading Chart</div>}
-                          data={partiesChartData}
-                          options={{
-                            legend: { position: "none" },
-                            chartArea: {
-                              width: "100%",
-                              left: 20,
-                              top: 60,
-                              bottom: 40,
-                              height: "100%",
-                            },
-                          }}
-                        />
-                        <SeatsDeclared data={data} />
-                      </div>
-                      <div className="col-lg-4">
-                        <table className="table table-bordered parties-stats-table table-condensed">
-                          <thead>
-                            <tr>
-                              <th>Party</th>
-                              <th className="parties-stats-table-seats">
-                                Seats
-                              </th>
-                            </tr>
-                          </thead>
-                          <tbody>
-                            {data.parties.map((party) => (
-                              <tr key={`party-${party.name}`}>
-                                <td>
-                                  <div
-                                    className="custom-badge"
-                                    style={{ backgroundColor: party.colour }}
-                                  ></div>
-                                  {party.name}
-                                </td>
-                                <td>{party.totalSeats}</td>
-                              </tr>
-                            ))}
-                          </tbody>
-                        </table>
-                        <SeatsDeclared data={data} />
-                      </div>
-                    </div>
-                  </div>
-                  <div className="gap-40"></div>
-                  <MagicButtons
-                    backendHost={BACKEND_HOST}
-                    page={window.location.pathname}
-                    frontendHost={FRONTEND_HOST}
-                  />
-                  <div className="gap-40"></div>
-                  <SignPetition
-                    oneDecimal={oneDecimal}
-                    wastedVotes={wastedVotes}
-                    page={page}
-                    data={data}
-                    selectedConstituency={selectedConstituency}
-                    selectedRegionName={selectedRegionName}
-                  />{" "}
-                  <div className="gap-40"></div>
-                  <div className="container-fluid">
-                    <div className="row">
-                      <div className="col-lg-4">
-                        <h2>Percentage change since 2017</h2>
-                        <div>
-                          <div
-                            className="custom-badge"
-                            style={{
-                              backgroundColor: othersColor,
-                              opacity: 0.6,
-                            }}
-                          ></div>
-                          % Votes change
-                          <div className="text-gap"></div>
-                          <div
-                            className="custom-badge"
-                            style={{ backgroundColor: othersColor }}
-                          ></div>
-                          % Seats change
-                        </div>
-                        <Chart
-                          width={"100%"}
-                          height={"400px"}
-                          chartType="BarChart"
-                          loader={<div>Loading Chart</div>}
-                          data={seatsVsVotesChangeChartData}
-                          options={{
-                            legend: { position: "none" },
-                            hAxis: {
-                              viewWindow: {
-                                min: -20,
-                                max: 20,
-                              },
-                            },
-                            chartArea: {
-                              width: "100%",
-                              left: 80,
-                              top: 20,
-                              height: "100%",
-                            },
-                          }}
-                        />
-                        <SeatsDeclared
-                          data={data}
-                          style={{ marginBottom: "40px" }}
-                        />
-                      </div>
-                      <div className="col-lg-8">
-                        <h2>Full Results</h2>
-
-                        <FullResultsTable
-                          partiesExtendedTableItems={partiesExtendedTableItems}
-                          partiesTableFields={partiesTableFields}
-                          partiesTableColumns={partiesTableColumns}
-                        />
-
-                        <SeatsDeclared data={data} />
-                      </div>
-                    </div>
-                  </div>
-                </>
+                <RegionAndUKPage
+                  data={data}
+                  page={page}
+                  pageParam={pageParam}
+                />
               )}
             </>
           )}
