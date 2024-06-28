@@ -369,7 +369,13 @@ function ConstituencyPage({ data, selectedConstituency, page }) {
                     <td
                       key={column}
                       dangerouslySetInnerHTML={{
-                        __html: item[column],
+                        __html:
+                          column === "totalVotes"
+                            ? commas(item[column])
+                            : column === "totalVotesShare" ||
+                              column === "totalVotesShareChange"
+                            ? oneDecimal(item[column])
+                            : item[column],
                       }}
                     ></td>
                   ))}
