@@ -30,6 +30,8 @@ import "./App_old.css";
 import fullData from "./old-data.json";
 import staticData from "./old-static-data.json";
 import { FullResultsTable } from "./components/FullResultsTable";
+import DotPlot from "./components/visualisations/DotPlot";
+import VotesPerMPBarChart from "./components/visualisations/VotesPerMPBarChart";
 
 const BACKEND_HOST = `${window.location.protocol}//${window.location.hostname}:8080`;
 // const BACKEND_HOST = "https://ge2019.electoral-reform.org.uk";
@@ -225,7 +227,7 @@ const calculatePartyPercentagesAndVotesPerSeat = (
     totalVotesPerSeat:
       party.totalSeats > 0
         ? Math.floor(party.totalVotes / party.totalSeats)
-        : "n/a",
+        : party.totalVotes,
   }));
 };
 
@@ -456,24 +458,6 @@ function RegionAndUKPage({ data, page, pageParam }) {
     return table;
   }, [data.parties]);
 
-  const partiesChartData = useMemo(() => {
-    const table = [
-      ["Party", "Votes %", { role: "style" }, "Seats %", { role: "style" }],
-    ];
-
-    data.parties.forEach((party) => {
-      table.push([
-        party.name,
-        oneDecimal(party.totalVotesShare),
-        `color: ${party.colour}; opacity: 0.6; stroke-width: 0`,
-        oneDecimal(party.totalSeatsShare),
-        `color: ${party.colour}; stroke-width: 0`,
-      ]);
-    });
-
-    return table;
-  }, [data.parties]);
-
   const selectedRegionName =
     page === "region"
       ? pageParam !== "england"
@@ -496,40 +480,8 @@ function RegionAndUKPage({ data, page, pageParam }) {
                     true
                   )}`}
             </h1>
-            <div>
-              <div
-                className="custom-badge"
-                style={{
-                  backgroundColor: othersColor,
-                  opacity: 0.6,
-                }}
-              ></div>
-              % Votes
-              <div className="text-gap"></div>
-              <div
-                className="custom-badge"
-                style={{ backgroundColor: othersColor }}
-              ></div>
-              % Seats
-            </div>
-            <Chart
-              width={"100%"}
-              height={"400px"}
-              chartType="ColumnChart"
-              loader={<div>Loading Chart</div>}
-              data={partiesChartData}
-              options={{
-                legend: { position: "none" },
-                chartArea: {
-                  width: "100%",
-                  left: 20,
-                  top: 60,
-                  bottom: 40,
-                  height: "100%",
-                },
-              }}
-            />
-            <SeatsDeclared data={data} />
+            <DotPlot parties={data.parties} />
+            <VotesPerMPBarChart parties={data.parties} />
           </div>
           <div className="col-lg-4">
             <table className="table table-bordered parties-stats-table table-condensed">
@@ -763,6 +715,8 @@ function App() {
 
     setData(newData);
   };
+
+  console.log("App data", data);
 
   const scrollToTop = () => {
     window.scrollTo(0, 0);
