@@ -1,7 +1,9 @@
 import React, { useState, useEffect, useMemo } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { orderBy, values, pick, forEach, map } from "lodash";
+import { orderBy, values, pick, forEach } from "lodash";
 import { Chart } from "react-google-charts";
+
+import hex2019 from "./2019-constituencies.json";
 
 import {
   fixPartyName,
@@ -18,7 +20,7 @@ import {
 import SignPetition from "./components/SignPetition";
 import MagicButtons from "./components/MagicButtons";
 import JoinNewsletter from "./components/JoinNewsletter";
-// import HexMap from "./components/HexMap";
+import HexMap from "./components/visualisations/HexMap";
 import SeatsDeclared from "./components/SeatsDeclared";
 import Subscribe from "./components/Subscribe";
 
@@ -515,6 +517,7 @@ function RegionAndUKPage({ data, page, pageParam }) {
             <DotPlot parties={data.parties} />
             <VotesPerMPBarChart parties={data.parties} />
             <VotesTypesGroupedBarChart parties={data.parties} />
+            <HexMap hexjson={hex2019} />
           </div>
           <div className="col-lg-4">
             <table className="table table-bordered parties-stats-table table-condensed">
