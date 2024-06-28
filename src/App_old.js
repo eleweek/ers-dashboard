@@ -32,6 +32,7 @@ import staticData from "./old-static-data.json";
 import { FullResultsTable } from "./components/FullResultsTable";
 import DotPlot from "./components/visualisations/DotPlot";
 import VotesPerMPBarChart from "./components/visualisations/VotesPerMPBarChart";
+import VotesTypesGroupedBarChart from "./components/visualisations/VotesTypesGroupedBarChart";
 
 const BACKEND_HOST = `${window.location.protocol}//${window.location.hostname}:8080`;
 // const BACKEND_HOST = "https://ge2019.electoral-reform.org.uk";
@@ -117,6 +118,10 @@ const calculatePartyData = (constituencies) => {
       10
     );
 
+    let winningPartyName = null;
+    let winningPartyVotes = 0;
+    let secondPlaceVotes = 0;
+
     candidates.forEach((candidate) => {
       const partyData = candidate.Party[0].$;
       const partyAbbr = partyData.abbreviation;
@@ -139,13 +144,30 @@ const calculatePartyData = (constituencies) => {
 
       if (candidate.$.elected) {
         parties[partyName].totalSeats += 1;
+        winningPartyName = partyName;
+        winningPartyVotes = parseFloat(partyData.votes);
       } else {
         wastedVotes += parseFloat(partyData.votes);
+        secondPlaceVotes = Math.max(
+          secondPlaceVotes,
+          parseFloat(partyData.votes)
+        );
+
+        parties[partyName].wastedVotes =
+          (parties[partyName]?.wastedVotes || 0) + parseFloat(partyData.votes);
       }
 
       parties[partyName].totalVotes += parseFloat(partyData.votes);
       totalVotes += parseFloat(partyData.votes);
     });
+
+    parties[winningPartyName].surplusVotes =
+      (parties[winningPartyName]?.surplusVotes || 0) +
+      winningPartyVotes -
+      secondPlaceVotes;
+
+    parties[winningPartyName].decisiveVotes =
+      (parties[winningPartyName]?.decisiveVotes || 0) + secondPlaceVotes;
 
     prevCandidates.forEach((candidate, index) => {
       const partyData = candidate.Party[0].$;
@@ -482,6 +504,7 @@ function RegionAndUKPage({ data, page, pageParam }) {
             </h1>
             <DotPlot parties={data.parties} />
             <VotesPerMPBarChart parties={data.parties} />
+            <VotesTypesGroupedBarChart parties={data.parties} />
           </div>
           <div className="col-lg-4">
             <table className="table table-bordered parties-stats-table table-condensed">
@@ -623,7 +646,6 @@ function App() {
       setPage(newPage);
       setPageParam(newPageParam);
       processData(newPage, newPageParam);
-      scrollToTop();
     }
   }, [location, page, pageParam]);
 
@@ -717,10 +739,6 @@ function App() {
   };
 
   console.log("App data", data);
-
-  const scrollToTop = () => {
-    window.scrollTo(0, 0);
-  };
 
   console.log("setSubscribePopupOpened", typeof setSubscribePopupOpened);
 
