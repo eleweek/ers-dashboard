@@ -77,19 +77,15 @@ export default function HexMap({ hexjson, data }) {
           this.updateBoundaries((n, props) => {
             if (props.type === "country")
               return {
-                stroke: "white",
-                "stroke-width": 3,
-                "stroke-dasharray": "4 4",
+                stroke: "black",
+                "stroke-width": 2,
                 "stroke-linecap": "round",
-                opacity: 0.9,
               };
             if (props.type === "region")
               return {
-                stroke: "white",
-                "stroke-width": 3,
-                "stroke-dasharray": "4 4",
+                stroke: "black",
+                "stroke-width": 0.5,
                 "stroke-linecap": "round",
-                opacity: 0.4,
               };
           });
         },

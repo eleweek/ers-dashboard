@@ -78,8 +78,35 @@ const filterConstituenciesByPage = (constituencies, page, pageParam) => {
 const processConstituencies = (constituencies) => {
   return constituencies.map((constituency) => {
     const constituencyDeepData = constituency.data.Election[0].Constituency[0];
+
+    const candidates = constituencyDeepData.Candidate;
+
+    let winningVotes = 0;
+    let secondPlaceVotes = 0;
+    let wastedVotes = 0;
+    let totalVotes = 0;
+
+    candidates.forEach((candidate) => {
+      const votes = parseFloat(candidate.Party[0].$.votes);
+      totalVotes += votes;
+
+      if (candidate.$.elected) {
+        winningVotes = votes;
+      } else {
+        wastedVotes += votes;
+        secondPlaceVotes = Math.max(secondPlaceVotes, votes);
+      }
+    });
+
+    const surplusVotes = winningVotes - secondPlaceVotes;
+    const decisiveVotes = secondPlaceVotes;
+
     return {
       ...constituency,
+      wastedVotes,
+      surplusVotes,
+      decisiveVotes,
+      totalVotes,
       data: {
         ...constituency.data,
         Election: [
@@ -516,6 +543,33 @@ function RegionAndUKPage({ data, page, pageParam }) {
     })
   );
 
+  const wastedHexMapData = Object.fromEntries(
+    data.constituencies.map((constituency) => {
+      return [
+        constituenciesNumbersToPcons[constituency.id],
+        parseFloat(constituency.wastedVotes),
+      ];
+    })
+  );
+
+  const decisiveVotes = Object.fromEntries(
+    data.constituencies.map((constituency) => {
+      return [
+        constituenciesNumbersToPcons[constituency.id],
+        parseFloat(constituency.decisiveVotes),
+      ];
+    })
+  );
+
+  const surplusVotes = Object.fromEntries(
+    data.constituencies.map((constituency) => {
+      return [
+        constituenciesNumbersToPcons[constituency.id],
+        parseFloat(constituency.surplusVotes),
+      ];
+    })
+  );
+
   return (
     <>
       <div className="container-fluid non-constituency-page">
@@ -533,6 +587,9 @@ function RegionAndUKPage({ data, page, pageParam }) {
             <VotesPerMPBarChart parties={data.parties} />
             <VotesTypesGroupedBarChart parties={data.parties} />
             <HexMap hexjson={hex2019} data={majorityHexMapData} />
+            <HexMap hexjson={hex2019} data={wastedHexMapData} />
+            <HexMap hexjson={hex2019} data={surplusVotes} />
+            <HexMap hexjson={hex2019} data={decisiveVotes} />
           </div>
           <div className="col-lg-4">
             <table className="table table-bordered parties-stats-table table-condensed">
