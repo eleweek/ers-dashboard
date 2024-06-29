@@ -43,7 +43,7 @@ const COLOUR_SCALE = new ColourScale([
   { rgb: [71, 25, 107], v: 1 }, // Most intense purple (for higher values)
 ]);
 
-export default function HexMap({ hexjson, data }) {
+export default function HexMap({ hexjson, data, valueType }) {
   const hexmapRef = useRef(null);
   const [isRendered, setIsRendered] = useState(false);
 
@@ -70,7 +70,6 @@ export default function HexMap({ hexjson, data }) {
 
           // Correct usage of updateColours
           this.updateColours((r) => {
-            console.log("updateColours", r, data[r], min, max);
             return COLOUR_SCALE.getValue(data[r], min, max);
           });
 
@@ -103,7 +102,7 @@ export default function HexMap({ hexjson, data }) {
         console.log(e.data.hexmap, e.data.hexmap.data[e.data.region]);
         tip.innerHTML = `${e.data.data.n}<br />${data[
           e.data.region
-        ].toLocaleString()} majority<br />Region: ${e.data.data.a}`;
+        ].toLocaleString()} ${valueType}<br />Region: ${e.data.data.a}`;
         const bb = hex.getBoundingClientRect();
         const bbo = svg.getBoundingClientRect();
         tip.style.left = `${Math.round(
