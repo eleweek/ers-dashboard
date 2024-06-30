@@ -20,11 +20,13 @@ export default function StackedBarChart({ data }) {
   };
 
   const partyOrder = useMemo(
-    () => arrangeParties(data.parties),
-    [data.parties]
+    () => (data && data.parties ? arrangeParties(data.parties) : []),
+    [data]
   );
 
   const processedData = useMemo(() => {
+    if (!data || !data.constituencies) return [];
+
     const processedConstituencies = data.constituencies.map((constituency) => {
       const constituencyData = constituency.data.Election[0].Constituency[0];
       const name = constituencyData.$.name;
@@ -47,9 +49,37 @@ export default function StackedBarChart({ data }) {
         b[1].percentageShare > a[1].percentageShare ? b : a
       );
 
+      // Create a custom order with the winner at the bottom
+      const customOrder = [
+        winner[0],
+        ...partyOrder.filter((party) => party !== winner[0]),
+      ];
+
+      // Create the stacked data
+      let cumulative = 0;
+      const stack = customOrder.map((party) => {
+        const start = cumulative;
+        const value = partiesData[party]?.percentageShare || 0;
+        const end = cumulative + value;
+        cumulative = end;
+        return { party, start: start / 100, end: end / 100, value };
+      });
+
+      // Add an "Others" category if the total is less than 100%
+      if (cumulative < 99.9) {
+        // Allow for small rounding errors
+        const othersValue = 100 - cumulative;
+        stack.push({
+          party: "Others",
+          start: cumulative / 100,
+          end: 1,
+          value: othersValue,
+        });
+      }
+
       return {
         name,
-        parties: partiesData,
+        stack,
         winner: winner[0],
         winnerPercentage: winner[1].percentageShare,
       };
@@ -67,16 +97,9 @@ export default function StackedBarChart({ data }) {
     });
   }, [data, partyOrder]);
 
-  // New function to reorder parties for each constituency
-  const getConstituencyPartyOrder = (constituency) => {
-    const winningParty = constituency.winner;
-    return [
-      winningParty,
-      ...partyOrder.filter((party) => party !== winningParty),
-    ];
-  };
-
   React.useEffect(() => {
+    if (!processedData || processedData.length === 0) return;
+
     const marginTop = 30;
     const marginRight = 20;
     const marginBottom = 30;
@@ -96,7 +119,8 @@ export default function StackedBarChart({ data }) {
       .range([marginLeft, width - marginRight])
       .padding(0.1);
 
-    const color = (d) => getPartyColor(d) || "gray";
+    const color = (d) =>
+      d === "Others" ? "#888888" : getPartyColor(d) || "#888888";
 
     const svg = d3
       .select(svgRef.current)
@@ -106,35 +130,49 @@ export default function StackedBarChart({ data }) {
       .attr("style", "max-width: 100%; height: auto;");
 
     const updateBars = (transitionDuration = 500) => {
-      const series = d3
-        .stack()
-        .keys((d) => getConstituencyPartyOrder(d))
-        .value((d, key) =>
-          showWinnerTakesAll
-            ? key === d.winner
-              ? 100
-              : 0
-            : d.parties[key]?.percentageShare || 0
-        )
-        .offset(d3.stackOffsetExpand)(processedData);
-
       const barGroups = svg
-        .selectAll("g.bar-group")
-        .data(series)
+        .selectAll("g.constituency")
+        .data(processedData)
         .join("g")
-        .attr("class", "bar-group")
-        .attr("fill", (d) => color(d.key));
+        .attr("class", "constituency")
+        .attr("transform", (d) => `translate(${x(d.name)},0)`);
 
-      barGroups
-        .selectAll("rect")
-        .data((d) => d)
-        .join("rect")
-        .attr("x", (d) => x(d.data.name))
-        .attr("width", x.bandwidth())
-        .transition()
-        .duration(transitionDuration)
-        .attr("y", (d) => y(d[1]))
-        .attr("height", (d) => y(d[0]) - y(d[1]));
+      barGroups.each(function (d) {
+        const group = d3.select(this);
+        const data = showWinnerTakesAll
+          ? [{ party: d.winner, start: 0, end: 1, value: 100 }]
+          : d.stack;
+
+        const bars = group.selectAll("rect").data(data, (d) => d.party);
+
+        // Enter new bars
+        bars
+          .enter()
+          .append("rect")
+          .attr("width", x.bandwidth())
+          .attr("fill", (d) => color(d.party))
+          .attr("y", y(1))
+          .attr("height", 0);
+
+        // Update all bars (including entered ones)
+        bars
+          .merge(bars.enter().selectAll("rect"))
+          .transition()
+          .duration(transitionDuration)
+          .attr("width", x.bandwidth())
+          .attr("fill", (d) => color(d.party))
+          .attr("y", (d) => y(d.end))
+          .attr("height", (d) => y(d.start) - y(d.end));
+
+        // Exit bars
+        bars
+          .exit()
+          .transition()
+          .duration(transitionDuration)
+          .attr("y", y(1))
+          .attr("height", 0)
+          .remove();
+      });
 
       svg
         .selectAll("g.axis")
@@ -148,6 +186,10 @@ export default function StackedBarChart({ data }) {
 
     updateBars();
   }, [processedData, showWinnerTakesAll, partyOrder]);
+
+  if (!processedData || processedData.length === 0) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <div>
