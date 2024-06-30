@@ -23,6 +23,7 @@ import JoinNewsletter from "./components/JoinNewsletter";
 import HexMap from "./components/visualisations/HexMap";
 import SeatsDeclared from "./components/SeatsDeclared";
 import Subscribe from "./components/Subscribe";
+import StackedBarChart from "./components/visualisations/StackedBarChart";
 
 import Footer from "./components/Footer";
 import TopMenu, { englandSubRegionSelector } from "./components/TopMenu";
@@ -615,6 +616,12 @@ function RegionAndUKPage({ data, page, pageParam }) {
               valueType="decisive votes"
             />
           </div>
+          <div className="row">
+            <div className="col-lg-12">
+              <StackedBarChart data={data} />
+            </div>
+          </div>
+
           <div className="col-lg-4">
             <table className="table table-bordered parties-stats-table table-condensed">
               <thead>
