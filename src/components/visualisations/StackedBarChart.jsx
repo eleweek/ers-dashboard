@@ -45,22 +45,36 @@ export default function StackedBarChart({ data }) {
 
       const winner = Object.entries(partiesData).reduce((a, b) =>
         b[1].percentageShare > a[1].percentageShare ? b : a
-      )[0];
+      );
 
       return {
         name,
         parties: partiesData,
-        winner,
+        winner: winner[0],
+        winnerPercentage: winner[1].percentageShare,
       };
     });
 
-    // Sort the processed data based on the winner party order
+    // Sort the processed data based on the winner party order and winning percentage
     return processedConstituencies.sort((a, b) => {
       const aIndex = partyOrder.indexOf(a.winner);
       const bIndex = partyOrder.indexOf(b.winner);
-      return aIndex - bIndex;
+      if (aIndex !== bIndex) {
+        return aIndex - bIndex;
+      }
+      // If the winners are the same, sort by the winning percentage in descending order
+      return b.winnerPercentage - a.winnerPercentage;
     });
   }, [data, partyOrder]);
+
+  // New function to reorder parties for each constituency
+  const getConstituencyPartyOrder = (constituency) => {
+    const winningParty = constituency.winner;
+    return [
+      winningParty,
+      ...partyOrder.filter((party) => party !== winningParty),
+    ];
+  };
 
   React.useEffect(() => {
     const marginTop = 30;
@@ -94,7 +108,7 @@ export default function StackedBarChart({ data }) {
     const updateBars = (transitionDuration = 500) => {
       const series = d3
         .stack()
-        .keys(partyOrder)
+        .keys((d) => getConstituencyPartyOrder(d))
         .value((d, key) =>
           showWinnerTakesAll
             ? key === d.winner
