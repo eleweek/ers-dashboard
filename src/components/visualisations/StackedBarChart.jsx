@@ -85,14 +85,27 @@ export default function StackedBarChart({ data }) {
       };
     });
 
-    // Sort the processed data based on the winner party order and winning percentage
+    // Count the number of constituencies won by each party
+    const partyWinCounts = processedConstituencies.reduce(
+      (counts, constituency) => {
+        counts[constituency.winner] = (counts[constituency.winner] || 0) + 1;
+        return counts;
+      },
+      {}
+    );
+
+    // Sort parties by the number of constituencies they've won
+    const sortedParties = Object.entries(partyWinCounts)
+      .sort((a, b) => b[1] - a[1])
+      .map(([party]) => party);
+
+    // Sort constituencies: first by winning party (in order of most wins), then by winning percentage
     return processedConstituencies.sort((a, b) => {
-      const aIndex = partyOrder.indexOf(a.winner);
-      const bIndex = partyOrder.indexOf(b.winner);
+      const aIndex = sortedParties.indexOf(a.winner);
+      const bIndex = sortedParties.indexOf(b.winner);
       if (aIndex !== bIndex) {
         return aIndex - bIndex;
       }
-      // If the winners are the same, sort by the winning percentage in descending order
       return b.winnerPercentage - a.winnerPercentage;
     });
   }, [data, partyOrder]);
