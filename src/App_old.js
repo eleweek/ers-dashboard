@@ -625,6 +625,23 @@ function RegionAndUKPage({ data, page, pageParam }) {
               to win the representation they deserve in Westminster.
             </p>
             <VotesPerMPBarChart parties={data.parties} />
+            <div className="caption">
+              This is the total number of votes for the candidates of each
+              party, divided by the number of MPs they won. Parties on the top
+              of the chart won a large numbers of votes, but few MPs
+            </div>
+            <p>
+              To become an MP, a candidate needs to get the most votes in their
+              constituency. But they don’t need to win a majority of votes.
+              First Past the Post is bad for parties with voters spread across
+              hundreds of seats, but not enough in a single seat to win it. Some
+              parties on the right of the chart only stand candidates in parts
+              of the UK so have fewer voters overall, but as they tend to be
+              concentrated in a smaller number of seats, they have enough
+              support to elect MPs. In Westminster’s first past the post system
+              it can matter more where your MPs are, than how many votes you
+              have.
+            </p>
             <VotesTypesGroupedBarChart parties={data.parties} />
             <HexMap
               hexjson={hex2019}
