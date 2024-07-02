@@ -33,7 +33,7 @@ import staticData from "./old-static-data.json";
 import { FullResultsTable } from "./components/visualisations/FullResultsTable";
 import DotPlot from "./components/visualisations/DotPlot";
 import VotesPerMPBarChart from "./components/visualisations/VotesPerMPBarChart";
-import VotesTypesGroupedBarChart from "./components/visualisations/VotesTypesGroupedBarChart";
+import VotesTypesBarChart from "./components/visualisations/VotesTypesBarChart";
 import classNames from "classnames";
 
 const BACKEND_HOST = `${window.location.protocol}//${window.location.hostname}:8080`;

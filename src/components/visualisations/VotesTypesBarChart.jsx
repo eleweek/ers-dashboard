@@ -1,23 +1,20 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef } from "react";
 import * as d3 from "d3";
 
-export default function VotesTypesGroupedBarChart({ parties }) {
+export default function VotesTypesBarChart({ parties }) {
   const svgRef = useRef();
-  const [showPercentage, setShowPercentage] = useState(false);
-
-  console.log("VotesTypesGroupedBarChart", parties);
 
   useEffect(() => {
     if (parties && parties.length > 0) {
       createChart();
     }
-  }, [parties, showPercentage]);
+  }, [parties]);
 
   const createChart = () => {
     const width = 928;
-    const height = 400;
+    const height = 500;
     const marginTop = 30;
-    const marginRight = 100;
+    const marginRight = 120; // Increased right margin for legend
     const marginBottom = 30;
     const marginLeft = 150;
 
@@ -33,30 +30,31 @@ export default function VotesTypesGroupedBarChart({ parties }) {
 
     const categories = ["decisiveVotes", "surplusVotes", "wastedVotes"];
 
+    // Calculate percentages and sort by decisive votes
+    const processedData = parties
+      .map((party) => {
+        const total = categories.reduce((sum, cat) => sum + party[cat], 0);
+        return {
+          name: party.name,
+          ...Object.fromEntries(
+            categories.map((cat) => [cat, (party[cat] / total) * 100])
+          ),
+        };
+      })
+      .sort((a, b) => b.decisiveVotes - a.decisiveVotes);
+
+    const stackedData = d3.stack().keys(categories)(processedData);
+
     const y = d3
       .scaleBand()
-      .domain(parties.map((d) => d.name))
+      .domain(processedData.map((d) => d.name))
       .rangeRound([marginTop, height - marginBottom])
       .paddingInner(0.1);
 
     const x = d3
       .scaleLinear()
-      .domain([
-        0,
-        showPercentage
-          ? 100
-          : d3.max(parties, (d) => {
-              const values = categories.map((cat) => d[cat]);
-              return d3.max(values);
-            }),
-      ])
+      .domain([0, 100])
       .range([marginLeft, width - marginRight]);
-
-    const z = d3
-      .scaleBand()
-      .domain(categories)
-      .rangeRound([0, y.bandwidth()])
-      .padding(0.05);
 
     const color = d3
       .scaleOrdinal()
@@ -66,22 +64,16 @@ export default function VotesTypesGroupedBarChart({ parties }) {
     svg
       .append("g")
       .selectAll("g")
-      .data(parties)
+      .data(stackedData)
       .join("g")
-      .attr("transform", (d) => `translate(0,${y(d.name)})`)
+      .attr("fill", (d) => color(d.key))
       .selectAll("rect")
-      .data((d) =>
-        categories.map((key) => ({
-          key,
-          value: showPercentage ? (d[key] / d.totalVotes) * 100 : d[key],
-        }))
-      )
+      .data((d) => d)
       .join("rect")
-      .attr("x", marginLeft)
-      .attr("y", (d) => z(d.key))
-      .attr("width", (d) => x(d.value) - marginLeft)
-      .attr("height", z.bandwidth())
-      .attr("fill", (d) => color(d.key));
+      .attr("x", (d) => x(d[0]))
+      .attr("y", (d) => y(d.data.name))
+      .attr("width", (d) => x(d[1]) - x(d[0]))
+      .attr("height", y.bandwidth());
 
     const yAxis = (g) =>
       g
@@ -96,9 +88,7 @@ export default function VotesTypesGroupedBarChart({ parties }) {
           d3
             .axisTop(x)
             .ticks(width / 80)
-            .tickFormat((d) =>
-              showPercentage ? `${d3.format(".0f")(d)}%` : d3.format("~s")(d)
-            )
+            .tickFormat((d) => `${d3.format(".0f")(d)}%`)
         )
         .call((g) => g.selectAll(".domain").remove());
 
@@ -132,12 +122,5 @@ export default function VotesTypesGroupedBarChart({ parties }) {
       .text((d) => d.replace(/([A-Z])/g, " $1").trim());
   };
 
-  return (
-    <div>
-      <button onClick={() => setShowPercentage(!showPercentage)}>
-        {showPercentage ? "Show Absolute Values" : "Show Percentages"}
-      </button>
-      <svg ref={svgRef}></svg>
-    </div>
-  );
+  return <svg ref={svgRef}></svg>;
 }
