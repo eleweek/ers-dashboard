@@ -724,6 +724,13 @@ function RegionAndUKPage({ data, page, pageParam }) {
             </div>
             <div className="gap-40"></div>
             <HexMaps data={data} />
+            <div>
+              Whether a seat is won with the lowest share of the vote or
+              highest, it makes no difference in Westminster. Likewise, a party
+              can have a huge lead over their main opponents or a tiny one: the
+              outcome is the same. But knowing that your vote made no difference
+              to the result isn’t good for voters.
+            </div>
           </div>
 
           <div className="col-lg-4">
