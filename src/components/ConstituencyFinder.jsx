@@ -125,8 +125,7 @@ const ConstituencyFinder = ({ escapeString }) => {
       onMouseEnter={() => toggleHover(true)}
     >
       <div id="postcode-finder-hint">
-        Would you like to see the results for your constituency? Search for a
-        constituency, MP, or by postcode.
+        Search for a constituency, MP, or by postcode.
       </div>
       <input
         id="constituency-finder"

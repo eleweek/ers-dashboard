@@ -19,7 +19,7 @@ const MagicButtons = ({ backendHost, frontendHost, page }) => {
       <div className="container-fluid">
         <div className="row">
           <div className="col-lg-12 text-center">
-            <h2>Why not share this page with your friends?</h2>
+            <h2>Share this page with your friends</h2>
             <a href={getUrl("f")} target="_blank" rel="noopener noreferrer">
               <FontAwesomeIcon
                 icon={faFacebookSquare}
