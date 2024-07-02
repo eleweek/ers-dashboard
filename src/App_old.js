@@ -593,6 +593,37 @@ function RegionAndUKPage({ data, page, pageParam }) {
                   )}`}
             </h1>
             <DotPlot parties={data.parties} />
+            <h3>
+              The percentage of votes a party receives is not the same as the
+              percentage of MPs they win in parliament
+            </h3>
+            <p>
+              The last nine years have witnessed four general elections, a
+              nationwide referendum and no less than six prime ministers. At
+              times our politics has felt chaotic, and the output of the
+              Westminster electoral system has only added to this sense of
+              dysfunction. The way we elect our MPs is called First Past the
+              Post. No area sees 100% of people support a single party, but with
+              Westminster’s First Past the Post voting system, only one MP
+              represents everyone. This one-person-takes all system means the
+              real diversity of opinion in the country is not reflected in
+              Westminster. Some parties do well out of this system, while others
+              lose out.
+            </p>
+            <h3>
+              How do some parties end up with more seats than they deserve?
+            </h3>
+            <p>
+              Elections in the UK are 650 individual contests. Rather than
+              trying to represent the diversity of opinions in your local area,
+              just one MP is elected to represent everyone in a constituency -
+              even if the majority of voters didn’t vote for them. Votes cast
+              for a candidate that didn’t win end up making no difference in
+              Westminster, added up across the whole country it means that
+              millions of voters aren’t represented in Westminster. Parties can
+              build up high levels of support across the country, but still fail
+              to win the representation they deserve in Westminster.
+            </p>
             <VotesPerMPBarChart parties={data.parties} />
             <VotesTypesGroupedBarChart parties={data.parties} />
             <HexMap

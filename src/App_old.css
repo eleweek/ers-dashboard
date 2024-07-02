@@ -267,3 +267,7 @@ h1.with-sup .sup {
   padding: 0;
   margin: 0;
 }
+
+.caption {
+  font-size: 70%;
+}
