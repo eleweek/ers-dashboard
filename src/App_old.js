@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { orderBy, values, pick, forEach } from "lodash";
 
@@ -34,6 +34,7 @@ import { FullResultsTable } from "./components/visualisations/FullResultsTable";
 import DotPlot from "./components/visualisations/DotPlot";
 import VotesPerMPBarChart from "./components/visualisations/VotesPerMPBarChart";
 import VotesTypesGroupedBarChart from "./components/visualisations/VotesTypesGroupedBarChart";
+import classNames from "classnames";
 
 const BACKEND_HOST = `${window.location.protocol}//${window.location.hostname}:8080`;
 // const BACKEND_HOST = "https://ge2019.electoral-reform.org.uk";
@@ -328,6 +329,7 @@ function getPartiesTableSettings(partiesTableColumns, data) {
 
 function HexMaps({ data }) {
   const [tab, setTab] = useState("decisive");
+  console.log("Tab", tab);
 
   const decisiveVotes = Object.fromEntries(
     data.constituencies.map((constituency) => {
@@ -381,27 +383,41 @@ function HexMaps({ data }) {
       <div class="btn-group" role="group" aria-label="Basic example">
         <button
           type="button"
-          class="btn btn-secondary"
+          class={classNames(
+            "btn",
+            tab === "decisive" ? "btn-primary" : "btn-secondary"
+          )}
           onClick={() => setTab("decisive")}
         >
           Decisive
         </button>
         <button
           type="button"
-          class="btn btn-secondary"
+          class={classNames(
+            "btn",
+            tab === "surplus" ? "btn-primary" : "btn-secondary"
+          )}
           onClick={() => setTab("surplus")}
         >
           Surplus
         </button>
         <button
           type="button"
-          class="btn btn-secondary"
+          class={classNames(
+            "btn",
+            tab === "wasted" ? "btn-primary" : "btn-secondary"
+          )}
           onClick={() => setTab("wasted")}
         >
           Wasted
         </button>
       </div>
-      <HexMap hexjson={hex2019} data={hexmapData} valueType={valueType} />
+      <HexMap
+        key={valueType}
+        hexjson={hex2019}
+        data={hexmapData}
+        valueType={valueType}
+      />
     </div>
   );
 }
@@ -576,32 +592,6 @@ function RegionAndUKPage({ data, page, pageParam }) {
 
   const { partiesTableFields, partiesExtendedTableItems } =
     getPartiesTableSettings(partiesTableColumns, data);
-
-  const seatsVsVotesChangeChartData = useMemo(() => {
-    const table = [
-      [
-        "Party",
-        "Votes % Change",
-        { role: "style" },
-        "Seats % Change",
-        { role: "style" },
-      ],
-    ];
-
-    data.parties.forEach((party) => {
-      if (party.name === "Others") return;
-
-      table.push([
-        party.name,
-        party.totalVotesShareChange,
-        `color: ${party.colour}; opacity: 0.6; stroke-width: 0`,
-        party.totalSeatsShareChange,
-        `color: ${party.colour}; stroke-width: 0`,
-      ]);
-    });
-
-    return table;
-  }, [data.parties]);
 
   const selectedRegionName =
     page === "region"
