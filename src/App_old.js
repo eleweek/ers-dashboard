@@ -707,7 +707,7 @@ function RegionAndUKPage({ data, page, pageParam }) {
               (unrepresented).
             </p>
 
-            <VotesTypesGroupedBarChart parties={data.parties} />
+            <VotesTypesBarChart parties={data.parties} />
             <div className="caption">
               Parties with geographically concentrated supporters tend to do
               better under First Past the Post
