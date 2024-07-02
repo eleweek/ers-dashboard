@@ -326,6 +326,86 @@ function getPartiesTableSettings(partiesTableColumns, data) {
   return { partiesTableFields, partiesTableItems, partiesExtendedTableItems };
 }
 
+function HexMaps({ data }) {
+  const [tab, setTab] = useState("decisive");
+
+  const decisiveVotes = Object.fromEntries(
+    data.constituencies.map((constituency) => {
+      return [
+        constituenciesNumbersToPcons[
+          constituency.data.Election[0].Constituency[0].$.number
+        ],
+        constituency.decisiveVotes,
+      ];
+    })
+  );
+
+  const surplusVotes = Object.fromEntries(
+    data.constituencies.map((constituency) => {
+      return [
+        constituenciesNumbersToPcons[
+          constituency.data.Election[0].Constituency[0].$.number
+        ],
+        constituency.surplusVotes,
+      ];
+    })
+  );
+
+  const wastedHexMapData = Object.fromEntries(
+    data.constituencies.map((constituency) => {
+      return [
+        constituenciesNumbersToPcons[
+          constituency.data.Election[0].Constituency[0].$.number
+        ],
+        constituency.wastedVotes,
+      ];
+    })
+  );
+
+  const hexmapData =
+    tab === "decisive"
+      ? decisiveVotes
+      : tab === "surplus"
+      ? surplusVotes
+      : wastedHexMapData;
+
+  const valueType =
+    tab === "decisive"
+      ? "decisive votes"
+      : tab === "surplus"
+      ? "surplus votes"
+      : "wasted votes";
+
+  return (
+    <div>
+      <div class="btn-group" role="group" aria-label="Basic example">
+        <button
+          type="button"
+          class="btn btn-secondary"
+          onClick={() => setTab("decisive")}
+        >
+          Decisive
+        </button>
+        <button
+          type="button"
+          class="btn btn-secondary"
+          onClick={() => setTab("surplus")}
+        >
+          Surplus
+        </button>
+        <button
+          type="button"
+          class="btn btn-secondary"
+          onClick={() => setTab("wasted")}
+        >
+          Wasted
+        </button>
+      </div>
+      <HexMap hexjson={hex2019} data={hexmapData} valueType={valueType} />
+    </div>
+  );
+}
+
 function ConstituencyPage({ data, selectedConstituency, page }) {
   const wastedVotes = percentage(data.wastedVotes / data.totalVotes);
 
@@ -532,51 +612,6 @@ function RegionAndUKPage({ data, page, pageParam }) {
         : "England"
       : "";
 
-  const majorityHexMapData = Object.fromEntries(
-    data.constituencies.map((constituency) => {
-      const constituencyData = constituency.data.Election[0].Constituency[0].$;
-      return [
-        constituenciesNumbersToPcons[
-          constituency.data.Election[0].Constituency[0].$.number
-        ],
-        parseFloat(constituencyData.majority),
-      ];
-    })
-  );
-
-  const wastedHexMapData = Object.fromEntries(
-    data.constituencies.map((constituency) => {
-      return [
-        constituenciesNumbersToPcons[
-          constituency.data.Election[0].Constituency[0].$.number
-        ],
-        constituency.wastedVotes,
-      ];
-    })
-  );
-
-  const decisiveVotes = Object.fromEntries(
-    data.constituencies.map((constituency) => {
-      return [
-        constituenciesNumbersToPcons[
-          constituency.data.Election[0].Constituency[0].$.number
-        ],
-        constituency.decisiveVotes,
-      ];
-    })
-  );
-
-  const surplusVotes = Object.fromEntries(
-    data.constituencies.map((constituency) => {
-      return [
-        constituenciesNumbersToPcons[
-          constituency.data.Election[0].Constituency[0].$.number
-        ],
-        constituency.surplusVotes,
-      ];
-    })
-  );
-
   return (
     <>
       <div className="container-fluid non-constituency-page">
@@ -683,26 +718,12 @@ function RegionAndUKPage({ data, page, pageParam }) {
             </p>
 
             <VotesTypesGroupedBarChart parties={data.parties} />
-            <HexMap
-              hexjson={hex2019}
-              data={majorityHexMapData}
-              valueType="majority"
-            />
-            <HexMap
-              hexjson={hex2019}
-              data={wastedHexMapData}
-              valueType="wasted votes"
-            />
-            <HexMap
-              hexjson={hex2019}
-              data={surplusVotes}
-              valueType="surplus votes"
-            />
-            <HexMap
-              hexjson={hex2019}
-              data={decisiveVotes}
-              valueType="decisive votes"
-            />
+            <div className="caption">
+              Parties with geographically concentrated supporters tend to do
+              better under First Past the Post
+            </div>
+            <div className="gap-40"></div>
+            <HexMaps data={data} />
           </div>
 
           <div className="col-lg-4">
