@@ -1,4 +1,4 @@
-import { commas, oneDecimal } from "../utils";
+import { commas, oneDecimal } from "../../utils";
 
 export function FullResultsTable({
   partiesExtendedTableItems,

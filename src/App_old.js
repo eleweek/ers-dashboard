@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useMemo } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { orderBy, values, pick, forEach } from "lodash";
-import { Chart } from "react-google-charts";
 
 import hex2019 from "./2019-constituencies.json";
 
@@ -31,7 +30,7 @@ import "./App_old.css";
 
 import fullData from "./old-data.json";
 import staticData from "./old-static-data.json";
-import { FullResultsTable } from "./components/FullResultsTable";
+import { FullResultsTable } from "./components/visualisations/FullResultsTable";
 import DotPlot from "./components/visualisations/DotPlot";
 import VotesPerMPBarChart from "./components/visualisations/VotesPerMPBarChart";
 import VotesTypesGroupedBarChart from "./components/visualisations/VotesTypesGroupedBarChart";
@@ -633,14 +632,27 @@ function RegionAndUKPage({ data, page, pageParam }) {
               To become an MP, a candidate needs to get the most votes in their
               constituency. But they don’t need to win a majority of votes.
               First Past the Post is bad for parties with voters spread across
-              hundreds of seats, but not enough in a single seat to win it. Some
-              parties on the right of the chart only stand candidates in parts
-              of the UK so have fewer voters overall, but as they tend to be
-              concentrated in a smaller number of seats, they have enough
+              hundreds of seats, but not enough in a single seat to win it.
+            </p>
+            <p>
+              Some parties on the right of the chart only stand candidates in
+              parts of the UK so have fewer voters overall, but as they tend to
+              be concentrated in a smaller number of seats, they have enough
               support to elect MPs. In Westminster’s first past the post system
               it can matter more where your MPs are, than how many votes you
               have.
             </p>
+
+            <h2>Full Results</h2>
+
+            <FullResultsTable
+              partiesExtendedTableItems={partiesExtendedTableItems}
+              partiesTableFields={partiesTableFields}
+              partiesTableColumns={partiesTableColumns}
+            />
+
+            <SeatsDeclared data={data} />
+
             <VotesTypesGroupedBarChart parties={data.parties} />
             <HexMap
               hexjson={hex2019}
@@ -707,63 +719,7 @@ function RegionAndUKPage({ data, page, pageParam }) {
         selectedRegionName={selectedRegionName}
       />{" "}
       <div className="gap-40"></div>
-      <div className="container-fluid">
-        <div className="row">
-          <div className="col-lg-4">
-            <h2>Percentage change since 2017</h2>
-            <div>
-              <div
-                className="custom-badge"
-                style={{
-                  backgroundColor: othersColor,
-                  opacity: 0.6,
-                }}
-              ></div>
-              % Votes change
-              <div className="text-gap"></div>
-              <div
-                className="custom-badge"
-                style={{ backgroundColor: othersColor }}
-              ></div>
-              % Seats change
-            </div>
-            <Chart
-              width={"100%"}
-              height={"400px"}
-              chartType="BarChart"
-              loader={<div>Loading Chart</div>}
-              data={seatsVsVotesChangeChartData}
-              options={{
-                legend: { position: "none" },
-                hAxis: {
-                  viewWindow: {
-                    min: -20,
-                    max: 20,
-                  },
-                },
-                chartArea: {
-                  width: "100%",
-                  left: 80,
-                  top: 20,
-                  height: "100%",
-                },
-              }}
-            />
-            <SeatsDeclared data={data} style={{ marginBottom: "40px" }} />
-          </div>
-          <div className="col-lg-8">
-            <h2>Full Results</h2>
-
-            <FullResultsTable
-              partiesExtendedTableItems={partiesExtendedTableItems}
-              partiesTableFields={partiesTableFields}
-              partiesTableColumns={partiesTableColumns}
-            />
-
-            <SeatsDeclared data={data} />
-          </div>
-        </div>
-      </div>
+      <div className="container-fluid"></div>
     </>
   );
 }
