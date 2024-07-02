@@ -651,7 +651,36 @@ function RegionAndUKPage({ data, page, pageParam }) {
               partiesTableColumns={partiesTableColumns}
             />
 
-            <SeatsDeclared data={data} />
+            <p>
+              To become an MP, a candidate just needs to beat the second placed
+              candidate by a single vote, so if they win any more votes beyond
+              this level, those votes don’t make any difference. Millions of
+              voters in the UK made no difference to the result, as their vote
+              went to a candidate who wasn’t elected, or the candidate they
+              voted for already had enough votes to win.
+            </p>
+            <p> You can break down how we voted into:</p>
+            <p>
+              <li>
+                <strong>Decisive Votes</strong>: Votes cast that a candidate
+                needed to be elected.
+              </li>
+              <li>
+                <strong>Unrepresented Votes</strong>: Votes cast for candidates
+                that weren’t elected.
+              </li>
+              <li>
+                <strong>Surplus Votes</strong>: Votes cast for a candidate above
+                what was needed for them to be elected.
+              </li>
+            </p>
+            <p>
+              But this process doesn’t impact the parties equally, some do
+              better out of the system, with their voters easily winning
+              representation. Others find their votes piling up in safe seats
+              (surplus votes) or going to candidates who aren’t elected
+              (unrepresented).
+            </p>
 
             <VotesTypesGroupedBarChart parties={data.parties} />
             <HexMap
