@@ -1,7 +1,10 @@
+import React, { useState } from "react";
 import * as d3 from "d3";
 import { displayedPartyName, getPartyColor } from "./utils";
 
 export default function DotPlot({ parties }) {
+  const [hoveredParty, setHoveredParty] = useState(null);
+
   const width = 700;
   const height = 400;
   const margin = { top: 40, right: 100, bottom: 40, left: 180 };
@@ -28,7 +31,8 @@ export default function DotPlot({ parties }) {
     .domain(parties)
     .range(parties.map((party) => getPartyColor(party.abbreviation)));
 
-  const formatPercent = (value) => `${value.toFixed(1)}%`;
+  const formatPercent = (value) =>
+    value === 0 ? "no" : `${value.toFixed(1)}%`;
 
   // Function to determine if labels should be combined
   const shouldCombineLabels = (votesShare, seatsShare) => {
@@ -51,6 +55,14 @@ export default function DotPlot({ parties }) {
           votesShare
         )} votes`;
   };
+
+  // Sort parties by total seats to get top two
+  const sortedParties = [...parties].sort(
+    (a, b) => b.totalSeats - a.totalSeats
+  );
+  const topTwoParties = new Set(
+    sortedParties.slice(0, 2).map((party) => party.name)
+  );
 
   return (
     <svg width={width} height={height}>
@@ -106,7 +118,7 @@ export default function DotPlot({ parties }) {
           ))}
         </g>
 
-        {/* Dots, arrows, and labels */}
+        {/* Hover areas and party data */}
         {parties.map((party, i) => {
           const color = colorScale(party);
           const lightColor = `rgba(${d3.rgb(color).r}, ${d3.rgb(color).g}, ${
@@ -129,8 +141,23 @@ export default function DotPlot({ parties }) {
             party.totalSeatsShare
           );
 
+          const showLabel =
+            topTwoParties.has(party.name) || hoveredParty === party.name;
+
           return (
             <g key={party.name}>
+              {/* Hover area */}
+              <rect
+                x={-margin.left}
+                y={yScale(party.name) - yScale.step() / 2}
+                width={width}
+                height={yScale.step()}
+                fill="transparent"
+                onMouseEnter={() => setHoveredParty(party.name)}
+                onMouseLeave={() => setHoveredParty(null)}
+              />
+
+              {/* Party data */}
               <circle
                 cx={votesX}
                 cy={yScale(party.name)}
@@ -154,49 +181,50 @@ export default function DotPlot({ parties }) {
               />
 
               {/* Labels */}
-              {smallParty ? (
-                <text
-                  x={Math.max(votesX, seatsX) + 10}
-                  y={yScale(party.name)}
-                  fill={color}
-                  textAnchor="start"
-                  alignmentBaseline="middle"
-                  fontSize="12px"
-                >
-                  {getLabelText(party.totalVotesShare, party.totalSeatsShare)}
-                </text>
-              ) : combinedLabels ? (
-                <text
-                  x={(votesX + seatsX) / 2}
-                  y={yScale(party.name) - 15}
-                  fill={color}
-                  textAnchor="middle"
-                  fontSize="12px"
-                >
-                  {getLabelText(party.totalVotesShare, party.totalSeatsShare)}
-                </text>
-              ) : (
-                <>
+              {showLabel &&
+                (smallParty ? (
                   <text
-                    x={votesX}
+                    x={Math.max(votesX, seatsX) + 10}
+                    y={yScale(party.name)}
+                    fill={color}
+                    textAnchor="start"
+                    alignmentBaseline="middle"
+                    fontSize="12px"
+                  >
+                    {getLabelText(party.totalVotesShare, party.totalSeatsShare)}
+                  </text>
+                ) : combinedLabels ? (
+                  <text
+                    x={(votesX + seatsX) / 2}
                     y={yScale(party.name) - 15}
                     fill={color}
                     textAnchor="middle"
                     fontSize="12px"
                   >
-                    {`${formatPercent(party.totalVotesShare)} votes`}
+                    {getLabelText(party.totalVotesShare, party.totalSeatsShare)}
                   </text>
-                  <text
-                    x={seatsX}
-                    y={yScale(party.name) - 15}
-                    fill={color}
-                    textAnchor="middle"
-                    fontSize="12px"
-                  >
-                    {`${formatPercent(party.totalSeatsShare)} seats`}
-                  </text>
-                </>
-              )}
+                ) : (
+                  <>
+                    <text
+                      x={votesX}
+                      y={yScale(party.name) - 15}
+                      fill={color}
+                      textAnchor="middle"
+                      fontSize="12px"
+                    >
+                      {`${formatPercent(party.totalVotesShare)} votes`}
+                    </text>
+                    <text
+                      x={seatsX}
+                      y={yScale(party.name) - 15}
+                      fill={color}
+                      textAnchor="middle"
+                      fontSize="12px"
+                    >
+                      {`${formatPercent(party.totalSeatsShare)} seats`}
+                    </text>
+                  </>
+                ))}
             </g>
           );
         })}
