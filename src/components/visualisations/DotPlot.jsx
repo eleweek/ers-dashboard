@@ -35,6 +35,23 @@ export default function DotPlot({ parties }) {
     return Math.abs(xScale(votesShare) - xScale(seatsShare)) < 50; // Adjust this threshold as needed
   };
 
+  // Function to check if a party is small (<5% in either category)
+  const isSmallParty = (votesShare, seatsShare) => {
+    return Math.max(votesShare, seatsShare) < 5;
+  };
+
+  // Function to generate label text with correct order and arrow
+  const getLabelText = (votesShare, seatsShare) => {
+    const arrow = votesShare < seatsShare ? "→" : "←";
+    return votesShare < seatsShare
+      ? `${formatPercent(votesShare)} votes ${arrow} ${formatPercent(
+          seatsShare
+        )} seats`
+      : `${formatPercent(seatsShare)} seats ${arrow} ${formatPercent(
+          votesShare
+        )} votes`;
+  };
+
   return (
     <svg width={width} height={height}>
       <defs>
@@ -107,6 +124,11 @@ export default function DotPlot({ parties }) {
             party.totalSeatsShare
           );
 
+          const smallParty = isSmallParty(
+            party.totalVotesShare,
+            party.totalSeatsShare
+          );
+
           return (
             <g key={party.name}>
               <circle
@@ -132,34 +154,27 @@ export default function DotPlot({ parties }) {
               />
 
               {/* Labels */}
-              {combinedLabels ? (
-                (() => {
-                  const arrow =
-                    party.totalVotesShare < party.totalSeatsShare ? "→" : "←";
-                  const labelText =
-                    party.totalVotesShare < party.totalSeatsShare
-                      ? `${formatPercent(
-                          party.totalVotesShare
-                        )} votes ${arrow} ${formatPercent(
-                          party.totalSeatsShare
-                        )} seats`
-                      : `${formatPercent(
-                          party.totalSeatsShare
-                        )} seats ${arrow} ${formatPercent(
-                          party.totalVotesShare
-                        )} votes`;
-                  return (
-                    <text
-                      x={(votesX + seatsX) / 2}
-                      y={yScale(party.name) - 15}
-                      fill={color}
-                      textAnchor="middle"
-                      fontSize="12px"
-                    >
-                      {labelText}
-                    </text>
-                  );
-                })()
+              {smallParty ? (
+                <text
+                  x={Math.max(votesX, seatsX) + 10}
+                  y={yScale(party.name)}
+                  fill={color}
+                  textAnchor="start"
+                  alignmentBaseline="middle"
+                  fontSize="12px"
+                >
+                  {getLabelText(party.totalVotesShare, party.totalSeatsShare)}
+                </text>
+              ) : combinedLabels ? (
+                <text
+                  x={(votesX + seatsX) / 2}
+                  y={yScale(party.name) - 15}
+                  fill={color}
+                  textAnchor="middle"
+                  fontSize="12px"
+                >
+                  {getLabelText(party.totalVotesShare, party.totalSeatsShare)}
+                </text>
               ) : (
                 <>
                   <text
