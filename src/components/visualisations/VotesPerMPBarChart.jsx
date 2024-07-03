@@ -12,6 +12,11 @@ export default function VotesPerMPBarChart({ parties }) {
   console.log("VotesPerMPBarChart", parties);
 
   const createChart = () => {
+    // Sort parties by totalVotesPerSeat in descending order
+    const sortedParties = [...parties].sort(
+      (a, b) => b.totalVotesPerSeat - a.totalVotesPerSeat
+    );
+
     const barHeight = 35;
     const marginTop = 30;
     const marginRight = 60;
@@ -19,7 +24,9 @@ export default function VotesPerMPBarChart({ parties }) {
     const marginLeft = 120;
     const width = 928;
     const height =
-      Math.ceil((parties.length + 0.1) * barHeight) + marginTop + marginBottom;
+      Math.ceil((sortedParties.length + 0.1) * barHeight) +
+      marginTop +
+      marginBottom;
 
     // Clear any existing SVG content
     d3.select(svgRef.current).selectAll("*").remove();
@@ -33,12 +40,12 @@ export default function VotesPerMPBarChart({ parties }) {
 
     const x = d3
       .scaleLinear()
-      .domain([0, 1.1 * d3.max(parties, (d) => d.totalVotesPerSeat)])
+      .domain([0, 1.1 * d3.max(sortedParties, (d) => d.totalVotesPerSeat)])
       .range([marginLeft, width - marginRight]);
 
     const y = d3
       .scaleBand()
-      .domain(parties.map((d) => d.name))
+      .domain(sortedParties.map((d) => d.name))
       .rangeRound([marginTop, height - marginBottom])
       .padding(0.1);
 
@@ -47,7 +54,7 @@ export default function VotesPerMPBarChart({ parties }) {
     svg
       .append("g")
       .selectAll("rect")
-      .data(parties)
+      .data(sortedParties)
       .join("rect")
       .attr("x", marginLeft)
       .attr("y", (d) => y(d.name))
@@ -60,7 +67,7 @@ export default function VotesPerMPBarChart({ parties }) {
       .attr("fill", "white")
       .attr("text-anchor", "start")
       .selectAll("text")
-      .data(parties)
+      .data(sortedParties)
       .join("text")
       .attr("x", (d) => x(0) + 10)
       .attr("y", (d) => y(d.name) + y.bandwidth() / 2)
@@ -85,20 +92,7 @@ export default function VotesPerMPBarChart({ parties }) {
       .append("g")
       .attr("transform", `translate(${marginLeft},0)`)
       .call(d3.axisLeft(y).tickSizeOuter(0))
-      .call((g) =>
-        g
-          .selectAll(".tick text") // Select all tick texts
-          .attr("font-size", "16px")
-      );
-
-    // Add a title
-    // svg
-    //   .append("text")
-    //   .attr("x", width / 2)
-    //   .attr("y", 15)
-    //   .attr("text-anchor", "middle")
-    //   .style("font-size", "16px")
-    //   .text("Votes Required to Elect an MP by Party");
+      .call((g) => g.selectAll(".tick text").attr("font-size", "16px"));
   };
 
   return <svg ref={svgRef}></svg>;
