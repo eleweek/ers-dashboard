@@ -39,7 +39,7 @@ const SingleBeeswarmChart = ({
     const xAxis = (g) =>
       g
         .attr("transform", `translate(0,${height - margin.bottom})`)
-        .call(d3.axisBottom(x).tickSizeOuter(0));
+        .call(d3.axisBottom(x).tickSizeOuter(0).ticks(5));
 
     svg.append("g").call(xAxis);
 
@@ -49,7 +49,7 @@ const SingleBeeswarmChart = ({
       .data(beeswarmData)
       .join("circle")
       .attr("cx", (d) => d.x)
-      .attr("cy", (d) => height - margin.bottom - d.y)
+      .attr("cy", (d) => height - margin.bottom - 5 - d.y)
       .attr("r", radius)
       .attr("fill", (d) => getPartyColor(d.data.winningParty) || "black");
 
@@ -57,8 +57,8 @@ const SingleBeeswarmChart = ({
     svg
       .append("text")
       .attr("x", margin.left)
-      .attr("y", margin.top)
-      .attr("font-size", "14px")
+      .attr("y", margin.top - 5)
+      .attr("font-size", "12px")
       .attr("font-weight", "bold")
       .text(party);
 
@@ -107,7 +107,7 @@ const BeeswarmChart = ({ data, width, radius, padding, margin, domain }) => {
     .flatMap(([_, constituencies]) => constituencies);
 
   return (
-    <div>
+    <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
       {majorParties.map((party) => (
         <SingleBeeswarmChart
           key={party}
