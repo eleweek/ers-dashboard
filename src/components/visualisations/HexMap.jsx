@@ -1,12 +1,11 @@
 import React, { useEffect, useRef, useState, useMemo } from "react";
 import "./HexMap.css";
 
-// ColourScale function (include the entire ColourScale function here)
+// ColourScale function
 function ColourScale(c) {
   let s, n;
   s = c;
   n = s.length;
-  // Get a colour given a value, and the range minimum/maximum
   this.getValue = function (v, min, max) {
     var c, a, b;
     v = (v - min) / (max - min);
@@ -30,7 +29,7 @@ function ColourScale(c) {
 }
 
 const COLOUR_SCALE = new ColourScale([
-  { rgb: [230, 221, 237], v: 0 }, // Slightly darker lightest shade
+  { rgb: [230, 221, 237], v: 0 },
   { rgb: [220, 207, 229], v: 0.1 },
   { rgb: [210, 193, 221], v: 0.2 },
   { rgb: [200, 179, 213], v: 0.3 },
@@ -40,11 +39,12 @@ const COLOUR_SCALE = new ColourScale([
   { rgb: [134, 103, 158], v: 0.7 },
   { rgb: [113, 77, 141], v: 0.8 },
   { rgb: [92, 51, 124], v: 0.9 },
-  { rgb: [71, 25, 107], v: 1 }, // Most intense purple (for higher values)
+  { rgb: [71, 25, 107], v: 1 },
 ]);
 
 export default function HexMap({ hexjson, data, valueType }) {
   const hexmapRef = useRef(null);
+  const hexInstanceRef = useRef(null);
   const [isRendered, setIsRendered] = useState(false);
 
   const { min, max } = useMemo(() => {
@@ -59,59 +59,118 @@ export default function HexMap({ hexjson, data, valueType }) {
 
   useEffect(() => {
     setIsRendered(true);
+    return () => setIsRendered(false);
   }, []);
 
   useEffect(() => {
-    if (isRendered && hexmapRef.current && window.OI && hexjson) {
-      const hex = new window.OI.hexmap(hexmapRef.current, {
-        hexjson: hexjson,
-        ready: function () {
-          this.data = data;
+    let hexInstance = null;
+    let isMounted = true;
 
-          // Correct usage of updateColours
-          this.updateColours((r) => {
-            return COLOUR_SCALE.getValue(data[r], min, max);
+    const initHexmap = () => {
+      if (!isMounted) return;
+      if (isRendered && hexmapRef.current && window.OI && hexjson) {
+        try {
+          hexInstance = new window.OI.hexmap(hexmapRef.current, {
+            hexjson: hexjson,
+            ready: function () {
+              if (!isMounted) return;
+              this.data = data;
+
+              this.updateColours((r) => {
+                return COLOUR_SCALE.getValue(data[r], min, max);
+              });
+
+              this.updateBoundaries((n, props) => {
+                if (props.type === "country")
+                  return {
+                    stroke: "black",
+                    "stroke-width": 2,
+                    "stroke-linecap": "round",
+                  };
+                if (props.type === "region")
+                  return {
+                    stroke: "black",
+                    "stroke-width": 0.5,
+                    "stroke-linecap": "round",
+                  };
+              });
+            },
           });
 
-          this.updateBoundaries((n, props) => {
-            if (props.type === "country")
-              return {
-                stroke: "black",
-                "stroke-width": 2,
-                "stroke-linecap": "round",
-              };
-            if (props.type === "region")
-              return {
-                stroke: "black",
-                "stroke-width": 0.5,
-                "stroke-linecap": "round",
-              };
+          hexInstance.on("mouseover", function (e) {
+            if (!isMounted) return;
+            const svg = e.data.hexmap.el;
+            const hex = e.target;
+            let tip = svg.querySelector(".tooltip");
+            if (!tip) {
+              tip = document.createElement("div");
+              tip.classList.add("tooltip");
+              svg.appendChild(tip);
+            }
+            tip.innerHTML = `${e.data.data.n}<br />${data[
+              e.data.region
+            ].toLocaleString()} ${valueType}<br />Region: ${e.data.data.a}`;
+            const bb = hex.getBoundingClientRect();
+            const bbo = svg.getBoundingClientRect();
+            tip.style.left = `${Math.round(
+              bb.left + bb.width / 2 - bbo.left + svg.scrollLeft
+            )}px`;
+            tip.style.top = `${Math.round(bb.top + bb.height / 2 - bbo.top)}px`;
           });
-        },
-      });
 
-      hex.on("mouseover", function (e) {
-        const svg = e.data.hexmap.el;
-        const hex = e.target;
-        let tip = svg.querySelector(".tooltip");
-        if (!tip) {
-          tip = document.createElement("div");
-          tip.classList.add("tooltip");
-          svg.appendChild(tip);
+          hexInstanceRef.current = hexInstance;
+        } catch (error) {
+          console.error("Error initializing hexmap:", error);
         }
-        console.log(e.data.hexmap, e.data.hexmap.data[e.data.region]);
-        tip.innerHTML = `${e.data.data.n}<br />${data[
-          e.data.region
-        ].toLocaleString()} ${valueType}<br />Region: ${e.data.data.a}`;
-        const bb = hex.getBoundingClientRect();
-        const bbo = svg.getBoundingClientRect();
-        tip.style.left = `${Math.round(
-          bb.left + bb.width / 2 - bbo.left + svg.scrollLeft
-        )}px`;
-        tip.style.top = `${Math.round(bb.top + bb.height / 2 - bbo.top)}px`;
-      });
-    }
-  }, [isRendered, hexjson, data, min, max]);
+      }
+    };
+
+    const timerId = setTimeout(initHexmap, 100);
+
+    return () => {
+      isMounted = false;
+      clearTimeout(timerId);
+      if (hexInstanceRef.current) {
+        try {
+          // Remove event listeners
+          if (
+            hexInstanceRef.current.callback &&
+            hexInstanceRef.current.callback.mouseover
+          ) {
+            hexInstanceRef.current.el.removeEventListener(
+              "mouseover",
+              hexInstanceRef.current.callback.mouseover
+            );
+          }
+
+          // Remove SVG elements
+          if (
+            hexInstanceRef.current.el &&
+            hexInstanceRef.current.el.parentNode
+          ) {
+            while (hexInstanceRef.current.el.firstChild) {
+              hexInstanceRef.current.el.removeChild(
+                hexInstanceRef.current.el.firstChild
+              );
+            }
+          }
+
+          // Remove tooltip if it exists
+          if (hexmapRef.current) {
+            const tooltip = hexmapRef.current.querySelector(".tooltip");
+            if (tooltip) {
+              tooltip.remove();
+            }
+          }
+
+          // Clear the hex instance
+          hexInstanceRef.current = null;
+        } catch (error) {
+          console.error("Error during cleanup:", error);
+        }
+      }
+    };
+  }, [isRendered, hexjson, data, min, max, valueType]);
 
   return (
     <figure>

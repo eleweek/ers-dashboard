@@ -713,7 +713,7 @@ function RegionAndUKPage({ data, page, pageParam }) {
               better under First Past the Post
             </div>
             <div className="gap-40"></div>
-            <HexMaps data={data} />
+            <HexMaps data={data} key={pageParam} />
             <div>
               Whether a seat is won with the lowest share of the vote or
               highest, it makes no difference in Westminster. Likewise, a party
