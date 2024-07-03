@@ -331,7 +331,6 @@ function getPartiesTableSettings(partiesTableColumns, data) {
 
 function HexMaps({ data }) {
   const [tab, setTab] = useState("decisive");
-  console.log("Tab", tab);
 
   const decisiveVotes = Object.fromEntries(
     data.constituencies.map((constituency) => {
@@ -439,8 +438,6 @@ function ConstituencyPage({ data, selectedConstituency, page }) {
     partiesTableColumns,
     data
   );
-
-  console.log("Const page data", data);
 
   const selectedConstituencyWinningParty = selectedConstituency
     ? data.parties.find((party) => {
