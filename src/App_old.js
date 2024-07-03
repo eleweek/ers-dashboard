@@ -380,7 +380,7 @@ function HexMaps({ data }) {
 
   return (
     <div>
-      <div class="btn-group" role="group" aria-label="Basic example">
+      <div className="btn-group" role="group" aria-label="Basic example">
         <button
           type="button"
           class={classNames(
