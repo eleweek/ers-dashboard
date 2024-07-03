@@ -42,6 +42,33 @@ const COLOUR_SCALE = new ColourScale([
   { rgb: [71, 25, 107], v: 1 },
 ]);
 
+function HexMapLegend({ min, max }) {
+  const gradientStops = 10; // Number of color stops in the gradient
+
+  return (
+    <div className="hexmap-legend">
+      <div className="legend-gradient">
+        {[...Array(gradientStops)].map((_, index) => {
+          const value = max - (index / (gradientStops - 1)) * (max - min);
+          return (
+            <div
+              key={index}
+              className="gradient-stop"
+              style={{
+                backgroundColor: COLOUR_SCALE.getValue(value, min, max),
+              }}
+            ></div>
+          );
+        })}
+      </div>
+      <div className="legend-labels">
+        <span className="min-label">{min.toLocaleString()}</span>
+        <span className="max-label">{max.toLocaleString()}</span>
+      </div>
+    </div>
+  );
+}
+
 export default function HexMap({ hexjson, data, valueType }) {
   const hexmapRef = useRef(null);
   const hexInstanceRef = useRef(null);
@@ -202,7 +229,9 @@ export default function HexMap({ hexjson, data, valueType }) {
         className="hexmap"
         ref={hexmapRef}
         style={{ visibility: isRendered ? "visible" : "hidden" }}
-      ></div>
+      >
+        {isRendered && <HexMapLegend min={min} max={max} />}
+      </div>
     </figure>
   );
 }

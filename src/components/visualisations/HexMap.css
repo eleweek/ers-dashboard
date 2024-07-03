@@ -46,3 +46,39 @@
   border-color: transparent;
   border-bottom-color: black;
 }
+
+.hexmap-legend {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  display: flex;
+  align-items: stretch;
+  height: 200px;
+  background-color: rgba(255, 255, 255, 0.8);
+  padding: 10px;
+  border-radius: 5px;
+  z-index: 1000; /* Ensure the legend appears above the hexmap */
+}
+
+.legend-gradient {
+  width: 30px;
+  display: flex;
+  flex-direction: column-reverse;
+}
+
+.gradient-stop {
+  flex-grow: 1;
+}
+
+.legend-labels {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  margin-left: 10px;
+  font-size: 12px;
+}
+
+.max-label,
+.min-label {
+  white-space: nowrap;
+}
