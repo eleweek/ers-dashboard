@@ -43,27 +43,32 @@ const COLOUR_SCALE = new ColourScale([
 ]);
 
 function HexMapLegend({ min, max }) {
-  const gradientStops = 10;
+  const mid = Math.round(min + (max - min) * 0.5);
 
   return (
     <div className="hexmap-legend">
       <div className="legend-gradient">
-        {[...Array(gradientStops)].map((_, index) => {
-          const value = max - (index / (gradientStops - 1)) * (max - min);
-          return (
-            <div
-              key={index}
-              className="gradient-stop"
-              style={{
-                backgroundColor: COLOUR_SCALE.getValue(value, min, max),
-              }}
-            ></div>
-          );
-        })}
+        <div
+          style={{
+            background: `linear-gradient(to top, 
+              ${COLOUR_SCALE.getValue(min, min, max)}, 
+              ${COLOUR_SCALE.getValue(max, min, max)}
+            )`,
+            width: "25px",
+            height: "200px",
+          }}
+        />
       </div>
       <div className="legend-labels">
-        <span className="max-label">{max.toLocaleString()}</span>
-        <span className="min-label">{min.toLocaleString()}</span>
+        <span className="max-label" style={{ top: "0%" }}>
+          {max.toLocaleString()} votes
+        </span>
+        <span className="third-label" style={{ top: "50%" }}>
+          {mid.toLocaleString()}
+        </span>
+        <span className="min-label" style={{ top: "100%" }}>
+          {min.toLocaleString()}
+        </span>
       </div>
     </div>
   );
