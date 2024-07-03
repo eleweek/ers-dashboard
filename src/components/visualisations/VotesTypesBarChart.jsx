@@ -12,9 +12,9 @@ export default function VotesTypesBarChart({ parties }) {
 
   const createChart = () => {
     const width = 928;
-    const height = 500;
+    const height = 350;
     const marginTop = 30;
-    const marginRight = 120; // Increased right margin for legend
+    const marginRight = 130; // Increased right margin for legend
     const marginBottom = 30;
     const marginLeft = 150;
 
@@ -59,7 +59,8 @@ export default function VotesTypesBarChart({ parties }) {
     const color = d3
       .scaleOrdinal()
       .domain(categories)
-      .range(["#008000", "#F1C40F", "#FF6347"]);
+      .range(["#3e6657", "#ffd3b6", "#a3454c"]);
+    // .range(["#a8e6cf", "#ffd3b6", "#ff8b94"]);
 
     svg
       .append("g")
@@ -98,14 +99,17 @@ export default function VotesTypesBarChart({ parties }) {
     // Legend
     const legend = svg
       .append("g")
-      .attr("transform", `translate(${width - marginRight + 10}, ${marginTop})`)
+      .attr(
+        "transform",
+        `translate(${width - marginRight + 10}, ${marginTop + 3})`
+      )
       .attr("text-anchor", "start")
       .attr("font-family", "sans-serif")
-      .attr("font-size", 10)
+      .attr("font-size", 14)
       .selectAll("g")
       .data(categories)
       .join("g")
-      .attr("transform", (d, i) => `translate(0,${i * 20})`);
+      .attr("transform", (d, i) => `translate(0,${i * 24})`);
 
     legend
       .append("rect")
@@ -116,10 +120,19 @@ export default function VotesTypesBarChart({ parties }) {
 
     legend
       .append("text")
-      .attr("x", 24)
+      .attr("x", 25)
       .attr("y", 9.5)
       .attr("dy", "0.35em")
-      .text((d) => d.replace(/([A-Z])/g, " $1").trim());
+      .text((d) => {
+        const result = d
+          .replace(/([A-Z])/g, " $1")
+          .toLowerCase()
+          .trim();
+
+        return result !== "decisive votes"
+          ? result.replace(" votes", "")
+          : result;
+      });
   };
 
   return <svg ref={svgRef}></svg>;
