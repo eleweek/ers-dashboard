@@ -81,15 +81,14 @@ export default function VotesTypesBarChart({ parties }) {
     const yAxis = (g) =>
       g
         .attr("transform", `translate(${marginLeft},0)`)
-        .call(d3.axisLeft(y).tickSizeOuter(0))
-        .call((g) => g.selectAll(".domain").remove())
         .call(
-          (g) =>
-            g
-              .selectAll(".tick text")
-              .attr("dx", "-0.25em") // Increase space between tick and label
-              .attr("font-size", "14px") // Increase font size
-        );
+          d3
+            .axisLeft(y)
+            .tickSize(0) // This removes the tick lines
+            .tickPadding(10) // This adds some padding between the labels and where the ticks would be
+        )
+        .call((g) => g.select(".domain").remove()) // This removes the axis line
+        .call((g) => g.selectAll(".tick text").attr("font-size", "14px"));
 
     const xAxis = (g) =>
       g

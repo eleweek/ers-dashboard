@@ -1,6 +1,8 @@
 import React, { useEffect, useRef } from "react";
 import * as d3 from "d3";
 
+import { displayedPartyName } from "./utils";
+
 export default function VotesPerMPBarChart({ parties }) {
   const svgRef = useRef();
 
@@ -21,7 +23,7 @@ export default function VotesPerMPBarChart({ parties }) {
     const marginTop = 30;
     const marginRight = 60;
     const marginBottom = 10;
-    const marginLeft = 120;
+    const marginLeft = 180;
     const width = 928;
     const height =
       Math.ceil((sortedParties.length + 0.1) * barHeight) +
@@ -45,7 +47,7 @@ export default function VotesPerMPBarChart({ parties }) {
 
     const y = d3
       .scaleBand()
-      .domain(sortedParties.map((d) => d.name))
+      .domain(sortedParties.map((party) => displayedPartyName(party)))
       .rangeRound([marginTop, height - marginBottom])
       .padding(0.1);
 
@@ -57,7 +59,7 @@ export default function VotesPerMPBarChart({ parties }) {
       .data(sortedParties)
       .join("rect")
       .attr("x", marginLeft)
-      .attr("y", (d) => y(d.name))
+      .attr("y", (d) => y(displayedPartyName(d)))
       .attr("width", (d) => x(d.totalVotesPerSeat) - marginLeft)
       .attr("height", y.bandwidth())
       .attr("fill", (d) => d.colour);
@@ -70,7 +72,7 @@ export default function VotesPerMPBarChart({ parties }) {
       .data(sortedParties)
       .join("text")
       .attr("x", (d) => x(0) + 10)
-      .attr("y", (d) => y(d.name) + y.bandwidth() / 2)
+      .attr("y", (d) => y(displayedPartyName(d)) + y.bandwidth() / 2)
       .attr("dy", "0.35em")
       .attr("dx", -4)
       .text((d) => (d.totalSeats === 0 ? "No MPs elected" : ""))
@@ -91,8 +93,11 @@ export default function VotesPerMPBarChart({ parties }) {
     svg
       .append("g")
       .attr("transform", `translate(${marginLeft},0)`)
-      .call(d3.axisLeft(y).tickSizeOuter(0))
-      .call((g) => g.selectAll(".tick text").attr("font-size", "16px"));
+      .call(d3.axisLeft(y).tickSize(0)) // This removes the tick lines
+      .call((g) => {
+        g.selectAll(".tick text").attr("font-size", "16px").attr("x", -10); // This moves the text labels slightly to the right
+        g.select(".domain").remove(); // This removes the left vertical line
+      });
   };
 
   return <svg ref={svgRef}></svg>;
