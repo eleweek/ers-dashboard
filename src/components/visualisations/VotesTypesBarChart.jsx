@@ -1,5 +1,6 @@
 import React, { useEffect, useRef } from "react";
 import * as d3 from "d3";
+import { displayedPartyName } from "./utils";
 
 export default function VotesTypesBarChart({ parties }) {
   const svgRef = useRef();
@@ -14,7 +15,7 @@ export default function VotesTypesBarChart({ parties }) {
     const width = 928;
     const height = 350;
     const marginTop = 30;
-    const marginRight = 130; // Increased right margin for legend
+    const marginRight = 140; // Increased right margin for legend
     const marginBottom = 30;
     const marginLeft = 150;
 
@@ -35,7 +36,7 @@ export default function VotesTypesBarChart({ parties }) {
       .map((party) => {
         const total = categories.reduce((sum, cat) => sum + party[cat], 0);
         return {
-          name: party.name,
+          name: displayedPartyName(party),
           ...Object.fromEntries(
             categories.map((cat) => [cat, (party[cat] / total) * 100])
           ),
@@ -54,7 +55,8 @@ export default function VotesTypesBarChart({ parties }) {
     const x = d3
       .scaleLinear()
       .domain([0, 100])
-      .range([marginLeft, width - marginRight]);
+      .range([marginLeft, width - marginRight])
+      .nice();
 
     const color = d3
       .scaleOrdinal()
@@ -80,18 +82,32 @@ export default function VotesTypesBarChart({ parties }) {
       g
         .attr("transform", `translate(${marginLeft},0)`)
         .call(d3.axisLeft(y).tickSizeOuter(0))
-        .call((g) => g.selectAll(".domain").remove());
+        .call((g) => g.selectAll(".domain").remove())
+        .call(
+          (g) =>
+            g
+              .selectAll(".tick text")
+              .attr("dx", "-0.25em") // Increase space between tick and label
+              .attr("font-size", "14px") // Increase font size
+        );
 
     const xAxis = (g) =>
       g
-        .attr("transform", `translate(0,${marginTop})`)
+        .attr("transform", `translate(0,${marginTop + 2})`)
         .call(
           d3
             .axisTop(x)
             .ticks(width / 80)
             .tickFormat((d) => `${d3.format(".0f")(d)}%`)
         )
-        .call((g) => g.selectAll(".domain").remove());
+        .call((g) => g.selectAll(".domain").remove())
+        .call(
+          (g) =>
+            g
+              .selectAll(".tick text")
+              .attr("dy", "-0.2em") // Increase space between tick and label
+              .attr("font-size", "13px") // Increase font size
+        );
 
     svg.append("g").call(xAxis);
     svg.append("g").call(yAxis);
@@ -105,7 +121,7 @@ export default function VotesTypesBarChart({ parties }) {
       )
       .attr("text-anchor", "start")
       .attr("font-family", "sans-serif")
-      .attr("font-size", 14)
+      .attr("font-size", 16)
       .selectAll("g")
       .data(categories)
       .join("g")
