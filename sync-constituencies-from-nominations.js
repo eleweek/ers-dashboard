@@ -22,7 +22,7 @@ async function processXmlFile(sftp, filePath) {
       result.FirstPastThePostNominations.Election[0].Constituency[0].$.name;
     const urlPart = escapeString(constituencyName);
 
-    return `${constituencyName},${urlPart}\n`;
+    return `${constituencyName};${urlPart}\n`;
   } catch (error) {
     console.error(`Error processing file ${filePath}:`, error);
     return "";
@@ -31,7 +31,7 @@ async function processXmlFile(sftp, filePath) {
 
 async function main() {
   const sftp = new Client();
-  let csvContent = "Name,urlPart\n"; // CSV header
+  let csvContent = "Name;urlPart\n"; // CSV header
 
   try {
     await sftp.connect({
