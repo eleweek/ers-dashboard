@@ -598,7 +598,7 @@ function PartiesSeatsTable({ parties }) {
 }
 
 const processDataForBeeswarm = (data) => {
-  return data.constituencies.map((constituency) => {
+  const processedData = data.constituencies.map((constituency) => {
     const constituencyData = constituency.data.Election[0].Constituency[0];
     const totalVotes = constituencyData.Candidate.reduce(
       (sum, candidate) => sum + parseInt(candidate.Party[0].$.votes, 10),
@@ -618,6 +618,11 @@ const processDataForBeeswarm = (data) => {
       totalVotes: totalVotes,
     };
   });
+
+  const minValue = Math.min(...processedData.map((d) => d.value));
+  const maxValue = Math.max(...processedData.map((d) => d.value));
+
+  return { data: processedData, minValue, maxValue };
 };
 
 function RegionAndUKPage({ data, page, pageParam }) {
@@ -644,7 +649,11 @@ function RegionAndUKPage({ data, page, pageParam }) {
         : "England"
       : "";
 
-  const beeswarmData = processDataForBeeswarm(data);
+  const {
+    data: beeswarmData,
+    minValue: beeswarmMinValue,
+    maxValue: beeswarmMaxValue,
+  } = processDataForBeeswarm(data);
 
   return (
     <>
@@ -788,7 +797,7 @@ function RegionAndUKPage({ data, page, pageParam }) {
               radius={4}
               padding={1.5}
               margin={{ top: 20, right: 20, bottom: 50, left: 20 }}
-              domain={[0, d3.max(beeswarmData, (d) => d.value)]}
+              domain={[beeswarmMinValue, beeswarmMaxValue]}
             />
           </div>
         </div>
