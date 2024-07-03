@@ -1,12 +1,10 @@
 import * as d3 from "d3";
-
 import { displayedPartyName, getPartyColor } from "./utils";
 
 export default function DotPlot({ parties }) {
-  console.log("DotPlot", parties);
   const width = 700;
   const height = 400;
-  const margin = { top: 20, right: 20, bottom: 40, left: 180 };
+  const margin = { top: 40, right: 100, bottom: 40, left: 180 };
   const plotWidth = width - margin.left - margin.right;
   const plotHeight = height - margin.top - margin.bottom;
 
@@ -30,6 +28,13 @@ export default function DotPlot({ parties }) {
     .domain(parties)
     .range(parties.map((party) => getPartyColor(party.abbreviation)));
 
+  const formatPercent = (value) => `${value.toFixed(1)}%`;
+
+  // Function to determine if labels should be combined
+  const shouldCombineLabels = (votesShare, seatsShare) => {
+    return Math.abs(xScale(votesShare) - xScale(seatsShare)) < 50; // Adjust this threshold as needed
+  };
+
   return (
     <svg width={width} height={height}>
       <defs>
@@ -39,9 +44,9 @@ export default function DotPlot({ parties }) {
             d3.rgb(color).b
           }, 0.3)`;
 
-          console.log(party);
           return (
             <linearGradient
+              key={`gradient-${i}`}
               id={`gradient-${i}`}
               x1={xScale(party.totalVotesShare)}
               y1={yScale(party.name)}
@@ -71,7 +76,7 @@ export default function DotPlot({ parties }) {
 
         {/* Y-axis */}
         <g>
-          {parties.map((party, i) => (
+          {parties.map((party) => (
             <text
               key={party.abbreviation}
               x={-10}
@@ -84,7 +89,7 @@ export default function DotPlot({ parties }) {
           ))}
         </g>
 
-        {/* Dots and arrows */}
+        {/* Dots, arrows, and labels */}
         {parties.map((party, i) => {
           const color = colorScale(party);
           const lightColor = `rgba(${d3.rgb(color).r}, ${d3.rgb(color).g}, ${
@@ -94,10 +99,18 @@ export default function DotPlot({ parties }) {
           const hasLessSeats = party.totalSeatsShare < party.totalVotesShare;
           const triangleRotation = hasLessSeats ? -90 : 90;
 
+          const votesX = xScale(party.totalVotesShare);
+          const seatsX = xScale(party.totalSeatsShare);
+
+          const combinedLabels = shouldCombineLabels(
+            party.totalVotesShare,
+            party.totalSeatsShare
+          );
+
           return (
             <g key={party.name}>
               <circle
-                cx={xScale(party.totalVotesShare)}
+                cx={votesX}
                 cy={yScale(party.name)}
                 r={3.5}
                 fill={lightColor}
@@ -105,18 +118,70 @@ export default function DotPlot({ parties }) {
               <path
                 d="M 0 -4 L 4 4 L -4 4 Z"
                 fill={color}
-                transform={`translate(${xScale(
-                  party.totalSeatsShare
-                )}, ${yScale(party.name)}) rotate(${triangleRotation})`}
+                transform={`translate(${seatsX}, ${yScale(
+                  party.name
+                )}) rotate(${triangleRotation})`}
               />
               <line
-                x1={xScale(party.totalVotesShare)}
+                x1={votesX}
                 y1={yScale(party.name)}
-                x2={xScale(party.totalSeatsShare)}
+                x2={seatsX}
                 y2={yScale(party.name)}
                 stroke={`url(#gradient-${i})`}
                 strokeWidth={1.5}
               />
+
+              {/* Labels */}
+              {combinedLabels ? (
+                (() => {
+                  const arrow =
+                    party.totalVotesShare < party.totalSeatsShare ? "→" : "←";
+                  const labelText =
+                    party.totalVotesShare < party.totalSeatsShare
+                      ? `${formatPercent(
+                          party.totalVotesShare
+                        )} votes ${arrow} ${formatPercent(
+                          party.totalSeatsShare
+                        )} seats`
+                      : `${formatPercent(
+                          party.totalSeatsShare
+                        )} seats ${arrow} ${formatPercent(
+                          party.totalVotesShare
+                        )} votes`;
+                  return (
+                    <text
+                      x={(votesX + seatsX) / 2}
+                      y={yScale(party.name) - 15}
+                      fill={color}
+                      textAnchor="middle"
+                      fontSize="12px"
+                    >
+                      {labelText}
+                    </text>
+                  );
+                })()
+              ) : (
+                <>
+                  <text
+                    x={votesX}
+                    y={yScale(party.name) - 15}
+                    fill={color}
+                    textAnchor="middle"
+                    fontSize="12px"
+                  >
+                    {`${formatPercent(party.totalVotesShare)} votes`}
+                  </text>
+                  <text
+                    x={seatsX}
+                    y={yScale(party.name) - 15}
+                    fill={color}
+                    textAnchor="middle"
+                    fontSize="12px"
+                  >
+                    {`${formatPercent(party.totalSeatsShare)} seats`}
+                  </text>
+                </>
+              )}
             </g>
           );
         })}
