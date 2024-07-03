@@ -63,33 +63,40 @@ export default function HexMap({ hexjson, data, valueType }) {
   }, []);
 
   useEffect(() => {
-    let hexInstance = null;
     let isMounted = true;
 
     const initHexmap = () => {
-      if (!isMounted) return;
-      if (isRendered && hexmapRef.current && window.OI && hexjson) {
-        try {
-          if (!hexInstanceRef.current) {
-            hexInstance = new window.OI.hexmap(hexmapRef.current, {
-              hexjson: hexjson,
-              ready: function () {
-                if (!isMounted) return;
-                this.data = data;
-                updateHexmapColors(this);
-                setupHexmapEvents(this);
-              },
-            });
-            hexInstanceRef.current = hexInstance;
-          } else {
-            hexInstance = hexInstanceRef.current;
-            hexInstance.data = data;
-            updateHexmapColors(hexInstance);
-          }
-        } catch (error) {
-          console.error("Error initializing hexmap:", error);
+      if (
+        !isMounted ||
+        !isRendered ||
+        !hexmapRef.current ||
+        !window.OI ||
+        !hexjson
+      )
+        return;
+
+      try {
+        if (!hexInstanceRef.current) {
+          hexInstanceRef.current = new window.OI.hexmap(hexmapRef.current, {
+            hexjson: hexjson,
+            ready: function () {
+              if (!isMounted) return;
+              updateHexmap(this);
+            },
+          });
+        } else {
+          updateHexmap(hexInstanceRef.current);
         }
+      } catch (error) {
+        console.error("Error initializing or updating hexmap:", error);
       }
+    };
+
+    const updateHexmap = (instance) => {
+      instance.data = data;
+      updateHexmapColors(instance);
+      updateHexmapBoundaries(instance);
+      setupHexmapEvents(instance);
     };
 
     const updateHexmapColors = (instance) => {
@@ -98,7 +105,33 @@ export default function HexMap({ hexjson, data, valueType }) {
       });
     };
 
+    const updateHexmapBoundaries = (instance) => {
+      instance.updateBoundaries((n, props) => {
+        if (props.type === "country")
+          return {
+            stroke: "black",
+            "stroke-width": 2,
+            "stroke-linecap": "round",
+          };
+        if (props.type === "region")
+          return {
+            stroke: "black",
+            "stroke-width": 0.5,
+            "stroke-linecap": "round",
+          };
+      });
+    };
+
     const setupHexmapEvents = (instance) => {
+      // Remove existing event listener if any
+      if (instance.callback && instance.callback.mouseover) {
+        instance.el.removeEventListener(
+          "mouseover",
+          instance.callback.mouseover
+        );
+      }
+
+      // Add new event listener
       instance.on("mouseover", function (e) {
         if (!isMounted) return;
         const svg = e.data.hexmap.el;
@@ -114,10 +147,8 @@ export default function HexMap({ hexjson, data, valueType }) {
         ].toLocaleString()} ${valueType}<br />Region: ${e.data.data.a}`;
         const bb = hex.getBoundingClientRect();
         const bbo = svg.getBoundingClientRect();
-        tip.style.left = `${Math.round(
-          bb.left + bb.width / 2 - bbo.left + svg.scrollLeft
-        )}px`;
-        tip.style.top = `${Math.round(bb.top + bb.height / 2 - bbo.top)}px`;
+        tip.style.left = `${bb.left + bb.width / 2 - bbo.left}px`;
+        tip.style.top = `${bb.top + bb.height / 2 - bbo.top}px`;
       });
     };
 
@@ -128,7 +159,7 @@ export default function HexMap({ hexjson, data, valueType }) {
       clearTimeout(timerId);
       if (hexInstanceRef.current) {
         try {
-          // Remove event listeners and clean up
+          // Remove event listeners
           if (
             hexInstanceRef.current.callback &&
             hexInstanceRef.current.callback.mouseover

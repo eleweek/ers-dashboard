@@ -13,7 +13,7 @@
 }
 
 .hexmap .hover path {
-  stroke-width: 4px;
+  stroke-width: 2px;
 }
 
 @media only screen and (max-width: 700px) {
