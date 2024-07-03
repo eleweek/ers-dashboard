@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { orderBy, values, pick, forEach } from "lodash";
 
+import * as d3 from "d3";
+
 import hex2019 from "./2019-constituencies.json";
 
 import {
@@ -22,6 +24,7 @@ import JoinNewsletter from "./components/JoinNewsletter";
 import HexMap from "./components/visualisations/HexMap";
 import SeatsDeclared from "./components/SeatsDeclared";
 import Subscribe from "./components/Subscribe";
+import BeeswarmChart from "./components/visualisations/BeeswarmChart";
 
 import Footer from "./components/Footer";
 import TopMenu, { englandSubRegionSelector } from "./components/TopMenu";
@@ -603,6 +606,23 @@ function PartiesSeatsTable({ parties }) {
   );
 }
 
+const processDataForBeeswarm = (data) => {
+  return data.constituencies.map((constituency) => {
+    const constituencyData = constituency.data.Election[0].Constituency[0];
+    const winningCandidate = constituencyData.Candidate.find(
+      (c) => c.$.elected
+    );
+
+    console.log("beeSwarm constituencyData", constituencyData);
+    console.log("beeSwarm winningCandidate", winningCandidate);
+    return {
+      name: constituencyData.$.name,
+      value: parseInt(winningCandidate.Party[0].$.votes, 10),
+      winningParty: constituencyData.$.winningParty,
+    };
+  });
+};
+
 function RegionAndUKPage({ data, page, pageParam }) {
   console.log("data", data);
 
@@ -628,6 +648,8 @@ function RegionAndUKPage({ data, page, pageParam }) {
           )
         : "England"
       : "";
+
+  const beeswarmData = processDataForBeeswarm(data);
 
   return (
     <>
@@ -761,6 +783,16 @@ function RegionAndUKPage({ data, page, pageParam }) {
               outcome is the same. But knowing that your vote made no difference
               to the result isn’t good for voters.
             </div>
+
+            <BeeswarmChart
+              data={beeswarmData}
+              width={1000}
+              height={450}
+              radius={5}
+              padding={1.5}
+              margin={{ top: 20, right: 20, bottom: 50, left: 20 }}
+              domain={[0, d3.max(beeswarmData, (d) => d.value)]}
+            />
           </div>
         </div>
       </div>
