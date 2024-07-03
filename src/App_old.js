@@ -413,12 +413,7 @@ function HexMaps({ data }) {
           Wasted
         </button>
       </div>
-      <HexMap
-        key={valueType}
-        hexjson={hex2019}
-        data={hexmapData}
-        valueType={valueType}
-      />
+      <HexMap hexjson={hex2019} data={hexmapData} valueType={valueType} />
     </div>
   );
 }
