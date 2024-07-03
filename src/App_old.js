@@ -278,7 +278,6 @@ const calculatePartyPercentagesAndVotesPerSeat = (
   totalSeatsPrev,
   totalVotesPrev
 ) => {
-  console.log("cpppavps parties", parties);
   return parties.map((party) => ({
     ...party,
     totalSeatsShare: percentage(party.totalSeats / totalSeats),
@@ -630,8 +629,6 @@ const processDataForBeeswarm = (data) => {
 };
 
 function RegionAndUKPage({ data, page, pageParam }) {
-  console.log("data", data);
-
   const wastedVotes = percentage(data.wastedVotes / data.totalVotes);
 
   const partiesTableColumns = [
@@ -884,8 +881,6 @@ function App() {
       calculatePartyData(newData.constituencies);
 
     newData.parties = orderBy(parties, ["totalSeats"], ["desc"]);
-    console.log("newData.parties", newData.parties);
-    console.log("parties", parties);
 
     newData.wastedVotes = wastedVotes;
     newData.totalVotes = totalVotes;
@@ -910,9 +905,6 @@ function App() {
         pageParam
       );
     }
-
-    console.log("newData.parties", newData.parties);
-    console.log("parties", parties);
 
     newData.parties = calculatePartyPercentagesAndVotesPerSeat(
       newData.parties,
@@ -947,15 +939,9 @@ function App() {
     setData(newData);
   };
 
-  console.log("App data", data);
-
-  console.log("setSubscribePopupOpened", typeof setSubscribePopupOpened);
-
   const selectedConstituency =
     page === "constituency" &&
     data.constituencies[0].data.Election[0].Constituency[0];
-
-  console.log("selectedConstituency", selectedConstituency);
 
   const selectedConstituencyRegionName =
     page === "constituency"
