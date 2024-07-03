@@ -1,11 +1,12 @@
 import * as d3 from "d3";
 
-import { getPartyColor } from "./utils";
+import { displayedPartyName, getPartyColor } from "./utils";
 
 export default function DotPlot({ parties }) {
-  const width = 600;
+  console.log("DotPlot", parties);
+  const width = 700;
   const height = 400;
-  const margin = { top: 20, right: 20, bottom: 40, left: 120 };
+  const margin = { top: 20, right: 20, bottom: 40, left: 180 };
   const plotWidth = width - margin.left - margin.right;
   const plotHeight = height - margin.top - margin.bottom;
 
@@ -78,7 +79,7 @@ export default function DotPlot({ parties }) {
               textAnchor="end"
               alignmentBaseline="middle"
             >
-              {party.name}
+              {displayedPartyName(party)}
             </text>
           ))}
         </g>

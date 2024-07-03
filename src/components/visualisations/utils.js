@@ -17,3 +17,15 @@ const PARTY_COLORS = {
 export const getPartyColor = (party) => {
   return PARTY_COLORS[party] || null;
 };
+
+export const displayedPartyName = (party) => {
+  switch (party.abbreviation) {
+    case "SNP":
+    case "DUP":
+    case "SDLP":
+    case "UUP":
+      return party.abbreviation;
+    default:
+      return party.name;
+  }
+};
