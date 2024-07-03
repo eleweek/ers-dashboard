@@ -73,7 +73,11 @@ const SingleBeeswarmChart = ({
       .on("mouseover", (event, d) => {
         tooltip.transition().duration(200).style("opacity", 0.9);
         tooltip
-          .html(`${d.data.name}<br/>Votes: ${d.data.value}`)
+          .html(
+            `${d.data.name}<br/>
+                      Percentage: ${d.data.value.toFixed(2)}%<br/>
+                      Votes: ${d.data.actualVotes.toLocaleString()} / ${d.data.totalVotes.toLocaleString()}`
+          )
           .style("left", event.pageX + 10 + "px")
           .style("top", event.pageY - 28 + "px");
       })

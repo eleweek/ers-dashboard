@@ -609,16 +609,22 @@ function PartiesSeatsTable({ parties }) {
 const processDataForBeeswarm = (data) => {
   return data.constituencies.map((constituency) => {
     const constituencyData = constituency.data.Election[0].Constituency[0];
+    const totalVotes = constituencyData.Candidate.reduce(
+      (sum, candidate) => sum + parseInt(candidate.Party[0].$.votes, 10),
+      0
+    );
     const winningCandidate = constituencyData.Candidate.find(
       (c) => c.$.elected
     );
+    const winningVotes = parseInt(winningCandidate.Party[0].$.votes, 10);
+    const votePercentage = (winningVotes / totalVotes) * 100;
 
-    console.log("beeSwarm constituencyData", constituencyData);
-    console.log("beeSwarm winningCandidate", winningCandidate);
     return {
       name: constituencyData.$.name,
-      value: parseInt(winningCandidate.Party[0].$.votes, 10),
+      value: votePercentage,
       winningParty: constituencyData.$.winningParty,
+      actualVotes: winningVotes,
+      totalVotes: totalVotes,
     };
   });
 };
