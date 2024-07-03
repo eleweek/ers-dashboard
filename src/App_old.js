@@ -765,12 +765,6 @@ function RegionAndUKPage({ data, page, pageParam }) {
         </div>
       </div>
       <div className="gap-40"></div>
-      <MagicButtons
-        backendHost={BACKEND_HOST}
-        page={window.location.pathname}
-        frontendHost={FRONTEND_HOST}
-      />
-      <div className="gap-40"></div>
       <SignPetition
         oneDecimal={oneDecimal}
         wastedVotes={wastedVotes}
