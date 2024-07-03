@@ -43,7 +43,7 @@ const COLOUR_SCALE = new ColourScale([
 ]);
 
 function HexMapLegend({ min, max }) {
-  const gradientStops = 10; // Number of color stops in the gradient
+  const gradientStops = 10;
 
   return (
     <div className="hexmap-legend">
@@ -62,8 +62,8 @@ function HexMapLegend({ min, max }) {
         })}
       </div>
       <div className="legend-labels">
-        <span className="min-label">{min.toLocaleString()}</span>
         <span className="max-label">{max.toLocaleString()}</span>
+        <span className="min-label">{min.toLocaleString()}</span>
       </div>
     </div>
   );
@@ -125,15 +125,14 @@ export default function HexMap({ hexjson, data, valueType }) {
       updateHexmapBoundaries(instance);
       setupHexmapEvents(instance);
 
-      // Add this line to remove hover classes after update
-      setTimeout(() => removeHoverClasses(instance), 0);
+      // Remove hover classes after update
+      setTimeout(() => removeAllHoverClasses(instance), 0);
     };
 
-    // Add this new function
-    const removeHoverClasses = (instance) => {
+    const removeAllHoverClasses = (instance) => {
       if (instance && instance.el) {
         instance.el
-          .querySelectorAll(".hover")
+          .querySelectorAll(".hex.hover")
           .forEach((el) => el.classList.remove("hover"));
       }
     };
@@ -162,33 +161,85 @@ export default function HexMap({ hexjson, data, valueType }) {
     };
 
     const setupHexmapEvents = (instance) => {
-      // Remove existing event listener if any
-      if (instance.callback && instance.callback.mouseover) {
-        instance.el.removeEventListener(
-          "mouseover",
-          instance.callback.mouseover
-        );
+      // Remove existing event listeners if any
+      if (instance.callback) {
+        if (instance.callback.mouseover) {
+          instance.el.removeEventListener(
+            "mouseover",
+            instance.callback.mouseover
+          );
+        }
+        if (instance.callback.mouseout) {
+          instance.el.removeEventListener(
+            "mouseout",
+            instance.callback.mouseout
+          );
+        }
       }
 
-      // Add new event listener
+      // Add new event listeners
       instance.on("mouseover", function (e) {
         if (!isMounted) return;
-        const svg = e.data.hexmap.el;
-        const hex = e.target;
-        let tip = svg.querySelector(".tooltip");
-        if (!tip) {
-          tip = document.createElement("div");
-          tip.classList.add("tooltip");
-          svg.appendChild(tip);
+        const hex = e.target.closest(".hex");
+        if (hex) {
+          hex.classList.add("hover");
+          showTooltip(e, instance);
         }
-        tip.innerHTML = `${e.data.data.n}<br />${data[
-          e.data.region
-        ].toLocaleString()} ${valueType}<br />Region: ${e.data.data.a}`;
-        const bb = hex.getBoundingClientRect();
-        const bbo = svg.getBoundingClientRect();
-        tip.style.left = `${bb.left + bb.width / 2 - bbo.left}px`;
-        tip.style.top = `${bb.top + bb.height / 2 - bbo.top}px`;
       });
+
+      instance.on("mouseout", function (e) {
+        if (!isMounted) return;
+        const hex = e.target.closest(".hex");
+        if (hex) {
+          hex.classList.remove("hover");
+          hideTooltip(instance);
+        }
+      });
+
+      // Add mouseout event for the entire hexmap container
+      instance.el.addEventListener("mouseout", function (e) {
+        if (!isMounted) return;
+        if (!instance.el.contains(e.relatedTarget)) {
+          removeAllHoverClasses(instance);
+          hideTooltip(instance);
+        }
+      });
+
+      // Add mousemove event to handle cases where the mouseout event might not fire
+      instance.el.addEventListener("mousemove", function (e) {
+        if (!isMounted) return;
+        const hex = e.target.closest(".hex");
+        if (!hex) {
+          removeAllHoverClasses(instance);
+          hideTooltip(instance);
+        }
+      });
+    };
+
+    const showTooltip = (e, instance) => {
+      const svg = e.data.hexmap.el;
+      const hex = e.target.closest(".hex");
+      let tip = svg.querySelector(".tooltip");
+      if (!tip) {
+        tip = document.createElement("div");
+        tip.classList.add("tooltip");
+        svg.appendChild(tip);
+      }
+      tip.innerHTML = `${e.data.data.n}<br />${data[
+        e.data.region
+      ].toLocaleString()} ${valueType}<br />Region: ${e.data.data.a}`;
+      const bb = hex.getBoundingClientRect();
+      const bbo = svg.getBoundingClientRect();
+      tip.style.left = `${bb.left + bb.width / 2 - bbo.left}px`;
+      tip.style.top = `${bb.top + bb.height / 2 - bbo.top}px`;
+      tip.style.display = "block";
+    };
+
+    const hideTooltip = (instance) => {
+      const tip = instance.el.querySelector(".tooltip");
+      if (tip) {
+        tip.style.display = "none";
+      }
     };
 
     const timerId = setTimeout(initHexmap, 100);
@@ -199,15 +250,28 @@ export default function HexMap({ hexjson, data, valueType }) {
       if (hexInstanceRef.current) {
         try {
           // Remove event listeners
-          if (
-            hexInstanceRef.current.callback &&
-            hexInstanceRef.current.callback.mouseover
-          ) {
-            hexInstanceRef.current.el.removeEventListener(
-              "mouseover",
-              hexInstanceRef.current.callback.mouseover
-            );
+          if (hexInstanceRef.current.callback) {
+            if (hexInstanceRef.current.callback.mouseover) {
+              hexInstanceRef.current.el.removeEventListener(
+                "mouseover",
+                hexInstanceRef.current.callback.mouseover
+              );
+            }
+            if (hexInstanceRef.current.callback.mouseout) {
+              hexInstanceRef.current.el.removeEventListener(
+                "mouseout",
+                hexInstanceRef.current.callback.mouseout
+              );
+            }
           }
+          hexInstanceRef.current.el.removeEventListener(
+            "mouseout",
+            removeAllHoverClasses
+          );
+          hexInstanceRef.current.el.removeEventListener(
+            "mousemove",
+            removeAllHoverClasses
+          );
 
           // Remove tooltip if it exists
           if (hexmapRef.current) {
