@@ -3,12 +3,10 @@ import React, { useEffect, useRef } from "react";
 import * as d3 from "d3";
 import { AccurateBeeswarm } from "accurate-beeswarm-plot";
 import { getPartyColor } from "./utils";
-import "./BeeswarmChart.css";
 
 const SingleBeeswarmChart = ({
   data,
   width,
-  height,
   radius,
   padding,
   margin,
@@ -18,10 +16,7 @@ const SingleBeeswarmChart = ({
   const svgRef = useRef();
 
   useEffect(() => {
-    const svg = d3
-      .select(svgRef.current)
-      .attr("viewBox", [0, 0, width, height]);
-
+    const svg = d3.select(svgRef.current);
     svg.selectAll("*").remove(); // Clear previous render
 
     const x = d3
@@ -29,17 +24,22 @@ const SingleBeeswarmChart = ({
       .domain(domain || d3.extent(data, (d) => d.value))
       .range([margin.left, width - margin.right]);
 
-    const xAxis = (g) =>
-      g
-        .attr("transform", `translate(0,${height - margin.bottom})`)
-        .call(d3.axisBottom(x).tickSizeOuter(0));
-
     const r = radius + padding / 2;
     const beeswarmData = new AccurateBeeswarm(data, r, (d) => x(d.value))
       .withTiesBrokenRandomly()
       .oneSided()
       .calculateYPositions()
       .map(({ datum, x, y }) => ({ data: datum, x, y }));
+
+    const maxY = d3.max(beeswarmData, (d) => d.y);
+    const height = maxY + margin.top + margin.bottom + radius * 2;
+
+    svg.attr("viewBox", [0, 0, width, height]);
+
+    const xAxis = (g) =>
+      g
+        .attr("transform", `translate(0,${height - margin.bottom})`)
+        .call(d3.axisBottom(x).tickSizeOuter(0));
 
     svg.append("g").call(xAxis);
 
@@ -49,7 +49,7 @@ const SingleBeeswarmChart = ({
       .data(beeswarmData)
       .join("circle")
       .attr("cx", (d) => d.x)
-      .attr("cy", (d) => height * 0.77 - d.y)
+      .attr("cy", (d) => height - margin.bottom - d.y)
       .attr("r", radius)
       .attr("fill", (d) => getPartyColor(d.data.winningParty) || "black");
 
@@ -66,7 +66,7 @@ const SingleBeeswarmChart = ({
     const tooltip = d3
       .select("body")
       .append("div")
-      .attr("class", "beeswarm-tooltip")
+      .attr("class", "tooltip")
       .style("opacity", 0);
 
     circles
@@ -80,20 +80,16 @@ const SingleBeeswarmChart = ({
       .on("mouseout", () => {
         tooltip.transition().duration(500).style("opacity", 0);
       });
-  }, [data, width, height, radius, padding, margin, domain, party]);
 
-  return <svg ref={svgRef} width={width} height={height} />;
+    return () => {
+      tooltip.remove();
+    };
+  }, [data, width, radius, padding, margin, domain, party]);
+
+  return <svg ref={svgRef} width={width} />;
 };
 
-const BeeswarmChart = ({
-  data,
-  width,
-  height,
-  radius,
-  padding,
-  margin,
-  domain,
-}) => {
+const BeeswarmChart = ({ data, width, radius, padding, margin, domain }) => {
   // Merge Lab and Lab Co-op
   const mergedData = data.map((d) => ({
     ...d,
@@ -103,10 +99,11 @@ const BeeswarmChart = ({
   const groupedData = d3.group(mergedData, (d) => d.winningParty);
   const majorParties = Array.from(groupedData)
     .filter(([_, constituencies]) => constituencies.length >= 10)
-    .map(([party, _]) => party);
+    .map(([party, _]) => party)
+    .sort((a, b) => groupedData.get(b).length - groupedData.get(a).length);
 
   const otherParties = Array.from(groupedData)
-    .filter(([_, constituencies]) => constituencies.length < 20)
+    .filter(([_, constituencies]) => constituencies.length < 10)
     .flatMap(([_, constituencies]) => constituencies);
 
   return (
@@ -116,7 +113,6 @@ const BeeswarmChart = ({
           key={party}
           data={groupedData.get(party)}
           width={width}
-          height={height}
           radius={radius}
           padding={padding}
           margin={margin}
@@ -129,7 +125,6 @@ const BeeswarmChart = ({
           key="Others"
           data={otherParties}
           width={width}
-          height={height}
           radius={radius}
           padding={padding}
           margin={margin}
