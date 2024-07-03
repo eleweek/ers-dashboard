@@ -576,6 +576,33 @@ function ConstituencyPage({ data, selectedConstituency, page }) {
   );
 }
 
+function PartiesSeatsTable({ parties }) {
+  return (
+    <table className="table table-bordered parties-stats-table table-condensed">
+      <thead>
+        <tr>
+          <th>Party</th>
+          <th className="parties-stats-table-seats">Seats</th>
+        </tr>
+      </thead>
+      <tbody>
+        {parties.map((party) => (
+          <tr key={`party-${party.name}`}>
+            <td>
+              <div
+                className="custom-badge"
+                style={{ backgroundColor: party.colour }}
+              ></div>
+              {party.name}
+            </td>
+            <td>{party.totalSeats}</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  );
+}
+
 function RegionAndUKPage({ data, page, pageParam }) {
   console.log("data", data);
 
@@ -615,7 +642,20 @@ function RegionAndUKPage({ data, page, pageParam }) {
                     true
                   )}`}
             </h1>
+          </div>
+        </div>
+        <div className="row">
+          <div className="col-lg-8">
             <DotPlot parties={data.parties} />
+          </div>
+
+          <div className="col-lg-4">
+            <PartiesSeatsTable parties={data.parties} />
+            <SeatsDeclared data={data} />
+          </div>
+        </div>
+        <div className="row">
+          <div className="col-lg-8">
             <h3>
               The percentage of votes a party receives is not the same as the
               percentage of MPs they win in parliament
@@ -721,32 +761,6 @@ function RegionAndUKPage({ data, page, pageParam }) {
               outcome is the same. But knowing that your vote made no difference
               to the result isn’t good for voters.
             </div>
-          </div>
-
-          <div className="col-lg-4">
-            <table className="table table-bordered parties-stats-table table-condensed">
-              <thead>
-                <tr>
-                  <th>Party</th>
-                  <th className="parties-stats-table-seats">Seats</th>
-                </tr>
-              </thead>
-              <tbody>
-                {data.parties.map((party) => (
-                  <tr key={`party-${party.name}`}>
-                    <td>
-                      <div
-                        className="custom-badge"
-                        style={{ backgroundColor: party.colour }}
-                      ></div>
-                      {party.name}
-                    </td>
-                    <td>{party.totalSeats}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-            <SeatsDeclared data={data} />
           </div>
         </div>
       </div>
