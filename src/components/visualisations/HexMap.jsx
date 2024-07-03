@@ -97,6 +97,18 @@ export default function HexMap({ hexjson, data, valueType }) {
       updateHexmapColors(instance);
       updateHexmapBoundaries(instance);
       setupHexmapEvents(instance);
+
+      // Add this line to remove hover classes after update
+      setTimeout(() => removeHoverClasses(instance), 0);
+    };
+
+    // Add this new function
+    const removeHoverClasses = (instance) => {
+      if (instance && instance.el) {
+        instance.el
+          .querySelectorAll(".hover")
+          .forEach((el) => el.classList.remove("hover"));
+      }
     };
 
     const updateHexmapColors = (instance) => {
