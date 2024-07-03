@@ -784,11 +784,13 @@ function RegionAndUKPage({ data, page, pageParam }) {
               to the result isn’t good for voters.
             </div>
 
+            <div className="gap-40"></div>
+
             <BeeswarmChart
               data={beeswarmData}
               width={1000}
-              height={450}
-              radius={5}
+              height={250}
+              radius={4}
               padding={1.5}
               margin={{ top: 20, right: 20, bottom: 50, left: 20 }}
               domain={[0, d3.max(beeswarmData, (d) => d.value)]}
