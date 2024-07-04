@@ -8,10 +8,14 @@ const PARTY_COLORS = {
   SF: "#326760",
   SDLP: "#3A9E84",
   UUP: "#48A5EE",
-  Alliance: "#F6CB2F",
+  Alliance: "#FAA61A",
   UKIP: "#70147A",
   Independent: "#535353",
   PC: "#008142",
+  Reform: "#12B6CF",
+  WP: "#A52A2A",
+  Yorkshire: "#00aeef",
+  Other: "#A6A6A6",
 };
 
 export const getPartyColor = (party) => {

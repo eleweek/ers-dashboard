@@ -928,7 +928,7 @@ function RegionAndUKPage({ data, unfilteredData, page, pageParam }) {
         </div>
         <div className="gap-40"></div>
         <div className="row">
-          <div className="col-lg-8">
+          <div className="col-xl-9 col-lg-10 col-md-12">
             <h2>Full Results</h2>
 
             <FullResultsTable
@@ -936,6 +936,8 @@ function RegionAndUKPage({ data, unfilteredData, page, pageParam }) {
               partiesTableFields={partiesTableFields}
               partiesTableColumns={partiesTableColumns}
             />
+          </div>
+          <div className="col-lg-8">
             <div className="caption">
               You can see the difference between the share of the vote and the
               share of MPs in parliament for each party.

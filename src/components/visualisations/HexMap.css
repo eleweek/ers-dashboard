@@ -1,5 +1,5 @@
 .hexmap {
-  height: 470px;
+  height: 600px;
   width: 100%;
   margin-top: 1em;
   position: relative;
@@ -86,5 +86,17 @@
 @media screen and (max-width: 767px) {
   .hexmap-legend {
     display: none;
+  }
+  .hexmap {
+    height: 600px;
+  }
+}
+
+@media screen and (max-width: 500px) {
+  .hexmap-legend {
+    display: none;
+  }
+  .hexmap {
+    height: 420px;
   }
 }
