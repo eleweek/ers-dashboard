@@ -1,6 +1,8 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { orderBy, values, pick, forEach } from "lodash";
+
+import Chart from "react-google-charts";
 
 import * as d3 from "d3";
 
@@ -564,7 +566,7 @@ function ConstituencyPage({ data, selectedConstituency, page }) {
       </div>
       <div className="gap-40"></div>
       <div className="text-muted text-center">
-        Seats declared: {data.constituencies.length} out of 650
+        {data.constituencies.length} / 650 seats declared
       </div>
     </div>
   );
@@ -625,6 +627,67 @@ const processDataForBeeswarm = (data) => {
   return { data: processedData, minValue, maxValue };
 };
 
+function LeadBarChartParties({ data }) {
+  const partiesChartData = useMemo(() => {
+    const table = [
+      ["Party", "Votes %", { role: "style" }, "Seats %", { role: "style" }],
+    ];
+
+    data.parties.forEach((party) => {
+      table.push([
+        party.name,
+        oneDecimal(party.totalVotesShare),
+        `color: ${party.colour}; opacity: 0.6; stroke-width: 0`,
+        oneDecimal(party.totalSeatsShare),
+        `color: ${party.colour}; stroke-width: 0`,
+      ]);
+    });
+
+    return table;
+  }, [data.parties]);
+
+  return (
+    <>
+      <div className="gap-40"></div>
+
+      <div>
+        <div
+          className="custom-badge"
+          style={{
+            backgroundColor: othersColor,
+            opacity: 0.6,
+          }}
+        ></div>
+        % Votes
+        <div className="text-gap"></div>
+        <div
+          className="custom-badge"
+          style={{ backgroundColor: othersColor }}
+        ></div>
+        % Seats
+      </div>
+      <Chart
+        width={"100%"}
+        height={"400px"}
+        chartType="ColumnChart"
+        loader={<div>Loading Chart</div>}
+        data={partiesChartData}
+        options={{
+          legend: { position: "none" },
+          chartArea: {
+            width: "100%",
+            left: 20,
+            top: 60,
+            bottom: 40,
+            height: "100%",
+          },
+        }}
+      />
+      <SeatsDeclared data={data} />
+    </>
+  );
+}
+
 function RegionAndUKPage({ data, page, pageParam }) {
   const wastedVotes = percentage(data.wastedVotes / data.totalVotes);
 
@@ -672,16 +735,17 @@ function RegionAndUKPage({ data, page, pageParam }) {
         </div>
         <div className="row">
           <div className="col-lg-8">
-            <DotPlot parties={data.parties} />
+            <LeadBarChartParties data={data} />
           </div>
 
           <div className="col-lg-4">
+            <div className="gap-40"></div>
             <PartiesSeatsTable parties={data.parties} />
-            <SeatsDeclared data={data} />
           </div>
         </div>
         <div className="row">
           <div className="col-lg-8">
+            <DotPlot parties={data.parties} />
             <h3>
               The percentage of votes a party receives is not the same as the
               percentage of MPs they win in parliament
