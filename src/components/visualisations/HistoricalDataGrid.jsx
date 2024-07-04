@@ -6,14 +6,17 @@ const PartyHistoricalArrows = ({
   partyColor,
   partyName,
   maxDomainValue,
+  showLabels = true,
+  showOnlyLatestLabels = true,
 }) => {
   const width = 300;
   const height = 200;
-  const margin = { top: 20, right: 30, bottom: 30, left: 60 };
+  const margin = { top: 20, right: 80, bottom: 30, left: 60 };
   const plotWidth = width - margin.left - margin.right;
   const plotHeight = height - margin.top - margin.bottom;
 
   const years = partyData.map((d) => d.year);
+  const latestYear = Math.max(...years);
 
   const xScale = d3
     .scalePoint()
@@ -28,28 +31,22 @@ const PartyHistoricalArrows = ({
 
   const formatPercent = (value) => `${value.toFixed(1)}%`;
 
-  const createValidId = (name, year) => {
-    return `gradient-${name.replace(/\s+/g, "-").toLowerCase()}-${year}`;
+  // Function to check if labels overlap
+  const checkOverlap = (y1, y2) => {
+    return Math.abs(y1 - y2) < 15; // Adjust this value as needed
+  };
+
+  // Function to adjust label positions
+  const adjustLabelPosition = (yVotes, ySeats) => {
+    if (checkOverlap(yVotes, ySeats)) {
+      const midPoint = (yVotes + ySeats) / 2;
+      return [midPoint - 10, midPoint + 10];
+    }
+    return [yVotes, ySeats];
   };
 
   return (
     <svg width={width} height={height}>
-      <defs>
-        {partyData.map((d) => (
-          <linearGradient
-            key={createValidId(partyName, d.year)}
-            id={createValidId(partyName, d.year)}
-            x1={0}
-            y1={yScale(d.votes)}
-            x2={0}
-            y2={yScale(d.seats)}
-            gradientUnits="userSpaceOnUse"
-          >
-            <stop stopColor={`${partyColor}40`} offset="0" />
-            <stop stopColor={partyColor} offset="1" />
-          </linearGradient>
-        ))}
-      </defs>
       <g transform={`translate(${margin.left}, ${margin.top})`}>
         {/* X-axis */}
         <g transform={`translate(0, ${plotHeight})`}>
@@ -86,6 +83,14 @@ const PartyHistoricalArrows = ({
           const hasMoreSeats = d.seats > d.votes;
           const triangleRotation = hasMoreSeats ? 180 : 0;
 
+          const [adjustedYVotes, adjustedYSeats] = adjustLabelPosition(
+            yVotes,
+            ySeats
+          );
+
+          const showThisLabel =
+            showLabels && (!showOnlyLatestLabels || d.year === latestYear);
+
           return (
             <g key={d.year} transform={`translate(${x}, 0)`}>
               <line
@@ -93,15 +98,41 @@ const PartyHistoricalArrows = ({
                 y1={yVotes}
                 x2={0}
                 y2={ySeats}
-                stroke={`url(#${createValidId(partyName, d.year)})`}
+                stroke={partyColor}
                 strokeWidth={2}
               />
-              <circle cx={0} cy={yVotes} r={3} fill={`${partyColor}40`} />
+              <circle cx={0} cy={yVotes} r={3} fill={partyColor} />
               <path
                 d="M -4 0 L 4 0 L 0 6 Z"
                 fill={partyColor}
                 transform={`translate(0, ${ySeats}) rotate(${triangleRotation})`}
               />
+              {/* Labels */}
+              {showThisLabel && (
+                <>
+                  <text
+                    x={5}
+                    y={adjustedYVotes}
+                    fill={partyColor}
+                    textAnchor="start"
+                    alignmentBaseline="middle"
+                    fontSize="12px"
+                  >
+                    {formatPercent(d.votes)}
+                  </text>
+                  <text
+                    x={5}
+                    y={adjustedYSeats}
+                    fill={partyColor}
+                    textAnchor="start"
+                    alignmentBaseline="middle"
+                    fontSize="12px"
+                    fontWeight="bold"
+                  >
+                    {formatPercent(d.seats)}
+                  </text>
+                </>
+              )}
             </g>
           );
         })}
