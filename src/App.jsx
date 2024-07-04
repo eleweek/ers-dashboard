@@ -897,6 +897,7 @@ function RegionAndUKPage({ data, unfilteredData, page, pageParam }) {
               build up high levels of support across the country, but still fail
               to win the representation they deserve in Westminster.
             </p>
+            <div className="gap-10"></div>
             <VotesPerMPBarChart parties={data.parties} />
             <div className="gap-20"></div>
 

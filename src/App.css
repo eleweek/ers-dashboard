@@ -44,6 +44,10 @@ table {
   min-width: auto;
 }
 
+.gap-10 {
+  height: 10px;
+}
+
 .gap-20 {
   height: 20px;
 }

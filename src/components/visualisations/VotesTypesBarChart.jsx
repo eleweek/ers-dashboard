@@ -33,7 +33,7 @@ export default function VotesTypesBarChart({ parties }) {
       .attr("width", width)
       .attr("height", height)
       .attr("viewBox", [0, 0, width, height])
-      .attr("style", "max-width: 100%; height: auto; font: 16px sans-serif;");
+      .attr("style", "max-width: 100%; height: auto; font: 14px sans-serif;");
 
     const categories = ["decisiveVotes", "surplusVotes", "wastedVotes"];
 
@@ -119,7 +119,7 @@ export default function VotesTypesBarChart({ parties }) {
       )
       .attr("text-anchor", "start")
       .attr("font-family", "sans-serif")
-      .attr("font-size", 16)
+      .attr("font-size", 14)
       .selectAll("g")
       .data(categories)
       .join("g")

@@ -247,6 +247,11 @@ export default function DotPlot({ parties }) {
           transform: `translateX(${margin.left}px)`,
         }}
       >
+        <h5
+          style={{ margin: 0, padding: 0, paddingBottom: 5, lineHeight: 1.1 }}
+        >
+          Percentage of votes and seats won in the 2024 General Election
+        </h5>
         With First Past the Post, often parties will win a higher share of the
         seats in parliament than the share of the vote they secured. The longer
         the arrow to the right, the more they benefited from the system this
