@@ -161,25 +161,26 @@ const historicalData = {
     { year: 2017, votes: 7.4, seats: 1.8 },
     { year: 2019, votes: 11.5, seats: 1.7 },
   ],
-  "Green Party": [
-    { year: 2015, votes: 3.8, seats: 0.2 },
-    { year: 2017, votes: 1.6, seats: 0.2 },
-    { year: 2019, votes: 2.7, seats: 0.2 },
-  ],
   SNP: [
     { year: 2015, votes: 4.7, seats: 8.6 },
     { year: 2017, votes: 3.0, seats: 5.4 },
     { year: 2019, votes: 3.9, seats: 7.4 },
   ],
+  "Green Party": [
+    { year: 2015, votes: 3.8, seats: 0.2 },
+    { year: 2017, votes: 1.6, seats: 0.2 },
+    { year: 2019, votes: 2.7, seats: 0.2 },
+  ],
   "Brexit Party": [{ year: 2019, votes: 2.0, seats: 0 }],
 };
 
+// TODO FIXME: unhardcode
 const partyColors = {
   Conservative: "#0087DC",
   Labour: "#DC241F",
   "Liberal Democrats": "#FDBB30",
+  SNP: "#a89a02",
   "Green Party": "#6AB023",
-  SNP: "#FDF38E",
   "Brexit Party": "#12B6CF",
 };
 
