@@ -177,34 +177,39 @@ const HistoricalDataGrid = () => {
       }}
     >
       {/* Top row: Conservative and Labour */}
-      <div style={{ gridColumn: "span 2" }}>
-        <h2>{conservative}</h2>
+      <div>
         <PartyHistoricalArrows
           partyData={historicalData[conservative]}
           partyColor={partyColors[conservative]}
           partyName={conservative}
           maxDomainValue={maxValueTopRow}
         />
+        <h6 style={{ textAlign: "center", marginTop: "10px" }}>
+          {conservative}
+        </h6>
       </div>
-      <div style={{ gridColumn: "span 2" }}>
-        <h2>{labour}</h2>
+      <div>
         <PartyHistoricalArrows
           partyData={historicalData[labour]}
           partyColor={partyColors[labour]}
           partyName={labour}
           maxDomainValue={maxValueTopRow}
         />
+        <h6 style={{ textAlign: "center", marginTop: "10px" }}>{labour}</h6>
       </div>
+      {/* Empty columns to push other parties to the next row */}
+      <div></div>
+      <div></div>
       {/* Bottom row: Other parties */}
       {rest.map((party) => (
         <div key={party}>
-          <h2>{party}</h2>
           <PartyHistoricalArrows
             partyData={historicalData[party]}
             partyColor={partyColors[party]}
             partyName={party}
             maxDomainValue={maxValueBottomRow}
           />
+          <h6 style={{ textAlign: "center", marginTop: "10px" }}>{party}</h6>
         </div>
       ))}
     </div>
