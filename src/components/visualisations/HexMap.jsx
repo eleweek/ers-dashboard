@@ -155,7 +155,19 @@ export default function HexMap({ hexjson, data, valueType, displayMode }) {
     const updateHexmapColors = (instance) => {
       instance.updateColours((r) => {
         if (displayMode === "winningParty") {
-          return data[r].winningPartyColor || "#CCCCCC"; // Default color if no winning party
+          const color = data[r].winningPartyColor || "#CCCCCC"; // Default color if no winning party
+          if (data[r].isSelected) {
+            return color;
+          } else {
+            const rgb = d3.rgb(color);
+            const gray = rgb.r * 0.299 + rgb.g * 0.587 + rgb.b * 0.114;
+            const greyedOut = d3.rgb(
+              Math.round(gray * 0.8 + rgb.r * 0.2),
+              Math.round(gray * 0.8 + rgb.g * 0.2),
+              Math.round(gray * 0.8 + rgb.b * 0.2)
+            );
+            return greyedOut.toString();
+          }
         } else {
           return COLOUR_SCALE.getValueWithGrayscale(
             data[r].value,

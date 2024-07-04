@@ -333,9 +333,15 @@ function getPartiesTableSettings(partiesTableColumns, data) {
   return { partiesTableFields, partiesTableItems, partiesExtendedTableItems };
 }
 
-const computeWinningPartyData = (constituencies) => {
+const computeWinningPartyData = (constituencies, allConstituencies) => {
   const winningPartyData = {};
-  constituencies.forEach((constituency) => {
+  const selectedConstituencies = new Set(
+    constituencies.map(
+      (constituency) => constituency.data.Election[0].Constituency[0].$.number
+    )
+  );
+
+  allConstituencies.forEach((constituency) => {
     const constituencyData = constituency.data.Election[0].Constituency[0];
     const pcon = constituenciesNumbersToPcons[constituencyData.$.number];
 
@@ -347,17 +353,23 @@ const computeWinningPartyData = (constituencies) => {
       : "Unknown";
 
     winningPartyData[pcon] = {
+      value: winningParty,
       winningParty: winningParty,
       winningPartyColor: partyColourByAbbr(winningParty),
+      isSelected: selectedConstituencies.has(constituencyData.$.number),
     };
   });
   return winningPartyData;
 };
 
-function WinningPartyHexMap({ data }) {
+function WinningPartyHexMap({ data, unfilteredData }) {
   const winningPartyData = useMemo(
-    () => computeWinningPartyData(data.constituencies),
-    [data.constituencies]
+    () =>
+      computeWinningPartyData(
+        data.constituencies,
+        unfilteredData.constituencies
+      ),
+    [data.constituencies, unfilteredData.constituencies]
   );
 
   return (
@@ -874,7 +886,7 @@ function RegionAndUKPage({ data, unfilteredData, page, pageParam }) {
 
         <div className="row">
           <div className="col-lg-5">
-            <WinningPartyHexMap data={data} />
+            <WinningPartyHexMap data={data} unfilteredData={unfilteredData} />
           </div>
           <div className="col-lg-7">
             <h3>
