@@ -461,7 +461,7 @@ function HexMaps({ data, unfilteredData, selectedRegion }) {
         valueType={valueType}
         displayMode="value"
       />
-      <div className="caption">
+      <div className="caption" style={{ textAlign: "center" }}>
         Different areas have different mixes of decisive, unrepresented or
         surplus votes
       </div>
