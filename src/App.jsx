@@ -426,7 +426,7 @@ function HexMaps({ data, unfilteredData, selectedRegion }) {
       <div className="btn-group" role="group" aria-label="Basic example">
         <button
           type="button"
-          class={classNames(
+          className={classNames(
             "btn",
             tab === "decisive" ? "btn-primary" : "btn-secondary"
           )}
@@ -436,7 +436,7 @@ function HexMaps({ data, unfilteredData, selectedRegion }) {
         </button>
         <button
           type="button"
-          class={classNames(
+          className={classNames(
             "btn",
             tab === "surplus" ? "btn-primary" : "btn-secondary"
           )}
@@ -446,7 +446,7 @@ function HexMaps({ data, unfilteredData, selectedRegion }) {
         </button>
         <button
           type="button"
-          class={classNames(
+          className={classNames(
             "btn",
             tab === "wasted" ? "btn-primary" : "btn-secondary"
           )}
@@ -929,12 +929,13 @@ function RegionAndUKPage({ data, unfilteredData, page, pageParam }) {
               partiesTableFields={partiesTableFields}
               partiesTableColumns={partiesTableColumns}
             />
-          </div>
-          <div className="col-lg-8">
             <div className="caption">
               You can see the difference between the share of the vote and the
               share of MPs in parliament for each party.
             </div>
+          </div>
+          <div className="col-lg-8">
+            <div className="gap-40"></div>
 
             <p>
               To become an MP, a candidate just needs to beat the second placed
@@ -944,20 +945,22 @@ function RegionAndUKPage({ data, unfilteredData, page, pageParam }) {
               went to a candidate who wasn’t elected, or the candidate they
               voted for already had enough votes to win.
             </p>
-            <p> You can break down how we voted into:</p>
-            <p>
-              <li>
-                <strong>Decisive Votes</strong>: Votes cast that a candidate
-                needed to be elected.
-              </li>
-              <li>
-                <strong>Unrepresented Votes</strong>: Votes cast for candidates
-                that weren’t elected.
-              </li>
-              <li>
-                <strong>Surplus Votes</strong>: Votes cast for a candidate above
-                what was needed for them to be elected.
-              </li>
+            <p style={{ margin: 0 }}> You can break down how we voted into:</p>
+            <p style={{ lineHeight: 1.25 }}>
+              <ul>
+                <li>
+                  <strong>Decisive Votes</strong> — votes cast that a candidate
+                  needed to be elected.
+                </li>
+                <li>
+                  <strong>Unrepresented Votes</strong> — votes cast for
+                  candidates that weren’t elected.
+                </li>
+                <li>
+                  <strong>Surplus Votes</strong> — votes cast for a candidate
+                  above what was needed for them to be elected.
+                </li>
+              </ul>
             </p>
             <p>
               But this process doesn’t impact the parties equally, some do
@@ -966,6 +969,7 @@ function RegionAndUKPage({ data, unfilteredData, page, pageParam }) {
               (surplus votes) or going to candidates who aren’t elected
               (unrepresented).
             </p>
+            <div className="gap-20"></div>
 
             <VotesTypesBarChart parties={data.parties} />
 
