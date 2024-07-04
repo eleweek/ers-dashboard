@@ -873,13 +873,6 @@ function RegionAndUKPage({ data, unfilteredData, page, pageParam }) {
               lose out.
             </p>
             <DotPlot parties={data.parties} />
-            <div className="caption">
-              With First Past the Post, often parties will win a higher share of
-              the seats in parliament than the share of the vote they secured.
-              The longer the arrow to the right, the more they benefited from
-              the system this election. The longer the arrow to the left, the
-              more they suffered
-            </div>
           </div>
         </div>
         <div className="gap-40"></div>

@@ -65,179 +65,193 @@ export default function DotPlot({ parties }) {
   );
 
   return (
-    <svg width={width} height={height}>
-      <defs>
-        {parties.map((party, i) => {
-          const color = getPartyColor(party.abbreviation);
-          const lightColor = `rgba(${d3.rgb(color).r}, ${d3.rgb(color).g}, ${
-            d3.rgb(color).b
-          }, 0.3)`;
+    <div>
+      <svg width={width} height={height}>
+        <defs>
+          {parties.map((party, i) => {
+            const color = getPartyColor(party.abbreviation);
+            const lightColor = `rgba(${d3.rgb(color).r}, ${d3.rgb(color).g}, ${
+              d3.rgb(color).b
+            }, 0.3)`;
 
-          return (
-            <linearGradient
-              key={`gradient-${i}`}
-              id={`gradient-${i}`}
-              x1={xScale(party.totalVotesShare)}
-              y1={yScale(party.name)}
-              x2={xScale(party.totalSeatsShare)}
-              y2={yScale(party.name)}
-              gradientUnits="userSpaceOnUse"
-            >
-              <stop stopColor={lightColor} offset="0" />
-              <stop stopColor={color} offset="1" />
-            </linearGradient>
-          );
-        })}
-      </defs>
-      <g transform={`translate(${margin.left}, ${margin.top})`}>
-        {/* X-axis */}
-        <g transform={`translate(0, ${plotHeight})`}>
-          <line x1={0} y1={0} x2={plotWidth} y2={0} stroke="black" />
-          {xScale.ticks(5).map((tick) => (
-            <g key={tick} transform={`translate(${xScale(tick)}, 0)`}>
-              <line x1={0} y1={0} x2={0} y2={5} stroke="black" />
-              <text x={0} y={20} textAnchor="middle">
-                {tick}%
-              </text>
-            </g>
-          ))}
-        </g>
-
-        {/* Y-axis */}
-        <g>
-          {parties.map((party) => (
-            <text
-              key={party.abbreviation}
-              x={-10}
-              y={yScale(party.name)}
-              textAnchor="end"
-              alignmentBaseline="middle"
-            >
-              {displayedPartyName(party)}
-            </text>
-          ))}
-        </g>
-
-        {/* Party data and labels */}
-        {parties.map((party, i) => {
-          const color = colorScale(party);
-          const lightColor = `rgba(${d3.rgb(color).r}, ${d3.rgb(color).g}, ${
-            d3.rgb(color).b
-          }, 0.3)`;
-
-          const hasLessSeats = party.totalSeatsShare < party.totalVotesShare;
-          const triangleRotation = hasLessSeats ? -90 : 90;
-
-          const votesX = xScale(party.totalVotesShare);
-          const seatsX = xScale(party.totalSeatsShare);
-
-          const combinedLabels = shouldCombineLabels(
-            party.totalVotesShare,
-            party.totalSeatsShare
-          );
-
-          const smallParty = isSmallParty(
-            party.totalVotesShare,
-            party.totalSeatsShare
-          );
-
-          const showLabel =
-            topTwoParties.has(party.name) || hoveredParty === party.name;
-
-          return (
-            <g key={party.name}>
-              {/* Hover area */}
-              <rect
-                x={-margin.left}
-                y={yScale(party.name) - yScale.step() / 2}
-                width={width}
-                height={yScale.step()}
-                fill="transparent"
-                onMouseEnter={() => setHoveredParty(party.name)}
-                onMouseLeave={() => setHoveredParty(null)}
-                style={{ pointerEvents: "all" }}
-              />
-
-              {/* Party data */}
-              <g style={{ pointerEvents: "none" }}>
-                <circle
-                  cx={votesX}
-                  cy={yScale(party.name)}
-                  r={3.5}
-                  fill={lightColor}
-                />
-                <path
-                  d="M 0 -4 L 4 4 L -4 4 Z"
-                  fill={color}
-                  transform={`translate(${seatsX}, ${yScale(
-                    party.name
-                  )}) rotate(${triangleRotation})`}
-                />
-                <line
-                  x1={votesX}
-                  y1={yScale(party.name)}
-                  x2={seatsX}
-                  y2={yScale(party.name)}
-                  stroke={`url(#gradient-${i})`}
-                  strokeWidth={1.5}
-                />
-
-                {/* Labels */}
-                {showLabel &&
-                  (smallParty ? (
-                    <text
-                      x={Math.max(votesX, seatsX) + 10}
-                      y={yScale(party.name)}
-                      fill={color}
-                      textAnchor="start"
-                      alignmentBaseline="middle"
-                      fontSize="12px"
-                    >
-                      {getLabelText(
-                        party.totalVotesShare,
-                        party.totalSeatsShare
-                      )}
-                    </text>
-                  ) : combinedLabels ? (
-                    <text
-                      x={(votesX + seatsX) / 2}
-                      y={yScale(party.name) - 15}
-                      fill={color}
-                      textAnchor="middle"
-                      fontSize="12px"
-                    >
-                      {getLabelText(
-                        party.totalVotesShare,
-                        party.totalSeatsShare
-                      )}
-                    </text>
-                  ) : (
-                    <>
-                      <text
-                        x={votesX}
-                        y={yScale(party.name) - 15}
-                        fill={color}
-                        textAnchor="middle"
-                        fontSize="12px"
-                      >
-                        {`${formatPercent(party.totalVotesShare)} votes`}
-                      </text>
-                      <text
-                        x={seatsX}
-                        y={yScale(party.name) - 15}
-                        fill={color}
-                        textAnchor="middle"
-                        fontSize="12px"
-                      >
-                        {`${formatPercent(party.totalSeatsShare)} seats`}
-                      </text>
-                    </>
-                  ))}
+            return (
+              <linearGradient
+                key={`gradient-${i}`}
+                id={`gradient-${i}`}
+                x1={xScale(party.totalVotesShare)}
+                y1={yScale(party.name)}
+                x2={xScale(party.totalSeatsShare)}
+                y2={yScale(party.name)}
+                gradientUnits="userSpaceOnUse"
+              >
+                <stop stopColor={lightColor} offset="0" />
+                <stop stopColor={color} offset="1" />
+              </linearGradient>
+            );
+          })}
+        </defs>
+        <g transform={`translate(${margin.left}, ${margin.top})`}>
+          {/* X-axis */}
+          <g transform={`translate(0, ${plotHeight})`}>
+            <line x1={0} y1={0} x2={plotWidth} y2={0} stroke="black" />
+            {xScale.ticks(5).map((tick) => (
+              <g key={tick} transform={`translate(${xScale(tick)}, 0)`}>
+                <line x1={0} y1={0} x2={0} y2={5} stroke="black" />
+                <text x={0} y={20} textAnchor="middle">
+                  {tick}%
+                </text>
               </g>
-            </g>
-          );
-        })}
-      </g>
-    </svg>
+            ))}
+          </g>
+
+          {/* Y-axis */}
+          <g>
+            {parties.map((party) => (
+              <text
+                key={party.abbreviation}
+                x={-10}
+                y={yScale(party.name)}
+                textAnchor="end"
+                alignmentBaseline="middle"
+              >
+                {displayedPartyName(party)}
+              </text>
+            ))}
+          </g>
+
+          {/* Party data and labels */}
+          {parties.map((party, i) => {
+            const color = colorScale(party);
+            const lightColor = `rgba(${d3.rgb(color).r}, ${d3.rgb(color).g}, ${
+              d3.rgb(color).b
+            }, 0.3)`;
+
+            const hasLessSeats = party.totalSeatsShare < party.totalVotesShare;
+            const triangleRotation = hasLessSeats ? -90 : 90;
+
+            const votesX = xScale(party.totalVotesShare);
+            const seatsX = xScale(party.totalSeatsShare);
+
+            const combinedLabels = shouldCombineLabels(
+              party.totalVotesShare,
+              party.totalSeatsShare
+            );
+
+            const smallParty = isSmallParty(
+              party.totalVotesShare,
+              party.totalSeatsShare
+            );
+
+            const showLabel =
+              topTwoParties.has(party.name) || hoveredParty === party.name;
+
+            return (
+              <g key={party.name}>
+                {/* Hover area */}
+                <rect
+                  x={-margin.left}
+                  y={yScale(party.name) - yScale.step() / 2}
+                  width={width}
+                  height={yScale.step()}
+                  fill="transparent"
+                  onMouseEnter={() => setHoveredParty(party.name)}
+                  onMouseLeave={() => setHoveredParty(null)}
+                  style={{ pointerEvents: "all" }}
+                />
+
+                {/* Party data */}
+                <g style={{ pointerEvents: "none" }}>
+                  <circle
+                    cx={votesX}
+                    cy={yScale(party.name)}
+                    r={3.5}
+                    fill={lightColor}
+                  />
+                  <path
+                    d="M 0 -4 L 4 4 L -4 4 Z"
+                    fill={color}
+                    transform={`translate(${seatsX}, ${yScale(
+                      party.name
+                    )}) rotate(${triangleRotation})`}
+                  />
+                  <line
+                    x1={votesX}
+                    y1={yScale(party.name)}
+                    x2={seatsX}
+                    y2={yScale(party.name)}
+                    stroke={`url(#gradient-${i})`}
+                    strokeWidth={1.5}
+                  />
+
+                  {/* Labels */}
+                  {showLabel &&
+                    (smallParty ? (
+                      <text
+                        x={Math.max(votesX, seatsX) + 10}
+                        y={yScale(party.name)}
+                        fill={color}
+                        textAnchor="start"
+                        alignmentBaseline="middle"
+                        fontSize="12px"
+                      >
+                        {getLabelText(
+                          party.totalVotesShare,
+                          party.totalSeatsShare
+                        )}
+                      </text>
+                    ) : combinedLabels ? (
+                      <text
+                        x={(votesX + seatsX) / 2}
+                        y={yScale(party.name) - 15}
+                        fill={color}
+                        textAnchor="middle"
+                        fontSize="12px"
+                      >
+                        {getLabelText(
+                          party.totalVotesShare,
+                          party.totalSeatsShare
+                        )}
+                      </text>
+                    ) : (
+                      <>
+                        <text
+                          x={votesX}
+                          y={yScale(party.name) - 15}
+                          fill={color}
+                          textAnchor="middle"
+                          fontSize="12px"
+                        >
+                          {`${formatPercent(party.totalVotesShare)} votes`}
+                        </text>
+                        <text
+                          x={seatsX}
+                          y={yScale(party.name) - 15}
+                          fill={color}
+                          textAnchor="middle"
+                          fontSize="12px"
+                        >
+                          {`${formatPercent(party.totalSeatsShare)} seats`}
+                        </text>
+                      </>
+                    ))}
+                </g>
+              </g>
+            );
+          })}
+        </g>
+      </svg>
+      <div
+        className="caption"
+        style={{
+          width: plotWidth,
+          transform: `translateX(${margin.left}px)`,
+        }}
+      >
+        With First Past the Post, often parties will win a higher share of the
+        seats in parliament than the share of the vote they secured. The longer
+        the arrow to the right, the more they benefited from the system this
+        election. The longer the arrow to the left, the more they suffered.
+      </div>
+    </div>
   );
 }
