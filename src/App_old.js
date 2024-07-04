@@ -683,7 +683,6 @@ function LeadBarChartParties({ data }) {
           },
         }}
       />
-      <SeatsDeclared data={data} />
     </>
   );
 }
@@ -741,11 +740,12 @@ function RegionAndUKPage({ data, page, pageParam }) {
           <div className="col-lg-4">
             <div className="gap-40"></div>
             <PartiesSeatsTable parties={data.parties} />
+            <SeatsDeclared data={data} />
           </div>
         </div>
+        <div className="gap-40"></div>
         <div className="row">
           <div className="col-lg-8">
-            <DotPlot parties={data.parties} />
             <h3>
               The percentage of votes a party receives is not the same as the
               percentage of MPs they win in parliament
@@ -763,6 +763,8 @@ function RegionAndUKPage({ data, page, pageParam }) {
               Westminster. Some parties do well out of this system, while others
               lose out.
             </p>
+            <DotPlot parties={data.parties} />
+
             <h3>
               How do some parties end up with more seats than they deserve?
             </h3>
