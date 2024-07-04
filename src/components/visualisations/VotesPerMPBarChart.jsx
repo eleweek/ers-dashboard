@@ -5,13 +5,13 @@ import { displayedPartyName } from "./utils";
 
 export default function VotesPerMPBarChart({ parties }) {
   const svgRef = useRef();
+  const captionRef = useRef();
 
   useEffect(() => {
     if (parties && parties.length > 0) {
       createChart();
     }
   }, [parties]);
-  console.log("VotesPerMPBarChart", parties);
 
   const createChart = () => {
     // Sort parties by totalVotesPerSeat in descending order
@@ -93,12 +93,46 @@ export default function VotesPerMPBarChart({ parties }) {
     svg
       .append("g")
       .attr("transform", `translate(${marginLeft},0)`)
-      .call(d3.axisLeft(y).tickSize(0)) // This removes the tick lines
+      .call(d3.axisLeft(y).tickSize(0))
       .call((g) => {
-        g.selectAll(".tick text").attr("font-size", "16px").attr("x", -10); // This moves the text labels slightly to the right
-        g.select(".domain").remove(); // This removes the left vertical line
+        g.selectAll(".tick text").attr("font-size", "16px").attr("x", -10);
+        g.select(".domain").remove();
       });
+
+    // Update caption position
+    updateCaptionPosition();
   };
 
-  return <svg ref={svgRef}></svg>;
+  const updateCaptionPosition = () => {
+    const svg = d3.select(svgRef.current);
+    const caption = d3.select(captionRef.current);
+
+    // Get the actual rendered size of the SVG
+    const svgBounds = svg.node().getBoundingClientRect();
+
+    // Calculate the scale factor
+    const scaleFactor = svgBounds.width / parseFloat(svg.attr("width"));
+
+    // Update caption position and width
+    caption
+      .style("margin-left", `${180 * scaleFactor}px`)
+      .style("max-width", `${(928 - 180 - 60) * scaleFactor}px`);
+  };
+
+  // Add resize listener
+  useEffect(() => {
+    window.addEventListener("resize", updateCaptionPosition);
+    return () => window.removeEventListener("resize", updateCaptionPosition);
+  }, []);
+
+  return (
+    <div>
+      <svg ref={svgRef}></svg>
+      <div ref={captionRef} className="caption">
+        This is the total number of votes for the candidates of each party,
+        divided by the number of MPs they won. Parties on the top of the chart
+        won a large numbers of votes, but few MPs
+      </div>
+    </div>
+  );
 }

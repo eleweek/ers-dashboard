@@ -897,12 +897,8 @@ function RegionAndUKPage({ data, unfilteredData, page, pageParam }) {
               to win the representation they deserve in Westminster.
             </p>
             <VotesPerMPBarChart parties={data.parties} />
+            <div className="gap-20"></div>
 
-            <div className="caption">
-              This is the total number of votes for the candidates of each
-              party, divided by the number of MPs they won. Parties on the top
-              of the chart won a large numbers of votes, but few MPs
-            </div>
             <p>
               To become an MP, a candidate needs to get the most votes in their
               constituency. But they don’t need to win a majority of votes.
