@@ -920,6 +920,24 @@ function RegionAndUKPage({ data, page, pageParam }) {
               margin={{ top: 20, right: 20, bottom: 50, left: 20 }}
               domain={[beeswarmMinValue, beeswarmMaxValue]}
             />
+            <div className="caption">
+              A low share of the vote doesn’t mean a candidate won’t win, as
+              long as the person in second place has a lower share. Some
+              candidates will become MPs with a lower share of the vote than
+              candidates in neighbouring seats that came second.
+            </div>
+
+            <div>
+              First Past the Post is an electoral system designed for contests
+              between just two candidates. If only two candidates are contesting
+              the seat, one of the two will win a majority. When there are
+              multiple candidates competing for a seat, the winner can get over
+              the line with a much lower vote share. When some votes make a
+              difference to the results and others are ignored, it means changes
+              in support have different impacts on different parties. Big
+              changes in the vote share can be turned into a massive change in
+              Westminster - far out of proportion to how we voted.
+            </div>
           </div>
         </div>
       </div>
