@@ -556,7 +556,7 @@ function ConstituencyPage({ data, selectedConstituency, page }) {
       </div>
       <div className="row">
         <div className="col-lg-12">
-          <h2>2019 General Election Results</h2>
+          <h2>2024 General Election Results</h2>
           <table className="table table-bordered">
             <thead>
               <tr>
@@ -768,8 +768,8 @@ function RegionAndUKPage({ data, page, pageParam }) {
           <div className="col-lg-12">
             <h1 style={{ paddingTop: 0 }}>
               {page !== "region"
-                ? "2019 General Election Results"
-                : `2019 General Election in ${getPlaceName(
+                ? "2024 General Election Results"
+                : `2024 General Election in ${getPlaceName(
                     selectedRegionName,
                     true
                   )}`}
