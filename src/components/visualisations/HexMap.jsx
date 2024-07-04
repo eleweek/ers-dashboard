@@ -56,7 +56,7 @@ function HexMapLegend({ min, max }) {
   const mid = Math.round(min + (max - min) * 0.5);
 
   return (
-    <div className="hexmap-legend">
+    <div className="hexmap-legend show-on-large">
       <div className="legend-gradient">
         <div
           style={{
@@ -64,7 +64,7 @@ function HexMapLegend({ min, max }) {
               ${COLOUR_SCALE.getValue(min, min, max)}, 
               ${COLOUR_SCALE.getValue(max, min, max)}
             )`,
-            width: "25px",
+            width: "15px",
             height: "200px",
           }}
         />

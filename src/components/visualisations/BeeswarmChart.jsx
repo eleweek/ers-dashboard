@@ -39,7 +39,14 @@ const SingleBeeswarmChart = ({
     const xAxis = (g) =>
       g
         .attr("transform", `translate(0,${height - margin.bottom})`)
-        .call(d3.axisBottom(x).tickSizeOuter(0).ticks(5));
+        .call(
+          d3
+            .axisBottom(x)
+            .tickSizeOuter(0)
+            .ticks(5)
+            .tickFormat((d) => `${d}%`)
+        )
+        .call((g) => g.selectAll(".tick text").attr("font-size", "14px"));
 
     svg.append("g").call(xAxis);
 

@@ -1,5 +1,5 @@
 .hexmap {
-  height: 600px;
+  height: 470px;
   width: 100%;
   margin-top: 1em;
   position: relative;
@@ -50,7 +50,7 @@
 .hexmap-legend {
   position: absolute;
   top: 20px;
-  right: 20px;
+  right: 100px;
   display: flex;
   align-items: stretch;
   height: 200px;
@@ -74,11 +74,17 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  margin-left: 10px;
-  font-size: 12px;
+  margin-left: 0px;
+  font-size: 14px;
 }
 
 .max-label,
 .min-label {
   white-space: nowrap;
+}
+
+@media screen and (max-width: 767px) {
+  .hexmap-legend {
+    display: none;
+  }
 }
