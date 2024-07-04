@@ -74,7 +74,7 @@ function HexMapLegend({ min, max }) {
   );
 }
 
-export default function HexMap({ hexjson, data, valueType }) {
+export default function HexMap({ hexjson, data, valueType, displayMode }) {
   const hexmapRef = useRef(null);
   const hexInstanceRef = useRef(null);
   const [isRendered, setIsRendered] = useState(false);
@@ -144,7 +144,11 @@ export default function HexMap({ hexjson, data, valueType }) {
 
     const updateHexmapColors = (instance) => {
       instance.updateColours((r) => {
-        return COLOUR_SCALE.getValue(data[r], min, max);
+        if (displayMode === "winningParty") {
+          return data[r].winningPartyColor || "#CCCCCC"; // Default color if no winning party
+        } else {
+          return COLOUR_SCALE.getValue(data[r], min, max);
+        }
       });
     };
 
@@ -230,9 +234,17 @@ export default function HexMap({ hexjson, data, valueType }) {
         tip.classList.add("tooltip");
         svg.appendChild(tip);
       }
-      tip.innerHTML = `${e.data.data.n}<br />${data[
-        e.data.region
-      ].toLocaleString()} ${valueType}<br />Region: ${e.data.data.a}`;
+      let tooltipContent = `${e.data.data.n}<br />`;
+      if (displayMode === "winningParty") {
+        tooltipContent += `Winning Party: ${data[e.data.region].winningParty}`;
+      } else {
+        tooltipContent += `${data[
+          e.data.region
+        ].value.toLocaleString()} ${valueType}`;
+      }
+      tooltipContent += `<br />Region: ${e.data.data.a}`;
+      tip.innerHTML = tooltipContent;
+
       const bb = hex.getBoundingClientRect();
       const bbo = svg.getBoundingClientRect();
       tip.style.left = `${bb.left + bb.width / 2 - bbo.left}px`;
@@ -299,7 +311,9 @@ export default function HexMap({ hexjson, data, valueType }) {
         ref={hexmapRef}
         style={{ visibility: isRendered ? "visible" : "hidden" }}
       >
-        {isRendered && <HexMapLegend min={min} max={max} />}
+        {isRendered && displayMode === "value" && (
+          <HexMapLegend min={min} max={max} />
+        )}
       </div>
     </figure>
   );

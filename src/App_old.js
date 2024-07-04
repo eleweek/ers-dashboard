@@ -331,6 +331,43 @@ function getPartiesTableSettings(partiesTableColumns, data) {
   return { partiesTableFields, partiesTableItems, partiesExtendedTableItems };
 }
 
+const computeWinningPartyData = (constituencies) => {
+  const winningPartyData = {};
+  constituencies.forEach((constituency) => {
+    const constituencyData = constituency.data.Election[0].Constituency[0];
+    const pcon = constituenciesNumbersToPcons[constituencyData.$.number];
+
+    const winningCandidate = constituencyData.Candidate.find(
+      (c) => c.$.elected
+    );
+    const winningParty = winningCandidate
+      ? winningCandidate.Party[0].$.abbreviation
+      : "Unknown";
+
+    winningPartyData[pcon] = {
+      winningParty: winningParty,
+      winningPartyColor: partyColourByAbbr(winningParty),
+    };
+  });
+  return winningPartyData;
+};
+
+function WinningPartyHexMap({ data }) {
+  const winningPartyData = useMemo(
+    () => computeWinningPartyData(data.constituencies),
+    [data.constituencies]
+  );
+
+  return (
+    <HexMap
+      hexjson={hex2019}
+      data={winningPartyData}
+      valueType={null}
+      displayMode="winningParty"
+    />
+  );
+}
+
 function HexMaps({ data }) {
   const [tab, setTab] = useState("decisive");
 
@@ -415,7 +452,12 @@ function HexMaps({ data }) {
           Wasted
         </button>
       </div>
-      <HexMap hexjson={hex2019} data={hexmapData} valueType={valueType} />
+      <HexMap
+        hexjson={hex2019}
+        data={hexmapData}
+        valueType={valueType}
+        displayMode="value"
+      />
     </div>
   );
 }
@@ -768,6 +810,7 @@ function RegionAndUKPage({ data, page, pageParam }) {
             <h3>
               How do some parties end up with more seats than they deserve?
             </h3>
+            <WinningPartyHexMap data={data} />
             <p>
               Elections in the UK are 650 individual contests. Rather than
               trying to represent the diversity of opinions in your local area,
