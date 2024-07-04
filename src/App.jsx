@@ -370,48 +370,37 @@ function WinningPartyHexMap({ data }) {
   );
 }
 
-function HexMaps({ data }) {
+function HexMaps({ data, unfilteredData, selectedRegion }) {
   const [tab, setTab] = useState("decisive");
 
-  const decisiveVotes = Object.fromEntries(
-    data.constituencies.map((constituency) => {
+  const selectedConstituencies = new Set(
+    data.constituencies.map(
+      (constituency) => constituency.data.Election[0].Constituency[0].$.number
+    )
+  );
+
+  const hexmapData = Object.fromEntries(
+    unfilteredData.constituencies.map((constituency) => {
+      const constituencyData = constituency.data.Election[0].Constituency[0];
+      const pcon = constituenciesNumbersToPcons[constituencyData.$.number];
+      const region =
+        staticData.constituenciesNumbersToRegions[constituencyData.$.number];
+      const isSelected = selectedConstituencies.has(constituencyData.$.number);
+
       return [
-        constituenciesNumbersToPcons[
-          constituency.data.Election[0].Constituency[0].$.number
-        ],
-        constituency.decisiveVotes,
+        pcon,
+        {
+          value:
+            tab === "decisive"
+              ? constituency.decisiveVotes
+              : tab === "surplus"
+              ? constituency.surplusVotes
+              : constituency.wastedVotes,
+          isSelected: isSelected,
+        },
       ];
     })
   );
-
-  const surplusVotes = Object.fromEntries(
-    data.constituencies.map((constituency) => {
-      return [
-        constituenciesNumbersToPcons[
-          constituency.data.Election[0].Constituency[0].$.number
-        ],
-        constituency.surplusVotes,
-      ];
-    })
-  );
-
-  const wastedHexMapData = Object.fromEntries(
-    data.constituencies.map((constituency) => {
-      return [
-        constituenciesNumbersToPcons[
-          constituency.data.Election[0].Constituency[0].$.number
-        ],
-        constituency.wastedVotes,
-      ];
-    })
-  );
-
-  const hexmapData =
-    tab === "decisive"
-      ? decisiveVotes
-      : tab === "surplus"
-      ? surplusVotes
-      : wastedHexMapData;
 
   const valueType =
     tab === "decisive"
@@ -795,7 +784,7 @@ function UKLevelOnly() {
   );
 }
 
-function RegionAndUKPage({ data, page, pageParam }) {
+function RegionAndUKPage({ data, unfilteredData, page, pageParam }) {
   const wastedVotes = percentage(data.wastedVotes / data.totalVotes);
 
   const partiesTableColumns = [
@@ -977,7 +966,12 @@ function RegionAndUKPage({ data, page, pageParam }) {
               better under First Past the Post
             </div>
             <div className="gap-40"></div>
-            <HexMaps data={data} key={pageParam} />
+            <HexMaps
+              data={data}
+              unfilteredData={unfilteredData}
+              key={pageParam}
+              selectedRegion={pageParam}
+            />
             <div className="caption">
               Different areas have different mixes of decisive, unrepresented or
               surplus votes
@@ -1048,6 +1042,12 @@ function App() {
     partiesExtended: [],
   });
 
+  const [unfilteredData, setUnfilteredData] = useState({
+    ...fullData,
+    parties: [],
+    partiesExtended: [],
+  });
+
   const [dataLoaded, setDataLoaded] = useState(null);
 
   const [page, setPage] = useState("");
@@ -1060,7 +1060,10 @@ function App() {
     if (location.search) {
       navigate(location.pathname.replace(/\/$/, ""));
     }
-    processData();
+    const newData = processData();
+    setData(newData);
+    setUnfilteredData(newData);
+
     setDataLoaded(true);
   }, []);
 
@@ -1074,7 +1077,8 @@ function App() {
     if (page !== newPage || pageParam !== newPageParam) {
       setPage(newPage);
       setPageParam(newPageParam);
-      processData(newPage, newPageParam);
+      const newData = processData(newPage, newPageParam);
+      setData(newData);
     }
   }, [location, page, pageParam]);
 
@@ -1159,7 +1163,7 @@ function App() {
       0
     );
 
-    setData(newData);
+    return newData;
   };
 
   const selectedConstituency =
@@ -1204,6 +1208,7 @@ function App() {
               {page !== "constituency" && (
                 <RegionAndUKPage
                   data={data}
+                  unfilteredData={unfilteredData}
                   page={page}
                   pageParam={pageParam}
                 />

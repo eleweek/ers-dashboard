@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState, useMemo } from "react";
 import "./HexMap.css";
+import * as d3 from "d3-color";
 
-// ColourScale function
 function ColourScale(c) {
   let s, n;
   s = c;
@@ -24,6 +24,16 @@ function ColourScale(c) {
         return "rgb(" + rgb.join(",") + ")";
       }
     }
+  };
+  this.getValueWithGrayscale = function (v, min, max, isSelected) {
+    const originalColor = this.getValue(v, min, max);
+    if (!isSelected) {
+      // Convert to grayscale using D3
+      const rgb = d3.rgb(originalColor);
+      const grayscale = rgb.r * 0.299 + rgb.g * 0.587 + rgb.b * 0.114;
+      return d3.rgb(grayscale, grayscale, grayscale).toString();
+    }
+    return originalColor;
   };
   return this;
 }
@@ -83,8 +93,8 @@ export default function HexMap({ hexjson, data, valueType, displayMode }) {
     let min = Infinity;
     let max = -Infinity;
     for (const r in data) {
-      min = Math.min(data[r], min);
-      max = Math.max(data[r], max);
+      min = Math.min(data[r].value, min);
+      max = Math.max(data[r].value, max);
     }
     return { min, max };
   }, [data]);
@@ -147,7 +157,12 @@ export default function HexMap({ hexjson, data, valueType, displayMode }) {
         if (displayMode === "winningParty") {
           return data[r].winningPartyColor || "#CCCCCC"; // Default color if no winning party
         } else {
-          return COLOUR_SCALE.getValue(data[r], min, max);
+          return COLOUR_SCALE.getValueWithGrayscale(
+            data[r].value,
+            min,
+            max,
+            data[r].isSelected
+          );
         }
       });
     };
@@ -240,7 +255,7 @@ export default function HexMap({ hexjson, data, valueType, displayMode }) {
       } else {
         tooltipContent += `${data[
           e.data.region
-        ].toLocaleString()} ${valueType}`;
+        ].value.toLocaleString()} ${valueType}`;
       }
       tip.innerHTML = tooltipContent;
 
@@ -301,7 +316,7 @@ export default function HexMap({ hexjson, data, valueType, displayMode }) {
         }
       }
     };
-  }, [isRendered, hexjson, data, min, max, valueType]);
+  }, [isRendered, hexjson, data, min, max, valueType, displayMode]);
 
   return (
     <figure>
