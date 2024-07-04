@@ -871,6 +871,10 @@ function RegionAndUKPage({ data, page, pageParam }) {
               partiesTableFields={partiesTableFields}
               partiesTableColumns={partiesTableColumns}
             />
+            <div className="caption">
+              You can see the difference between the share of the vote and the
+              share of MPs in parliament for each party.
+            </div>
 
             <p>
               To become an MP, a candidate just needs to beat the second placed
