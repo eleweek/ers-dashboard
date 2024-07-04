@@ -739,13 +739,15 @@ function LeadBarChartParties({ data }) {
 function UKLevelOnly() {
   return (
     <div className="row">
-      <div className="col-lg-12">
+      <div className="col-lg-8">
         <HistoricalDataGrid />
         <div className="caption">
           There is no clear correlation between how many people vote for a
           party, and how many seats they win. When more people decide to support
           a party, it can lead to more MPs, the same number of MPs or fewer MPs
         </div>
+        <div className="gap-40"></div>
+
         <h2>It doesn’t have to be like this</h2>
         <p>
           Each constituency electing just one MP isn’t the only way to run
@@ -830,6 +832,8 @@ function RegionAndUKPage({ data, unfilteredData, page, pageParam }) {
     maxValue: beeswarmMaxValue,
   } = processDataForBeeswarm(data);
 
+  const regionName = getPlaceName(selectedRegionName, true);
+
   return (
     <>
       <div className="container-fluid non-constituency-page">
@@ -838,10 +842,7 @@ function RegionAndUKPage({ data, unfilteredData, page, pageParam }) {
             <h1 style={{ paddingTop: 0 }}>
               {page !== "region"
                 ? "2024 General Election Results"
-                : `2024 General Election in ${getPlaceName(
-                    selectedRegionName,
-                    true
-                  )}`}
+                : `2024 General Election in ${regionName}`}
             </h1>
           </div>
         </div>
@@ -990,7 +991,10 @@ function RegionAndUKPage({ data, unfilteredData, page, pageParam }) {
             </p>
 
             <div className="gap-40"></div>
-
+            <h2>
+              Percentage of the vote won by the winning candidate in each
+              constituency, by party {regionName && `in ${regionName}`}
+            </h2>
             <BeeswarmChart
               data={beeswarmData}
               width={1000}
@@ -1006,6 +1010,8 @@ function RegionAndUKPage({ data, unfilteredData, page, pageParam }) {
               candidates will become MPs with a lower share of the vote than
               candidates in neighbouring seats that came second.
             </div>
+
+            <div className="gap-40"></div>
 
             <p>
               First Past the Post is an electoral system designed for contests
