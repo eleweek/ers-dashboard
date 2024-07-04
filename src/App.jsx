@@ -914,6 +914,10 @@ function RegionAndUKPage({ data, page, pageParam }) {
             </div>
             <div className="gap-40"></div>
             <HexMaps data={data} key={pageParam} />
+            <div className="caption">
+              Different areas have different mixes of decisive, unrepresented or
+              surplus votes
+            </div>
             <div>
               Whether a seat is won with the lowest share of the vote or
               highest, it makes no difference in Westminster. Likewise, a party
