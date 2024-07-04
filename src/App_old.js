@@ -40,6 +40,7 @@ import DotPlot from "./components/visualisations/DotPlot";
 import VotesPerMPBarChart from "./components/visualisations/VotesPerMPBarChart";
 import VotesTypesBarChart from "./components/visualisations/VotesTypesBarChart";
 import classNames from "classnames";
+import HistoricalDataGrid from "./components/visualisations/HistoricalDataGrid";
 
 const BACKEND_HOST = `${window.location.protocol}//${window.location.hostname}:8080`;
 // const BACKEND_HOST = "https://ge2019.electoral-reform.org.uk";
@@ -938,6 +939,7 @@ function RegionAndUKPage({ data, page, pageParam }) {
               changes in the vote share can be turned into a massive change in
               Westminster - far out of proportion to how we voted.
             </div>
+            <HistoricalDataGrid />
           </div>
         </div>
       </div>
