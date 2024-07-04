@@ -976,13 +976,14 @@ function RegionAndUKPage({ data, unfilteredData, page, pageParam }) {
               key={pageParam}
               selectedRegion={pageParam}
             />
-            <div>
+            <div className="gap-40"></div>
+            <p>
               Whether a seat is won with the lowest share of the vote or
               highest, it makes no difference in Westminster. Likewise, a party
               can have a huge lead over their main opponents or a tiny one: the
               outcome is the same. But knowing that your vote made no difference
               to the result isn’t good for voters.
-            </div>
+            </p>
 
             <div className="gap-40"></div>
 
@@ -1002,7 +1003,7 @@ function RegionAndUKPage({ data, unfilteredData, page, pageParam }) {
               candidates in neighbouring seats that came second.
             </div>
 
-            <div>
+            <p>
               First Past the Post is an electoral system designed for contests
               between just two candidates. If only two candidates are contesting
               the seat, one of the two will win a majority. When there are
@@ -1012,7 +1013,7 @@ function RegionAndUKPage({ data, unfilteredData, page, pageParam }) {
               in support have different impacts on different parties. Big
               changes in the vote share can be turned into a massive change in
               Westminster - far out of proportion to how we voted.
-            </div>
+            </p>
           </div>
           <div className="gap-40"></div>
           {page !== "region" && <UKLevelOnly />}
