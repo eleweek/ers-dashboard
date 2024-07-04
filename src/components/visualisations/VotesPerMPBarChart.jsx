@@ -7,6 +7,9 @@ export default function VotesPerMPBarChart({ parties }) {
   const svgRef = useRef();
   const captionRef = useRef();
 
+  const title =
+    "Votes required to elect one MP for each party in the 2024 general election";
+
   useEffect(() => {
     if (parties && parties.length > 0) {
       createChart();
@@ -88,7 +91,10 @@ export default function VotesPerMPBarChart({ parties }) {
       .append("g")
       .attr("transform", `translate(0,${marginTop})`)
       .call(d3.axisTop(x).ticks(width / 80))
-      .call((g) => g.select(".domain").remove());
+      .call((g) => {
+        g.select(".domain").remove();
+        g.selectAll(".tick text").attr("font-size", "14px"); // Add this line
+      });
 
     svg
       .append("g")
@@ -115,7 +121,7 @@ export default function VotesPerMPBarChart({ parties }) {
 
     // Update caption position and width
     caption
-      .style("margin-left", `${180 * scaleFactor}px`)
+      .style("margin-left", `${180 * scaleFactor - 3}px`)
       .style("max-width", `${(928 - 180 - 60) * scaleFactor}px`);
   };
 
@@ -127,12 +133,19 @@ export default function VotesPerMPBarChart({ parties }) {
 
   return (
     <div>
-      <svg ref={svgRef}></svg>
-      <div ref={captionRef} className="caption">
-        This is the total number of votes for the candidates of each party,
-        divided by the number of MPs they won. Parties on the top of the chart
-        won a large numbers of votes, but few MPs
+      <div ref={captionRef}>
+        <h5
+          style={{ margin: 0, padding: 0, paddingBottom: 5, lineHeight: 1.0 }}
+        >
+          {title}
+        </h5>
+        <div className="caption" style={{ paddingBottom: 10, lineHeight: 1.1 }}>
+          This is the total number of votes for the candidates of each party,
+          divided by the number of MPs they won. Parties on the top of the chart
+          won a large numbers of votes, but few MPs
+        </div>
       </div>
+      <svg ref={svgRef}></svg>
     </div>
   );
 }

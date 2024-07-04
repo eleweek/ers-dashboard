@@ -6,6 +6,11 @@ export default function VotesTypesBarChart({ parties }) {
   const svgRef = useRef();
   const containerRef = useRef();
 
+  const title =
+    "Percentage of decisive votes, unrepresented votes and surplus votes in 2024 by party";
+  const caption =
+    "Parties with geographically concentrated supporters tend to do better under First Past the Post";
+
   useEffect(() => {
     if (parties && parties.length > 0) {
       createChart();
@@ -15,8 +20,8 @@ export default function VotesTypesBarChart({ parties }) {
   const createChart = () => {
     const width = 928;
     const height = 350;
-    const marginTop = 30;
-    const marginRight = 140; // Increased right margin for legend
+    const marginTop = 45;
+    const marginRight = 140;
     const marginBottom = 10;
     const marginLeft = 150;
 
@@ -81,13 +86,8 @@ export default function VotesTypesBarChart({ parties }) {
     const yAxis = (g) =>
       g
         .attr("transform", `translate(${marginLeft},0)`)
-        .call(
-          d3
-            .axisLeft(y)
-            .tickSize(0) // This removes the tick lines
-            .tickPadding(10) // This adds some padding between the labels and where the ticks would be
-        )
-        .call((g) => g.select(".domain").remove()) // This removes the axis line
+        .call(d3.axisLeft(y).tickSize(0).tickPadding(10))
+        .call((g) => g.select(".domain").remove())
         .call((g) => g.selectAll(".tick text").attr("font-size", "14px"));
 
     const xAxis = (g) =>
@@ -100,12 +100,11 @@ export default function VotesTypesBarChart({ parties }) {
             .tickFormat((d) => `${d3.format(".0f")(d)}%`)
         )
         .call((g) => g.selectAll(".domain").remove())
-        .call(
-          (g) =>
-            g
-              .selectAll(".tick text")
-              .attr("dy", "-0.2em") // Increase space between tick and label
-              .attr("font-size", "14px") // Changed to 14px as requested
+        .call((g) =>
+          g
+            .selectAll(".tick text")
+            .attr("dy", "-0.2em")
+            .attr("font-size", "14px")
         );
 
     svg.append("g").call(xAxis);
@@ -155,7 +154,7 @@ export default function VotesTypesBarChart({ parties }) {
 
   const updateCaptionPosition = () => {
     const svg = d3.select(svgRef.current);
-    const caption = d3.select(containerRef.current).select(".caption");
+    const captionContainer = d3.select(containerRef.current).select("div");
 
     // Get the actual rendered size of the SVG
     const svgBounds = svg.node().getBoundingClientRect();
@@ -163,9 +162,9 @@ export default function VotesTypesBarChart({ parties }) {
     // Calculate the scale factor
     const scaleFactor = svgBounds.width / parseFloat(svg.attr("width"));
 
-    // Update caption position and width
-    caption
-      .style("margin-left", `${150 * scaleFactor}px`)
+    // Update caption container position and width
+    captionContainer
+      .style("margin-left", `${150 * scaleFactor - 3}px`)
       .style("max-width", `${(928 - 150 - 140) * scaleFactor}px`);
   };
 
@@ -177,11 +176,17 @@ export default function VotesTypesBarChart({ parties }) {
 
   return (
     <div ref={containerRef}>
-      <svg ref={svgRef}></svg>
-      <div className="caption">
-        Parties with geographically concentrated supporters tend to do better
-        under First Past the Post
+      <div>
+        <h5
+          style={{ margin: 0, padding: 0, paddingBottom: 5, lineHeight: 1.1 }}
+        >
+          {title}
+        </h5>
+        <div className="caption" style={{ marginBottom: "0px" }}>
+          {caption}
+        </div>
       </div>
+      <svg ref={svgRef}></svg>
     </div>
   );
 }
