@@ -1,17 +1,22 @@
 import React from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faFacebookSquare,
-  faTwitterSquare,
-  faWhatsapp,
-} from "@fortawesome/free-brands-svg-icons";
-
 import "./MagicButtons.css";
+import {
+  FacebookShareButton,
+  TwitterShareButton,
+  WhatsappShareButton,
+  EmailShareButton,
+  FacebookIcon,
+  TwitterIcon,
+  WhatsappIcon,
+  EmailIcon,
+} from "react-share";
 
-const MagicButtons = ({ backendHost, frontendHost, page }) => {
-  const getUrl = (type) => {
-    const url = encodeURIComponent(`${frontendHost}${page}`);
-    return `${backendHost}/magic/${type}?page=${url}`;
+const MagicButtons = () => {
+  const shareUrl = window.location.href;
+  const SHARE_SIZE = 48;
+
+  const buttonStyle = {
+    margin: "0 5px", // This adds 5px on left and right, resulting in 10px between buttons
   };
 
   return (
@@ -20,21 +25,21 @@ const MagicButtons = ({ backendHost, frontendHost, page }) => {
         <div className="row">
           <div className="col-lg-12 text-center">
             <h2>Share this page with your friends</h2>
-            <a href={getUrl("f")} target="_blank" rel="noopener noreferrer">
-              <FontAwesomeIcon
-                icon={faFacebookSquare}
-                style={{ color: "#4267B2" }}
-              />
-            </a>
-            <a href={getUrl("t")} target="_blank" rel="noopener noreferrer">
-              <FontAwesomeIcon
-                icon={faTwitterSquare}
-                style={{ color: "#1DA1F2" }}
-              />
-            </a>
-            <a href={getUrl("w")} target="_blank" rel="noopener noreferrer">
-              <FontAwesomeIcon icon={faWhatsapp} style={{ color: "#4AC959" }} />
-            </a>
+            <TwitterShareButton url={shareUrl} style={buttonStyle}>
+              <TwitterIcon size={SHARE_SIZE} round />
+            </TwitterShareButton>
+
+            <FacebookShareButton url={shareUrl} style={buttonStyle}>
+              <FacebookIcon size={SHARE_SIZE} round />
+            </FacebookShareButton>
+
+            <WhatsappShareButton url={shareUrl} style={buttonStyle}>
+              <WhatsappIcon size={SHARE_SIZE} round />
+            </WhatsappShareButton>
+
+            <EmailShareButton url={shareUrl} style={buttonStyle}>
+              <EmailIcon size={SHARE_SIZE} round />
+            </EmailShareButton>
           </div>
         </div>
       </div>

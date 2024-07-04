@@ -40,11 +40,7 @@ import VotesTypesBarChart from "./components/visualisations/VotesTypesBarChart";
 import classNames from "classnames";
 import HistoricalDataGrid from "./components/visualisations/HistoricalDataGrid";
 
-const BACKEND_HOST = `${window.location.protocol}//${window.location.hostname}:8080`;
-// const BACKEND_HOST = "https://ge2019.electoral-reform.org.uk";
-const FRONTEND_HOST = `${BACKEND_HOST}${
-  window.location.port ? `:${window.location.port}` : ""
-}`;
+const BACKEND_HOST = "https://ge2019.electoral-reform.org.uk";
 
 const constituenciesEscapedNameToPcons = {};
 const constituenciesNumbersToPcons = {};
@@ -1229,11 +1225,7 @@ function App() {
         </>
       )}
       <div className="gap-40"></div>
-      <MagicButtons
-        backendHost={BACKEND_HOST}
-        page={window.location.pathname}
-        frontendHost={FRONTEND_HOST}
-      />
+      <MagicButtons />
       <JoinNewsletter setSubscribePopupOpened={setSubscribePopupOpened} />
       <Footer />
     </div>
