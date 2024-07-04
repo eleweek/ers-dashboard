@@ -104,8 +104,8 @@ const processConstituencies = (constituencies) => {
       }
     });
 
-    const surplusVotes = winningVotes - secondPlaceVotes;
-    const decisiveVotes = secondPlaceVotes;
+    const surplusVotes = winningVotes - secondPlaceVotes - 1;
+    const decisiveVotes = secondPlaceVotes + 1;
 
     return {
       ...constituency,
@@ -207,10 +207,11 @@ const calculatePartyData = (constituencies) => {
     parties[winningPartyName].surplusVotes =
       parties[winningPartyName].surplusVotes +
       winningPartyVotes -
-      secondPlaceVotes;
+      secondPlaceVotes -
+      1;
 
     parties[winningPartyName].decisiveVotes =
-      parties[winningPartyName].decisiveVotes + secondPlaceVotes;
+      parties[winningPartyName].decisiveVotes + secondPlaceVotes + 1;
 
     prevCandidates.forEach((candidate, index) => {
       const partyData = candidate.Party[0].$;
