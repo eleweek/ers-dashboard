@@ -29,8 +29,13 @@ export function FullResultsTable({
                     />
                   );
                 case "totalVotes":
-                case "totalVotesPerSeat":
                   return <td key={column}>{commas(item[column])}</td>;
+                case "totalVotesPerSeat":
+                  return (
+                    <td key={column}>
+                      {item.totalSeats > 0 ? commas(item[column]) : "N/A"}
+                    </td>
+                  );
                 case "totalVotesShare":
                   return (
                     <td key={column}>

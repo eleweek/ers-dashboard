@@ -1,38 +1,279 @@
-.App {
-  text-align: center;
+/* @import url("https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.min.css"); */
+
+body {
+  font-family: "Din Regular";
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+p {
+  font-family: "Crimson Text";
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+a {
+  cursor: pointer;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
+a:hover {
+  opacity: 0.8;
+}
+
+.custom-badge {
+  display: inline-block;
+  height: 1em;
+  width: 1em;
+  border-radius: 2px;
+  margin-bottom: -0.1em;
+  margin-right: 10px;
+}
+
+.text-gap {
+  display: inline-block;
+  margin-left: 20px;
+}
+
+#postcode-finder {
+  max-width: 130px;
+  height: 50px;
+  margin-right: 10px;
+}
+
+[id*="google-visualization-errors-all"] {
+  display: none !important;
+}
+
+table {
+  min-width: auto;
+}
+
+.gap-40 {
+  height: 40px;
+}
+
+.container-cta {
+  padding: 40px 0;
+}
+
+.container-cta.light-cta {
+  background-color: transparent;
+}
+
+.container-cta.dark-cta {
+  background-color: #313b52;
+}
+
+.container-cta.dark-cta,
+.container-cta.dark-cta h1,
+.container-cta.dark-cta h2 {
   color: white;
 }
 
-.App-link {
-  color: #61dafb;
+.divider {
+  border-bottom: solid 1px #ccc;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
+.party-winner {
+  display: inline-block;
+  padding: 20px 40px;
+  border-radius: 7px;
+  margin-bottom: 20px;
+}
+
+.party-winner:not([data-party="Scottish National Party"]) {
+  color: white;
+}
+
+.party-winner-name {
+  font-size: 100px;
+  line-height: 1em;
+}
+
+@media only screen and (max-width: 600px) {
+  .party-winner-name {
+    font-size: 40px;
   }
-  to {
-    transform: rotate(360deg);
-  }
+}
+
+th {
+  background-color: #313b52 !important;
+  background-position: right calc(0.75rem / 2) center;
+  background-repeat: no-repeat;
+  background-size: 0.65em 1em;
+}
+
+th[aria-sort="ascending"] {
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='101' height='101' view-box='0 0 101 101' preserveAspectRatio='none'%3e%3cpath fill='white' d='M51 1l25 23 24 22H1l25-22z'/%3e%3cpath fill='white' opacity='.3' d='M51 101l25-23 24-22H1l25 22z'/%3e%3c/svg%3e");
+}
+
+th[aria-sort="descending"] {
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='101' height='101' view-box='0 0 101 101' preserveAspectRatio='none'%3e%3cpath fill='white' opacity='.3' d='M51 1l25 23 24 22H1l25-22z'/%3e%3cpath fill='white' d='M51 101l25-23 24-22H1l25 22z'/%3e%3c/svg%3e");
+}
+
+th[aria-sort="none"] {
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='101' height='101' view-box='0 0 101 101' preserveAspectRatio='none'%3e%3cpath fill='white' opacity='.3' d='M51 1l25 23 24 22H1l25-22zM51 101l25-23 24-22H1l25 22z'/%3e%3c/svg%3e");
+}
+
+.region-option {
+  display: inline-block;
+  cursor: pointer;
+  padding: 5px 10px;
+  border-radius: 2px;
+  border: solid 1px transparent;
+  margin: 0 1px;
+}
+
+.region-option[data-type="england"] {
+  border-radius: 2px 2px 0 0;
+}
+
+.region-option[data-type="england"].hover {
+  border-bottom: solid 1px white;
+}
+
+.region-option.hover {
+  border: solid 1px #9e589d;
+}
+
+.region-option.selected {
+  font-weight: bold;
+  color: #9e589d;
+}
+
+.eng-sub-region-options {
+  max-width: 410px;
+  margin: 0 auto;
+  padding: 2px 5px 8px 5px;
+  border: solid 1px #9e589d;
+  border-radius: 2px;
+  margin-top: -1px;
+}
+
+.region-option-sub {
+  display: inline-block;
+  font-size: 12px;
+  line-height: 12px;
+  margin-right: 3px;
+  border-radius: 2px;
+  padding: 0 5px;
+  height: 12px;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.region-option-sub:hover {
+  text-decoration: none;
+}
+
+.region-option-sub.selected {
+  font-weight: bold;
+  color: #9e589d;
+  text-decoration: none;
+}
+
+.non-constituency-page {
+  margin-top: 40px;
+}
+
+.region-selector {
+  margin-top: -11px;
+}
+
+#postcode-finder-hint {
+  font-size: 12px;
+  line-height: 12px;
+  margin-bottom: 5px;
+}
+
+.parties-stats-table-seats {
+  width: 70px;
+}
+
+.column-minimum-margin {
+  width: 80px;
+}
+
+.column-needed-to-win {
+  width: 110px;
+}
+
+.huge {
+  font-size: 600%;
+}
+
+.top-menu {
+  border-bottom: solid 1px #ccc;
+  position: fixed;
+  background-color: white;
+  z-index: 20000;
+  width: 100%;
+  padding-top: 30px;
+  max-width: 100%;
+}
+
+.top-menu-marginer {
+  height: 130px;
+}
+
+td {
+  border-bottom: solid 1px #ccc;
+}
+
+th:first-child {
+  border-radius: 3px 0 0 3px;
+}
+
+th:last-child {
+  border-radius: 0 3px 3px 0;
+}
+
+.parties-table tr td:not(:first-child) {
+  white-space: nowrap;
+}
+
+h1.with-sup {
+  margin-top: -0.17em;
+}
+
+h1.with-sup .sup {
+  display: inline;
+  font-size: 0.5em;
+  vertical-align: super;
+}
+
+.btn {
+  margin: 0;
+}
+
+.postcode-error {
+  position: absolute;
+  margin-top: -19px;
+  font-size: 70%;
+}
+
+.ers-branding {
+  padding: 15px 0;
+}
+
+.ers-branding__logo {
+  display: inline-block;
+  max-width: 200px;
+}
+
+.ers-branding__logo img {
+  width: 100%;
+  height: auto;
+}
+
+.link-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.caption {
+  font-size: 70%;
+}
+
+.container-fluid {
+  max-width: 100%;
+  padding-left: 50px;
+  padding-right: 50px;
 }
