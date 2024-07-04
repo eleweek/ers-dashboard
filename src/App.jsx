@@ -304,8 +304,8 @@ const calculatePartyPercentagesAndVotesPerSeat = (
 function getPartiesTableSettings(partiesTableColumns, data) {
   const columnsToLabels = {
     name: "Party",
-    totalSeats: "Seats",
-    totalSeatsShare: "Seats %",
+    totalSeats: "MPs",
+    totalSeatsShare: "MPs %",
     totalVotesShare: "Votes %",
     totalVotes: "Votes",
     totalVotesPerSeat: "Votes per Seat",
@@ -674,7 +674,7 @@ const processDataForBeeswarm = (data) => {
 function LeadBarChartParties({ data }) {
   const partiesChartData = useMemo(() => {
     const table = [
-      ["Party", "Votes %", { role: "style" }, "Seats %", { role: "style" }],
+      ["Party", "MPs %", { role: "style" }, "MPs %", { role: "style" }],
     ];
 
     data.parties.forEach((party) => {
@@ -708,7 +708,7 @@ function LeadBarChartParties({ data }) {
           className="custom-badge"
           style={{ backgroundColor: othersColor }}
         ></div>
-        % Seats
+        % MPs
       </div>
       <Chart
         width={"100%"}
