@@ -1,7 +1,12 @@
 import React from "react";
 import * as d3 from "d3";
 
-const PartyHistoricalArrows = ({ partyData, partyColor, partyName }) => {
+const PartyHistoricalArrows = ({
+  partyData,
+  partyColor,
+  partyName,
+  maxDomainValue,
+}) => {
   const width = 300;
   const height = 200;
   const margin = { top: 20, right: 30, bottom: 30, left: 60 };
@@ -9,8 +14,6 @@ const PartyHistoricalArrows = ({ partyData, partyColor, partyName }) => {
   const plotHeight = height - margin.top - margin.bottom;
 
   const years = partyData.map((d) => d.year);
-  const allValues = partyData.flatMap((d) => [d.votes, d.seats]);
-  const maxValue = Math.ceil(d3.max(allValues) * 1.1); // Add 10% padding
 
   const xScale = d3
     .scalePoint()
@@ -18,7 +21,10 @@ const PartyHistoricalArrows = ({ partyData, partyColor, partyName }) => {
     .range([0, plotWidth])
     .padding(0.5);
 
-  const yScale = d3.scaleLinear().domain([0, maxValue]).range([plotHeight, 0]);
+  const yScale = d3
+    .scaleLinear()
+    .domain([0, maxDomainValue])
+    .range([plotHeight, 0]);
 
   const formatPercent = (value) => `${value.toFixed(1)}%`;
 
@@ -78,7 +84,7 @@ const PartyHistoricalArrows = ({ partyData, partyColor, partyName }) => {
           const yVotes = yScale(d.votes);
           const ySeats = yScale(d.seats);
           const hasMoreSeats = d.seats > d.votes;
-          const triangleRotation = hasMoreSeats ? 180 : 0; // Reversed as per your instruction
+          const triangleRotation = hasMoreSeats ? 180 : 0;
 
           return (
             <g key={d.year} transform={`translate(${x}, 0)`}>
@@ -146,24 +152,50 @@ const HistoricalDataGrid = () => {
   const parties = Object.keys(historicalData);
   const [conservative, labour, ...rest] = parties;
 
+  // Calculate max domain value for each row
+  const getMaxValue = (partyData) => {
+    return Math.ceil(
+      Math.max(...partyData.flatMap((d) => [d.votes, d.seats])) * 1.1
+    );
+  };
+
+  const maxValueTopRow = Math.max(
+    getMaxValue(historicalData[conservative]),
+    getMaxValue(historicalData[labour])
+  );
+
+  const maxValueBottomRow = Math.max(
+    ...rest.map((party) => getMaxValue(historicalData[party]))
+  );
+
   return (
     <div
       style={{
         display: "grid",
-        gridTemplateColumns: "repeat(3, 1fr)",
+        gridTemplateColumns: "repeat(4, 1fr)",
         gap: "20px",
       }}
     >
-      {[conservative, labour].map((party) => (
-        <div key={party} style={{ gridColumn: "span 3" }}>
-          <h2>{party}</h2>
-          <PartyHistoricalArrows
-            partyData={historicalData[party]}
-            partyColor={partyColors[party]}
-            partyName={party}
-          />
-        </div>
-      ))}
+      {/* Top row: Conservative and Labour */}
+      <div style={{ gridColumn: "span 2" }}>
+        <h2>{conservative}</h2>
+        <PartyHistoricalArrows
+          partyData={historicalData[conservative]}
+          partyColor={partyColors[conservative]}
+          partyName={conservative}
+          maxDomainValue={maxValueTopRow}
+        />
+      </div>
+      <div style={{ gridColumn: "span 2" }}>
+        <h2>{labour}</h2>
+        <PartyHistoricalArrows
+          partyData={historicalData[labour]}
+          partyColor={partyColors[labour]}
+          partyName={labour}
+          maxDomainValue={maxValueTopRow}
+        />
+      </div>
+      {/* Bottom row: Other parties */}
       {rest.map((party) => (
         <div key={party}>
           <h2>{party}</h2>
@@ -171,6 +203,7 @@ const HistoricalDataGrid = () => {
             partyData={historicalData[party]}
             partyColor={partyColors[party]}
             partyName={party}
+            maxDomainValue={maxValueBottomRow}
           />
         </div>
       ))}
