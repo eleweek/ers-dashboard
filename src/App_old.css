@@ -271,3 +271,9 @@ h1.with-sup .sup {
 .caption {
   font-size: 70%;
 }
+
+.container-fluid {
+  max-width: 100%;
+  padding-left: 50px;
+  padding-right: 50px;
+}

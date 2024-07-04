@@ -240,9 +240,8 @@ export default function HexMap({ hexjson, data, valueType, displayMode }) {
       } else {
         tooltipContent += `${data[
           e.data.region
-        ].value.toLocaleString()} ${valueType}`;
+        ].toLocaleString()} ${valueType}`;
       }
-      tooltipContent += `<br />Region: ${e.data.data.a}`;
       tip.innerHTML = tooltipContent;
 
       const bb = hex.getBoundingClientRect();

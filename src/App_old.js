@@ -763,7 +763,7 @@ function RegionAndUKPage({ data, page, pageParam }) {
     <>
       <div className="container-fluid non-constituency-page">
         <div className="row">
-          <div className="col-lg-8">
+          <div className="col-lg-12">
             <h1 style={{ paddingTop: 0 }}>
               {page !== "region"
                 ? "2019 General Election Results"
@@ -788,10 +788,10 @@ function RegionAndUKPage({ data, page, pageParam }) {
         <div className="gap-40"></div>
         <div className="row">
           <div className="col-lg-8">
-            <h3>
+            <h2>
               The percentage of votes a party receives is not the same as the
               percentage of MPs they win in parliament
-            </h3>
+            </h2>
             <p>
               The last nine years have witnessed four general elections, a
               nationwide referendum and no less than six prime ministers. At
@@ -806,11 +806,18 @@ function RegionAndUKPage({ data, page, pageParam }) {
               lose out.
             </p>
             <DotPlot parties={data.parties} />
+          </div>
+        </div>
+        <div className="gap-40"></div>
 
+        <div className="row">
+          <div className="col-lg-5">
+            <WinningPartyHexMap data={data} />
+          </div>
+          <div className="col-lg-7">
             <h3>
               How do some parties end up with more seats than they deserve?
             </h3>
-            <WinningPartyHexMap data={data} />
             <p>
               Elections in the UK are 650 individual contests. Rather than
               trying to represent the diversity of opinions in your local area,
@@ -823,6 +830,7 @@ function RegionAndUKPage({ data, page, pageParam }) {
               to win the representation they deserve in Westminster.
             </p>
             <VotesPerMPBarChart parties={data.parties} />
+
             <div className="caption">
               This is the total number of votes for the candidates of each
               party, divided by the number of MPs they won. Parties on the top
@@ -842,7 +850,11 @@ function RegionAndUKPage({ data, page, pageParam }) {
               it can matter more where your MPs are, than how many votes you
               have.
             </p>
-
+          </div>
+        </div>
+        <div className="gap-40"></div>
+        <div className="row">
+          <div className="col-lg-8">
             <h2>Full Results</h2>
 
             <FullResultsTable
