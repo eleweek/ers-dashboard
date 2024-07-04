@@ -61,8 +61,7 @@ export default function VotesTypesBarChart({ parties }) {
     const color = d3
       .scaleOrdinal()
       .domain(categories)
-      .range(["#3e6657", "#ffd3b6", "#a3454c"]);
-    // .range(["#a8e6cf", "#ffd3b6", "#ff8b94"]);
+      .range(["#fc85ae", "#9e579d", "#303A52"]);
 
     svg
       .append("g")
