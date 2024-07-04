@@ -101,11 +101,15 @@ const PartyHistoricalArrows = ({
                 stroke={partyColor}
                 strokeWidth={1}
               />
-              <circle cx={0} cy={yVotes} r={2} fill={partyColor} />
+              {Math.abs(yVotes - ySeats) > 5 && (
+                <circle cx={0} cy={yVotes} r={2} fill={partyColor} />
+              )}
               <path
                 d="M -3 0 L 3 0 L 0 5 Z"
                 fill={partyColor}
-                transform={`translate(0, ${ySeats}) rotate(${triangleRotation})`}
+                transform={`translate(0, ${
+                  triangleRotation === 0 ? ySeats - 5 : ySeats
+                }) rotate(${triangleRotation})`}
               />
               {/* Labels */}
               {showThisLabel && (
@@ -118,7 +122,7 @@ const PartyHistoricalArrows = ({
                     alignmentBaseline="middle"
                     fontSize="12px"
                   >
-                    {formatPercent(d.votes)} votes
+                    {formatPercent(d.votes)} {d.year === latestYear && "votes"}
                   </text>
                   <text
                     x={5}
@@ -129,7 +133,7 @@ const PartyHistoricalArrows = ({
                     fontSize="12px"
                     fontWeight="bold"
                   >
-                    {formatPercent(d.seats)} seats
+                    {formatPercent(d.seats)} {d.year === latestYear && "seats"}
                   </text>
                 </>
               )}
