@@ -273,7 +273,8 @@ h1.with-sup .sup {
 }
 
 .caption {
-  font-size: 70%;
+  font-size: 14px;
+  line-height: 1.2;
 }
 
 .container-fluid {
