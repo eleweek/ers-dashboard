@@ -461,6 +461,10 @@ function HexMaps({ data, unfilteredData, selectedRegion }) {
         valueType={valueType}
         displayMode="value"
       />
+      <div className="caption">
+        Different areas have different mixes of decisive, unrepresented or
+        surplus votes
+      </div>
     </div>
   );
 }
@@ -964,10 +968,7 @@ function RegionAndUKPage({ data, unfilteredData, page, pageParam }) {
             </p>
 
             <VotesTypesBarChart parties={data.parties} />
-            <div className="caption">
-              Parties with geographically concentrated supporters tend to do
-              better under First Past the Post
-            </div>
+
             <div className="gap-40"></div>
             <HexMaps
               data={data}
@@ -975,10 +976,6 @@ function RegionAndUKPage({ data, unfilteredData, page, pageParam }) {
               key={pageParam}
               selectedRegion={pageParam}
             />
-            <div className="caption">
-              Different areas have different mixes of decisive, unrepresented or
-              surplus votes
-            </div>
             <div>
               Whether a seat is won with the lowest share of the vote or
               highest, it makes no difference in Westminster. Likewise, a party

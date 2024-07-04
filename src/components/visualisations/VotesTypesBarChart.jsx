@@ -4,6 +4,7 @@ import { displayedPartyName } from "./utils";
 
 export default function VotesTypesBarChart({ parties }) {
   const svgRef = useRef();
+  const containerRef = useRef();
 
   useEffect(() => {
     if (parties && parties.length > 0) {
@@ -16,7 +17,7 @@ export default function VotesTypesBarChart({ parties }) {
     const height = 350;
     const marginTop = 30;
     const marginRight = 140; // Increased right margin for legend
-    const marginBottom = 30;
+    const marginBottom = 10;
     const marginLeft = 150;
 
     // Clear any existing SVG content
@@ -104,7 +105,7 @@ export default function VotesTypesBarChart({ parties }) {
             g
               .selectAll(".tick text")
               .attr("dy", "-0.2em") // Increase space between tick and label
-              .attr("font-size", "13px") // Increase font size
+              .attr("font-size", "14px") // Changed to 14px as requested
         );
 
     svg.append("g").call(xAxis);
@@ -147,7 +148,40 @@ export default function VotesTypesBarChart({ parties }) {
           ? result.replace(" votes", "")
           : result;
       });
+
+    // Update caption position
+    updateCaptionPosition();
   };
 
-  return <svg ref={svgRef}></svg>;
+  const updateCaptionPosition = () => {
+    const svg = d3.select(svgRef.current);
+    const caption = d3.select(containerRef.current).select(".caption");
+
+    // Get the actual rendered size of the SVG
+    const svgBounds = svg.node().getBoundingClientRect();
+
+    // Calculate the scale factor
+    const scaleFactor = svgBounds.width / parseFloat(svg.attr("width"));
+
+    // Update caption position and width
+    caption
+      .style("margin-left", `${150 * scaleFactor}px`)
+      .style("max-width", `${(928 - 150 - 140) * scaleFactor}px`);
+  };
+
+  // Add resize listener
+  useEffect(() => {
+    window.addEventListener("resize", updateCaptionPosition);
+    return () => window.removeEventListener("resize", updateCaptionPosition);
+  }, []);
+
+  return (
+    <div ref={containerRef}>
+      <svg ref={svgRef}></svg>
+      <div className="caption">
+        Parties with geographically concentrated supporters tend to do better
+        under First Past the Post
+      </div>
+    </div>
+  );
 }
