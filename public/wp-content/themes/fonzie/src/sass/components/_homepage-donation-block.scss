@@ -1,0 +1,75 @@
+.homepage-donation-block {
+	@include clearfix();
+	position: relative;
+	word-break: break-word;
+
+	.icon{
+		path{
+			fill: #DB3283;
+		}
+	}
+
+	&__content {
+		margin-top: 15px;
+
+		@include media-breakpoint-up(md) {
+			margin-top: 0;
+		}
+
+		&__text {
+
+		}
+
+		h3 {
+			margin-top: 0;
+			padding-bottom: 5px;
+			padding-top: 0;
+			position: relative;
+			font-size: 24px;
+			font-weight: 700;
+		}
+
+		.icon{
+			position: absolute;
+			left: -1em;
+
+		}
+
+		p {
+			font-size: 18px;
+		}
+
+		.btn {
+			width: 100%;
+			vertical-align: top;
+			word-break: break-word;
+
+			@include media-breakpoint-up(sm) {
+				width: auto;
+				max-width: 45%;
+			}
+			@include media-breakpoint-only(md) {
+				width: 100%;
+				max-width: none;
+			}
+
+			&:last-child {
+				margin-bottom: 0;
+			}
+		}
+	}
+
+	&__images{
+
+	}
+
+	&__image{
+		padding-left: 5px;
+		width: 50%;
+		float: left;
+		img{
+			border-radius: $border-radius;
+		}
+	}
+
+}

@@ -1,0 +1,45 @@
+.service-post-information {
+	border: 1px solid $border-color;
+	border-radius: $border-radius;
+	padding: 20px;
+	@include media-breakpoint-up(md) {
+		padding: 40px;
+	}
+	@include clearfix();
+
+	h4 {
+		padding-top: 0;
+		padding-bottom: 10px;
+		color: $colour--grey;
+		text-transform: uppercase;
+		font-size: 14px;
+		font-weight: bold;
+		svg {
+			position: relative;
+			top: 2px;
+			width: 15px;
+			height: 15px;
+			path {
+				fill: $colour--grey;
+			}
+		}
+	}
+
+	p, dl {
+		font-size: 16px;
+	}
+
+	.opening-hours {
+		text-transform: uppercase;
+		dt {
+			float: left;
+			clear: left;
+			display: inline-block;
+			width: 75px;
+			font-weight: bold;
+		}
+		dd {
+			float: left;
+		}
+	}
+}

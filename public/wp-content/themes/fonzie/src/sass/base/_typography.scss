@@ -1,0 +1,124 @@
+/* Base: Typography
+========================================================================== */
+h1, h2, h3, h4, h5,
+.h1, .h2, .h3, .h4, .h5 {
+  margin: 0;
+  color: $brand-heading;
+  word-break: break-word;
+}
+
+h1, .h1{
+  font-size: 32px;
+  line-height: 40px;
+  padding-top: 30px;
+  padding-bottom: 20px;
+  @include media-breakpoint-up(sm) {
+    font-size: 48px;
+    line-height: 55px;
+    padding-top: 40px;
+    padding-bottom: 40px;
+  }
+}
+
+h2, .h2{
+  font-size: 26px;
+  line-height: 34px;
+  padding-top: 15px;
+  padding-bottom: 20px;
+  @include media-breakpoint-up(sm) {
+    font-size: 28px;
+    padding-top: 40px;
+    padding-bottom: 20px;
+  }
+}
+
+h3, .h3{
+  font-size: 22px;
+  line-height: 34px;
+  padding-top: 10px;
+  padding-bottom: 20px;
+  @include media-breakpoint-up(sm) {
+    font-size: 24px;
+    padding-top: 30px;
+  }
+}
+
+h4, .h4{
+  font-size: 18px;
+  line-height: 34px;
+  padding-top: 10px;
+  padding-bottom: 15px;
+  @include media-breakpoint-up(sm) {
+    padding-top: 30px;
+    padding-bottom: 20px;
+  }
+}
+
+h5, .h5{
+  font-size: 14px;
+  line-height: 34px;
+  padding-bottom: 15px;
+  @include media-breakpoint-up(sm) {
+    padding-top: 30px;
+    padding-bottom: 20px;
+  }
+}
+
+p, dl{
+  line-height: 22px;
+  @include media-breakpoint-up(sm) {
+    line-height: 30px;
+  }
+}
+
+blockquote {
+  padding-left: 40px;
+  color: $brand-secondary;
+  font-size: 18px;
+  line-height: 25px;
+  @include media-breakpoint-up(sm) {
+    font-size: 24px;
+    line-height: 34px;
+  }
+}
+
+small,
+.small {
+  font-size: 14px;
+  line-height: 22px;
+  @include media-breakpoint-up(sm) {
+    font-size: 16px;
+  }
+}
+
+.heading_pull-top{
+  padding-top: 0;
+}
+
+.text{
+
+  &-center{
+    text-align: center;
+  }
+
+  &-left{
+    text-align: left;
+  }
+
+  &-right{
+    text-align: right;
+  }
+
+  &-color {
+    &-grey {
+      color: $colour--grey;
+    }
+  }
+
+  &-weight {
+    &-medium {
+      font-weight: 400;
+    }
+  }
+
+}

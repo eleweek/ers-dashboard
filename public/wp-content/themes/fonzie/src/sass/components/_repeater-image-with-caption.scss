@@ -1,0 +1,25 @@
+.image-with-caption, .wp-caption {
+	max-width: 100%;
+	margin-top: 0;
+	word-break: break-word;
+	img {
+		width: 100%;
+	}
+	&__caption, .wp-caption-text {
+		background-color: $colour--lighter-grey;
+		line-height: 22px;
+		text-align: center;
+		font-size: 16px;
+		font-style: italic;
+		padding: 15px 18px;
+		@include media-breakpoint-up(md) {
+			padding: 18px 35px;
+		}
+		p {
+			line-height: 22px;
+			&:last-child {
+				margin-bottom: 0;
+			}
+		}
+	}
+}

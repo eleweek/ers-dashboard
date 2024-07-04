@@ -1,0 +1,9 @@
+/* This table can be seen on the events listing page when selecting a date range */
+.table-condensed {
+	min-width: 0;
+
+	th,
+	td {
+		padding: $table-sm-cell-padding;
+	}
+}

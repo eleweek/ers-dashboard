@@ -1,0 +1,28 @@
+/* Base: Helpers
+========================================================================== */
+.float-left {
+	float: left;
+}
+.float-right {
+	float: right;
+}
+
+// margin and padding helper classes ( e.g. .margin-top-30 {margin-top: 30px;} )
+$sizes: 0, 30, 60; // specify all the sizes of margin and padding helpers that you want here
+$classes: margin-top, margin-right, margin-bottom, margin-left,
+          padding-top, padding-right, padding-bottom, padding-left;
+
+@each $class in $classes {
+  @each $size in $sizes {
+    .#{$class}-#{$size} {
+      #{$class}: #{$size}px;
+    }
+    // output:
+    // .margin-top-30 {
+    // 		margin-top: 30px;
+    // }
+    // .. etc ..
+  }
+}
+
+

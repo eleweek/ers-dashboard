@@ -1,0 +1,355 @@
+/* Base: Buttons
+========================================================================== */
+.btn {
+  // background-color: $colour--white;
+  color: $colour--black;
+  font-size: 16px;
+  font-weight: 700;
+  display: inline-block;
+  padding: 12px 16px;
+  text-align: center;
+  border-radius: 5px;
+  transition: color 0.2s, background-color 0.2s;
+  box-sizing: border-box;
+  // width: 105px;
+  background-color: $brand-primary;
+  border: 1px solid transparent;
+  color: white;
+  margin-right: $btn--margin;
+  margin-bottom: $btn--margin;
+  line-height: 24px;
+  word-break: break-word;
+
+  &:hover, &:focus {
+    background-color: $brand-secondary;
+    color: white;
+  }
+
+  &_right {
+    margin-right: 0;
+  }
+
+  &_secondary {
+    background-color: $brand-secondary;
+  }
+
+  // outlined button
+  &_outlined {
+    background-color: lighten($brand-tertiary, 4);
+    color: $brand-primary;
+    border: 1px solid $brand-primary;
+
+    &:hover, &:focus {
+      background-color: lighten($brand-tertiary, 1);
+      color: $brand-secondary;
+      i {
+        path {
+          fill: $brand-secondary;
+        }
+      }
+    }
+    i {
+      path {
+        fill: $brand-primary;
+      }
+    }
+  }
+
+  // download button
+  &_download {
+    display: block;
+    width: 100%;
+    border: 2px solid $brand-primary;
+    text-align: left;
+    padding: 18px 70px 18px 22px;
+    position: relative;
+    margin-bottom: 0;
+    span {
+      span {
+        display: inline-block;
+      }
+    }
+    .icon {
+      position: absolute;
+      right: 20px;
+      top: 50%;
+      transform: translateY(-50%);
+      svg {
+        width: 40px;
+        height: 30px;
+      }
+    }
+  }
+
+  // borderless button
+  &_borderless {
+    border: none;
+    background-color: transparent;
+    color: $brand-primary;
+    padding-left: 0;
+    padding-right: 0;
+    &:hover, &:focus {
+      color: $brand-secondary;
+      background-color: transparent;
+      i {
+        path {
+          fill: $brand-secondary;
+        }
+      }
+    }
+    i {
+      margin-right: 0;
+      margin-left: 0;
+      path {
+        fill: $brand-primary;
+      }
+    }
+  }
+
+  // buttons with icons
+  &_icon-left {
+    i {
+      margin-right: 5px;
+    }
+  }
+
+  &_icon-right {
+    i {
+      margin-left: 5px;
+    }
+  }
+
+  // other colours
+  &_white {
+    background-color: white;
+    color: $colour--dark-grey;
+    border: 1px solid $colour--light-grey;
+    &:hover, &:focus, &.btn_active {
+      background-color: $brand-primary;
+      color: white;
+      border: 1px solid $brand-primary;
+    }
+    i {
+      path {
+        fill: $brand-primary;
+      }
+    }
+  }
+  &_bg-facebook {
+    background-color: $colour--facebook;
+    border-color: 1px solid $colour--facebook;
+    &:hover, &:focus {
+      background-color: darken($colour--facebook, 10);
+    }
+  }
+  &_bg-twitter {
+    background-color: $colour--twitter;
+    border-color: 1px solid $colour--twitter;
+    &:hover, &:focus {
+      background-color: darken($colour--twitter, 10);
+    }
+  }
+
+	&_bg-email {
+		background-color: $colour--email;
+		border-color: 1px solid $colour--email;
+
+		&:hover,
+		&:focus {
+			background-color: darken($colour--email, 10);
+		}
+	}
+
+  &_fixed-width {
+    width: 240px;
+  }
+
+  &_donation {
+    border-radius: 25px;
+    min-width: 134px;
+    margin-bottom: 0;
+
+    .icon {
+      top: 2px;
+    }
+
+    &.btn_bg-facebook {
+      .icon {
+        svg {
+          width: 10px;
+          height: 18px;
+        }
+      }
+    }
+
+    &.btn_bg-twitter {
+      .icon {
+        svg {
+          width: 17px;
+          height: 18px;
+        }
+      }
+    }
+
+    &.btn_bg-email {
+      .icon {
+        svg {
+          width: 18px;
+          height: 18px;
+        }
+      }
+    }
+
+  }
+
+  i {
+    line-height: 0;
+    position: relative;
+    top: 1px;
+  }
+
+  // + .btn{
+  //   margin-left: $btn--margin;
+  // }
+
+  &:hover, &:focus {
+    // color: $colour--black;
+    text-decoration: none;
+  }
+
+  &[disabled] {
+    background-color: #ccc;
+    cursor: default;
+  }
+
+}
+
+.btn--alt {
+  background-color: $colour--lighter-grey;
+  border-color: $colour--lighter-grey;
+}
+
+.btn--full{
+  width: 100%;
+}
+
+.btn--fluid{
+  width: auto;
+}
+
+.btn--border{
+  border: 1px solid $gray-light;
+}
+
+// button list - whenever you find a row of buttons, they will be in a button list
+.btn-list {
+  margin-bottom: 30px;
+  ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    li {
+      display: inline-block;
+      margin-right: $btn--margin;
+      &:last-child {
+        margin-right: 0;
+      }
+    }
+  }
+
+  .btn {
+    margin-right: 0;
+  }
+
+  // social share button list
+  &_social-share {
+    background-color: $colour--lighter-grey;
+    padding: 8px;
+    display: block;
+    border-radius: 4px;
+    margin-top: 30px;
+    margin-bottom: 10px;
+
+    @include media-breakpoint-up(sm) {
+      display: inline-block;
+    }
+
+    ul li {
+      display: block;
+      width: 46%;
+      float: left;
+      margin: 2%;
+
+      @include media-breakpoint-up(sm) {
+        display: inline-block;
+        float: none;
+        width: auto;
+        margin: 0 3px 0 0;
+      }
+    }
+    .btn {
+      display: block;
+      background-color: white;
+      box-shadow: 0.7px 0.7px 2px $colour--light-grey;
+      padding: 5px 9px;
+      color: $colour--dark-grey;
+      margin-bottom: 0;
+      &:hover, &:focus {
+        background-color: darken(white, 3);
+      }
+      i {
+        margin-right: 2px;
+        path {
+          fill: $colour--dark-grey;
+        }
+      }
+      &_icon-facebook {
+        i {
+          path {
+            fill: $colour--facebook;
+          }
+        }
+      }
+      &_icon-twitter {
+        i {
+          path {
+            fill: $colour--twitter;
+          }
+        }
+      }
+      &_icon-linkedin {
+        i {
+          path {
+            fill: $colour--linkedin;
+          }
+        }
+      }
+
+    }
+  }
+
+  // tags list
+  &_tags {
+    i {
+      svg path {
+        fill: $brand-primary;
+      }
+    }
+    ul li {
+      margin-right: 0;
+    }
+    ul li:not(:last-child) span:after {
+      content: ","
+    }
+  }
+}
+
+.btn-block {
+  display: block;
+  width: 100%;
+}
+
+// Vertically space out multiple block buttons
+.btn-block + .btn-block {
+  margin-top: 5px;
+}

@@ -1,0 +1,13 @@
+# File ignores
+.DS_Store
+Thumbs.db
+codecept.phar
+codeception.yml
+composer.lock
+composer.phar
+npm-debug.log
+npm-debug.log*
+
+# Dir ignores
+node_modules
+.sass-cache

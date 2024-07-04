@@ -1,0 +1,75 @@
+.voting-filter {
+	background-color: $brand-primary;
+	margin-bottom: 15px;
+	padding: 15px 15px 15px;
+
+	@include media-breakpoint-up(md) {
+		align-items: center;
+		display: flex;
+		flex-wrap: wrap;
+		margin-bottom: 35px;
+		padding: 20px 30px;
+	}
+
+	> div,
+	> a {
+
+		@include media-breakpoint-up(md) {
+			margin-right: 10px;
+		}
+	}
+
+	select {
+		font-family: $din-bold;
+		font-size: 14px;
+		padding: 10px;
+		width: 100%;
+		height: 50px;
+
+		@include media-breakpoint-up(sm) {
+			max-width: 325px;
+		}
+
+		option {
+			font-family: $din-regular;
+		}
+	}
+
+	button {
+		margin-top: 10px;
+
+		@include media-breakpoint-up(sm) {
+			margin-top: 0;
+		}
+	}
+}
+
+.voting-filter__title {
+	font-family: $din-bold;
+	font-size: 14px;
+	flex-basis: 100%;
+	margin-bottom: 10px;
+
+	@include media-breakpoint-up(md) {
+		font-size: 18px;
+	}
+
+	@include media-breakpoint-up(lg) {
+		flex-basis: auto;
+		margin-bottom: 0;
+	}
+}
+
+.voting-filter__btn {
+	background-color: transparent;
+	border: 1px solid #303A53;
+	cursor: pointer;
+	font-family: $din-bold;
+	font-size: 16px;
+	margin: 0;
+}
+
+.voting-filter__btn--active {
+	background-color: #303A53;
+	color: #fff;
+}

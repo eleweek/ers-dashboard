@@ -1,0 +1,70 @@
+.block__item {
+
+	.block__link {
+		font-family: $din-bold;
+		font-size: 16px;
+		font-weight: 700;
+	}
+}
+
+.block__item--cta-home {
+	text-align: center;
+}
+
+.block__item--page {
+	flex-grow: 1;
+	float: none;
+	min-height: 0;
+
+	a {
+
+		background-color: #574992;
+		color: #fff;
+		min-height: 0;
+		padding: 25px 30px;
+
+		&:hover,
+		&:focus {
+			background-color: #3C2D78;
+			color: #fff;
+		}
+	}
+
+	h3 {
+		color: #fff;
+		font-size: 28px;
+		margin-bottom: 10px;
+		padding: 0;
+	}
+
+	.block__link {
+		margin-top: 15px;
+	}
+}
+
+.block__item--latest-home {
+	width: 100%;
+}
+
+.block__item--generic.block__item--third .block__image img {
+	border-radius: 0;
+}
+
+.block__item--campaign-info {
+
+	a {
+		background-color: #fff;
+	}
+}
+
+.block__item--team {
+	width: 100%;
+
+	@include media-breakpoint-up(md) {
+		width: 50%;
+	}
+
+	@include media-breakpoint-up(lg) {
+		width: percentage(1/3);
+	}
+}

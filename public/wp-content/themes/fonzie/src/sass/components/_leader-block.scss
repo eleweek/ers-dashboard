@@ -1,0 +1,60 @@
+.leader-block {
+  margin-top: 30px;
+  margin-bottom: 30px;
+
+  @include media-breakpoint-up(md) {
+    margin-top: 60px;
+    margin-bottom: 60px;
+  }
+
+  &__item {
+    display: block;
+    margin-bottom: 30px;
+    color: $colour--black;
+
+    &:hover,
+    &:focus {
+      text-decoration: none;
+    }
+
+    > img {
+      display: block;
+      width: 100%;
+      height: auto;
+      border-radius: $border-radius;
+      border: 0;
+    }
+  }
+
+  &__heading {
+    margin-top: 10px;
+    padding-top: 16px;
+    padding-bottom: 40px;
+    text-decoration: underline;
+  }
+
+  &__thumb-placeholder {
+    border-radius: $border-radius;
+    width: 100%;
+    height: auto;
+    position: relative;
+
+    &:after {
+      padding-top: 59%;
+      display: block;
+      content: '';
+    }
+
+    span {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      right: 0;
+      left: 0;
+      background-color: $brand-primary;
+      border-radius: $border-radius;
+    }
+
+  }
+
+}

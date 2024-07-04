@@ -1,0 +1,114 @@
+/* Base: Tables
+========================================================================== */
+table,
+th,
+td {
+	border: 1px solid $border-color;
+	border-collapse: collapse;
+}
+table {
+	width: 100%;
+	word-break: break-word;
+	font-size: 14px;
+
+	@include media-breakpoint-up(sm) {
+		font-size: 16px;
+	}
+
+	@include media-breakpoint-up(md) {
+		min-width: 600px;
+		table-layout: fixed;
+	}
+}
+
+th,
+td {
+	text-align: center;
+}
+
+th {
+	text-align: center;
+	background-color: $table-header-colour;
+	color: $brand-primary;
+	font-weight: 700;
+	padding: 15px 10px;
+
+	@include media-breakpoint-up(sm) {
+		font-size: 18px;
+	}
+}
+td {
+	background-color: $table-data-colour;
+	padding: 15px 10px;
+}
+
+
+/*
+	The below table styles will only affect elements inside the .content-area class.
+	The datepicker tables will not be affected due to their element appearing outside of .content-area.
+
+	In the file, template.tables.js, you can see which selector is being targeted for these styles.
+	The same styles that are being targeted in template.tables.js should match up to the selectors below.
+*/
+.content-area {
+	@include media-breakpoint-down(sm) {
+		@media screen {
+			table {
+				border: 0;
+				&, p {
+					font-size: 13px;
+				}
+
+				thead, tfoot {
+					display: none;
+				}
+
+				&, tfoot, tbody, td, th, tr {
+					display: block;
+				}
+
+				thead, tbody {
+					td, th {
+						padding: 10px;
+						border: none;
+						border-left: 1px solid $border-color;
+						border-right: 1px solid $border-color;
+						border-bottom: 1px solid $border-color;
+					}
+				}
+
+				tbody {
+					tr {
+						margin-bottom: 10px;
+						border-top: 1px solid $border-color;
+						border-bottom: none;
+
+						&:nth-child(even) {
+							background-color: white;
+						}
+					}
+
+					.table__cell--meta {
+						display: table;
+						width: 100%;
+
+						&:before {
+							content: attr(data-meta);
+							color: $brand-primary;
+							font-weight: 700;
+							width: 100px;
+							padding: 10px;
+							display: table-cell;
+												border-right: 10px solid transparent;
+							background-color: $table-header-colour;
+						}
+
+						&:nth-child(even) {
+							background-color: #f6f6f6;
+						}
+					}
+				}
+			}
+		}
+	}
+}

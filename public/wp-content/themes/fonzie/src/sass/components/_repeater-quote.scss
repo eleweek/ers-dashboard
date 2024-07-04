@@ -1,0 +1,60 @@
+.blockquote {
+	padding: 24px 24px 24px 62px;
+	margin-bottom: 20px;
+	background-color: lighten($colour--lighter-grey, 7);
+	border: 1px solid $border-color;
+	position: relative;
+	word-break: break-word;
+	@include media-breakpoint-up(md) {
+		padding: 30px 30px 30px 68px;
+		padding-left: 68px;
+		&--has-avatar {
+			min-height: 195px;
+			padding-right: 200px;
+		}
+	}
+	&__avatar {
+		border-radius: 100px;
+		width: 67px;
+		height: 67px;
+		margin-left: -42px;
+		margin-right: 16px;
+		@include media-breakpoint-up(md) {
+			width: 126px;
+			height: 126px;
+			position: absolute;
+			top: 35px;
+			right: 50px;
+		}
+	}
+	p {
+		font-size:  22px;
+		font-weight: 300;
+		line-height: 34px;
+		padding-top: 0;
+		color: $colour--grey;
+
+		&:last-of-type {
+			@include media-breakpoint-up(md) {
+				margin-bottom: 0;
+			}
+		}
+
+		@include media-breakpoint-up(md) {
+			font-size: 24px;
+		}
+	}
+	cite {
+		font-size: 16px;
+		color: $colour--grey;
+		margin-top: 16px;
+		display: inline-block;
+	}
+	svg {
+		width: 25px;
+		height: 23px;
+		position: absolute;
+		top: 29px;
+		left: 19px;
+	}
+}

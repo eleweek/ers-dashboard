@@ -1,0 +1,10 @@
+//Custom
+
+$brand-primary: __PRIMARY__;
+$brand-secondary: __SECONDARY__;
+$brand-tertiary: __TERTIARY__;
+$brand-heading: $brand-secondary;
+$brand-text: __TEXT__;
+$brand-theme-name: 'custom';
+
+@import "style";

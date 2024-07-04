@@ -1,0 +1,30 @@
+/* Global: Variables
+   ========================================================================== */
+
+// Image path
+$image-path: "/wp-content/themes/fonzie/images/";
+$image-path-ers: "/wp-content/themes/fonzie-electoral-reform-society/images/";
+
+// Colour scheme (Fonzie)
+$brand-primary: #FD98BC;
+$brand-secondary: #313B52;
+$brand-tertiary: #ffffff;
+$brand-heading: $brand-secondary;
+$brand-text: #3D4346;
+$brand-theme-name: "custom";
+
+// Colour scheme (additional)
+$brand-additional-primary: #9E589D;
+$brand-additional-secondary: #574A92;
+$brand-additional-tertiary: #E9E6F6;
+
+$link-color: #9E589D;
+
+// Misc
+$border-radius: 6px;
+$section-background: #F1F0F6;
+
+// Fonts
+$din-regular: "Din Regular", "Helvetica Neue", Arial, sans-serif;
+$din-bold: "Din Bold", "Helvetica Neue", Arial, sans-serif;
+$crimson-text: "Crimson Text", "Times New Roman", serif;

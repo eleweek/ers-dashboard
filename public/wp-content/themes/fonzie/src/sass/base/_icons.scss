@@ -1,0 +1,2112 @@
+/* Base: Icons
+========================================================================== */
+.icon {
+  display: inline-block;
+
+  svg {
+    width: 16px; height: 16px;
+  }
+
+  &_fw {
+    svg {
+      width: 16px;
+    }
+  }
+}
+
+.icon--social {
+  margin-right: 10px;
+  width: 16px; height: 16px;
+
+  @include media-breakpoint-up(lg) {
+    margin-top: -5px;
+  }
+
+  svg {
+
+    path {
+      fill: $colour--black;
+    }
+  }
+}
+
+i.caret {
+  width: 15px;
+}
+
+//
+// .#{$icon_prefix}--adjust, %#{$icon_prefix}--adjust{
+//   background-image: url(../../images/svg/adjust.svg);
+// }
+//
+// .#{$icon_prefix}--adn, %#{$icon_prefix}--adn{
+//   background-image: url(../../images/svg/adn.svg);
+// }
+//
+// .#{$icon_prefix}--align-center, %#{$icon_prefix}--align-center{
+//   background-image: url(../../images/svg/align-center.svg);
+// }
+//
+// .#{$icon_prefix}--align-justify, %#{$icon_prefix}--align-justify{
+//   background-image: url(../../images/svg/align-justify.svg);
+// }
+//
+// .#{$icon_prefix}--align-left, %#{$icon_prefix}--align-left{
+//   background-image: url(../../images/svg/align-left.svg);
+// }
+//
+// .#{$icon_prefix}--align-right, %#{$icon_prefix}--align-right{
+//   background-image: url(../../images/svg/align-right.svg);
+// }
+//
+// .#{$icon_prefix}--ambulance, %#{$icon_prefix}--ambulance{
+//   background-image: url(../../images/svg/ambulance.svg);
+// }
+//
+// .#{$icon_prefix}--anchor, %#{$icon_prefix}--anchor{
+//   background-image: url(../../images/svg/anchor.svg);
+// }
+//
+// .#{$icon_prefix}--android, %#{$icon_prefix}--android{
+//   background-image: url(../../images/svg/android.svg);
+// }
+//
+// .#{$icon_prefix}--angellist, %#{$icon_prefix}--angellist{
+//   background-image: url(../../images/svg/angellist.svg);
+// }
+//
+// .#{$icon_prefix}--angle-double-down, %#{$icon_prefix}--angle-double-down{
+//   background-image: url(../../images/svg/angle-double-down.svg);
+// }
+//
+// .#{$icon_prefix}--angle-double-left, %#{$icon_prefix}--angle-double-left{
+//   background-image: url(../../images/svg/angle-double-left.svg);
+// }
+//
+// .#{$icon_prefix}--angle-double-right, %#{$icon_prefix}--angle-double-right{
+//   background-image: url(../../images/svg/angle-double-right.svg);
+// }
+//
+// .#{$icon_prefix}--angle-double-up, %#{$icon_prefix}--angle-double-up{
+//   background-image: url(../../images/svg/angle-double-up.svg);
+// }
+//
+// .#{$icon_prefix}--angle-down, %#{$icon_prefix}--angle-down{
+//   background-image: url(../../images/svg/angle-down.svg);
+// }
+//
+// .#{$icon_prefix}--angle-left, %#{$icon_prefix}--angle-left{
+//   background-image: url(../../images/svg/angle-left.svg);
+// }
+//
+// .#{$icon_prefix}--angle-right, %#{$icon_prefix}--angle-right{
+//   background-image: url(../../images/svg/angle-right.svg);
+// }
+//
+// .#{$icon_prefix}--angle-up, %#{$icon_prefix}--angle-up{
+//   background-image: url(../../images/svg/angle-up.svg);
+// }
+//
+// .#{$icon_prefix}--apple, %#{$icon_prefix}--apple{
+//   background-image: url(../../images/svg/apple.svg);
+// }
+//
+// .#{$icon_prefix}--archive, %#{$icon_prefix}--archive{
+//   background-image: url(../../images/svg/archive.svg);
+// }
+//
+// .#{$icon_prefix}--area-chart, %#{$icon_prefix}--area-chart{
+//   background-image: url(../../images/svg/area-chart.svg);
+// }
+//
+// .#{$icon_prefix}--arrow-circle-down, %#{$icon_prefix}--arrow-circle-down{
+//   background-image: url(../../images/svg/arrow-circle-down.svg);
+// }
+//
+// .#{$icon_prefix}--arrow-circle-left, %#{$icon_prefix}--arrow-circle-left{
+//   background-image: url(../../images/svg/arrow-circle-left.svg);
+// }
+//
+// .#{$icon_prefix}--arrow-circle-o-down, %#{$icon_prefix}--arrow-circle-o-down{
+//   background-image: url(../../images/svg/arrow-circle-o-down.svg);
+// }
+//
+// .#{$icon_prefix}--arrow-circle-o-left, %#{$icon_prefix}--arrow-circle-o-left{
+//   background-image: url(../../images/svg/arrow-circle-o-left.svg);
+// }
+//
+// .#{$icon_prefix}--arrow-circle-o-right, %#{$icon_prefix}--arrow-circle-o-right{
+//   background-image: url(../../images/svg/arrow-circle-o-right.svg);
+// }
+//
+// .#{$icon_prefix}--arrow-circle-o-up, %#{$icon_prefix}--arrow-circle-o-up{
+//   background-image: url(../../images/svg/arrow-circle-o-up.svg);
+// }
+//
+// .#{$icon_prefix}--arrow-circle-right, %#{$icon_prefix}--arrow-circle-right{
+//   background-image: url(../../images/svg/arrow-circle-right.svg);
+// }
+//
+// .#{$icon_prefix}--arrow-circle-up, %#{$icon_prefix}--arrow-circle-up{
+//   background-image: url(../../images/svg/arrow-circle-up.svg);
+// }
+//
+// .#{$icon_prefix}--arrow-down, %#{$icon_prefix}--arrow-down{
+//   background-image: url(../../images/svg/arrow-down.svg);
+// }
+//
+// .#{$icon_prefix}--arrow-left, %#{$icon_prefix}--arrow-left{
+//   background-image: url(../../images/svg/arrow-left.svg);
+// }
+//
+// .#{$icon_prefix}--arrow-right, %#{$icon_prefix}--arrow-right{
+//   background-image: url(../../images/svg/arrow-right.svg);
+// }
+//
+// .#{$icon_prefix}--arrow-up, %#{$icon_prefix}--arrow-up{
+//   background-image: url(../../images/svg/arrow-up.svg);
+// }
+//
+// .#{$icon_prefix}--arrows-alt, %#{$icon_prefix}--arrows-alt{
+//   background-image: url(../../images/svg/arrows-alt.svg);
+// }
+//
+// .#{$icon_prefix}--arrows-h, %#{$icon_prefix}--arrows-h{
+//   background-image: url(../../images/svg/arrows-h.svg);
+// }
+//
+// .#{$icon_prefix}--arrows-v, %#{$icon_prefix}--arrows-v{
+//   background-image: url(../../images/svg/arrows-v.svg);
+// }
+//
+// .#{$icon_prefix}--arrows, %#{$icon_prefix}--arrows{
+//   background-image: url(../../images/svg/arrows.svg);
+// }
+//
+// .#{$icon_prefix}--asterisk, %#{$icon_prefix}--asterisk{
+//   background-image: url(../../images/svg/asterisk.svg);
+// }
+//
+// .#{$icon_prefix}--at, %#{$icon_prefix}--at{
+//   background-image: url(../../images/svg/at.svg);
+// }
+//
+// .#{$icon_prefix}--backward, %#{$icon_prefix}--backward{
+//   background-image: url(../../images/svg/backward.svg);
+// }
+//
+// .#{$icon_prefix}--ban, %#{$icon_prefix}--ban{
+//   background-image: url(../../images/svg/ban.svg);
+// }
+//
+// .#{$icon_prefix}--bar-chart, %#{$icon_prefix}--bar-chart{
+//   background-image: url(../../images/svg/bar-chart.svg);
+// }
+//
+// .#{$icon_prefix}--barcode, %#{$icon_prefix}--barcode{
+//   background-image: url(../../images/svg/barcode.svg);
+// }
+//
+// .#{$icon_prefix}--bars, %#{$icon_prefix}--bars{
+//   background-image: url(../../images/svg/bars.svg);
+// }
+//
+// .#{$icon_prefix}--bed, %#{$icon_prefix}--bed{
+//   background-image: url(../../images/svg/bed.svg);
+// }
+//
+// .#{$icon_prefix}--beer, %#{$icon_prefix}--beer{
+//   background-image: url(../../images/svg/beer.svg);
+// }
+//
+// .#{$icon_prefix}--behance-square, %#{$icon_prefix}--behance-square{
+//   background-image: url(../../images/svg/behance-square.svg);
+// }
+//
+// .#{$icon_prefix}--behance, %#{$icon_prefix}--behance{
+//   background-image: url(../../images/svg/behance.svg);
+// }
+//
+// .#{$icon_prefix}--bell-o, %#{$icon_prefix}--bell-o{
+//   background-image: url(../../images/svg/bell-o.svg);
+// }
+//
+// .#{$icon_prefix}--bell-slash-o, %#{$icon_prefix}--bell-slash-o{
+//   background-image: url(../../images/svg/bell-slash-o.svg);
+// }
+//
+// .#{$icon_prefix}--bell-slash, %#{$icon_prefix}--bell-slash{
+//   background-image: url(../../images/svg/bell-slash.svg);
+// }
+//
+// .#{$icon_prefix}--bell, %#{$icon_prefix}--bell{
+//   background-image: url(../../images/svg/bell.svg);
+// }
+//
+// .#{$icon_prefix}--bicycle, %#{$icon_prefix}--bicycle{
+//   background-image: url(../../images/svg/bicycle.svg);
+// }
+//
+// .#{$icon_prefix}--binoculars, %#{$icon_prefix}--binoculars{
+//   background-image: url(../../images/svg/binoculars.svg);
+// }
+//
+// .#{$icon_prefix}--birthday-cake, %#{$icon_prefix}--birthday-cake{
+//   background-image: url(../../images/svg/birthday-cake.svg);
+// }
+//
+// .#{$icon_prefix}--bitbucket-square, %#{$icon_prefix}--bitbucket-square{
+//   background-image: url(../../images/svg/bitbucket-square.svg);
+// }
+//
+// .#{$icon_prefix}--bitbucket, %#{$icon_prefix}--bitbucket{
+//   background-image: url(../../images/svg/bitbucket.svg);
+// }
+//
+// .#{$icon_prefix}--bold, %#{$icon_prefix}--bold{
+//   background-image: url(../../images/svg/bold.svg);
+// }
+//
+// .#{$icon_prefix}--bolt, %#{$icon_prefix}--bolt{
+//   background-image: url(../../images/svg/bolt.svg);
+// }
+//
+// .#{$icon_prefix}--bomb, %#{$icon_prefix}--bomb{
+//   background-image: url(../../images/svg/bomb.svg);
+// }
+//
+// .#{$icon_prefix}--book, %#{$icon_prefix}--book{
+//   background-image: url(../../images/svg/book.svg);
+// }
+//
+// .#{$icon_prefix}--bookmark-o, %#{$icon_prefix}--bookmark-o{
+//   background-image: url(../../images/svg/bookmark-o.svg);
+// }
+//
+// .#{$icon_prefix}--bookmark, %#{$icon_prefix}--bookmark{
+//   background-image: url(../../images/svg/bookmark.svg);
+// }
+//
+// .#{$icon_prefix}--briefcase, %#{$icon_prefix}--briefcase{
+//   background-image: url(../../images/svg/briefcase.svg);
+// }
+//
+// .#{$icon_prefix}--btc, %#{$icon_prefix}--btc{
+//   background-image: url(../../images/svg/btc.svg);
+// }
+//
+// .#{$icon_prefix}--bug, %#{$icon_prefix}--bug{
+//   background-image: url(../../images/svg/bug.svg);
+// }
+//
+// .#{$icon_prefix}--building-o, %#{$icon_prefix}--building-o{
+//   background-image: url(../../images/svg/building-o.svg);
+// }
+//
+// .#{$icon_prefix}--building, %#{$icon_prefix}--building{
+//   background-image: url(../../images/svg/building.svg);
+// }
+//
+// .#{$icon_prefix}--bullhorn, %#{$icon_prefix}--bullhorn{
+//   background-image: url(../../images/svg/bullhorn.svg);
+// }
+//
+// .#{$icon_prefix}--bullseye, %#{$icon_prefix}--bullseye{
+//   background-image: url(../../images/svg/bullseye.svg);
+// }
+//
+// .#{$icon_prefix}--bus, %#{$icon_prefix}--bus{
+//   background-image: url(../../images/svg/bus.svg);
+// }
+//
+// .#{$icon_prefix}--buysellads, %#{$icon_prefix}--buysellads{
+//   background-image: url(../../images/svg/buysellads.svg);
+// }
+//
+// .#{$icon_prefix}--calculator, %#{$icon_prefix}--calculator{
+//   background-image: url(../../images/svg/calculator.svg);
+// }
+//
+// .#{$icon_prefix}--calendar-o, %#{$icon_prefix}--calendar-o{
+//   background-image: url(../../images/svg/calendar-o.svg);
+// }
+//
+// .#{$icon_prefix}--calendar, %#{$icon_prefix}--calendar{
+//   background-image: url(../../images/svg/calendar.svg);
+// }
+//
+// .#{$icon_prefix}--camera-retro, %#{$icon_prefix}--camera-retro{
+//   background-image: url(../../images/svg/camera-retro.svg);
+// }
+//
+// .#{$icon_prefix}--camera, %#{$icon_prefix}--camera{
+//   background-image: url(../../images/svg/camera.svg);
+// }
+//
+// .#{$icon_prefix}--car, %#{$icon_prefix}--car{
+//   background-image: url(../../images/svg/car.svg);
+// }
+//
+// .#{$icon_prefix}--caret-down, %#{$icon_prefix}--caret-down{
+//   background-image: url(../../images/svg/caret-down.svg);
+// }
+//
+// .#{$icon_prefix}--caret-left, %#{$icon_prefix}--caret-left{
+//   background-image: url(../../images/svg/caret-left.svg);
+// }
+//
+// .#{$icon_prefix}--caret-right, %#{$icon_prefix}--caret-right{
+//   background-image: url(../../images/svg/caret-right.svg);
+// }
+//
+// .#{$icon_prefix}--caret-square-o-down, %#{$icon_prefix}--caret-square-o-down{
+//   background-image: url(../../images/svg/caret-square-o-down.svg);
+// }
+//
+// .#{$icon_prefix}--caret-square-o-left, %#{$icon_prefix}--caret-square-o-left{
+//   background-image: url(../../images/svg/caret-square-o-left.svg);
+// }
+//
+// .#{$icon_prefix}--caret-square-o-right, %#{$icon_prefix}--caret-square-o-right{
+//   background-image: url(../../images/svg/caret-square-o-right.svg);
+// }
+//
+// .#{$icon_prefix}--caret-square-o-up, %#{$icon_prefix}--caret-square-o-up{
+//   background-image: url(../../images/svg/caret-square-o-up.svg);
+// }
+//
+// .#{$icon_prefix}--caret-up, %#{$icon_prefix}--caret-up{
+//   background-image: url(../../images/svg/caret-up.svg);
+// }
+//
+// .#{$icon_prefix}--cart-arrow-down, %#{$icon_prefix}--cart-arrow-down{
+//   background-image: url(../../images/svg/cart-arrow-down.svg);
+// }
+//
+// .#{$icon_prefix}--cart-plus, %#{$icon_prefix}--cart-plus{
+//   background-image: url(../../images/svg/cart-plus.svg);
+// }
+//
+// .#{$icon_prefix}--cc-amex, %#{$icon_prefix}--cc-amex{
+//   background-image: url(../../images/svg/cc-amex.svg);
+// }
+//
+// .#{$icon_prefix}--cc-discover, %#{$icon_prefix}--cc-discover{
+//   background-image: url(../../images/svg/cc-discover.svg);
+// }
+//
+// .#{$icon_prefix}--cc-mastercard, %#{$icon_prefix}--cc-mastercard{
+//   background-image: url(../../images/svg/cc-mastercard.svg);
+// }
+//
+// .#{$icon_prefix}--cc-paypal, %#{$icon_prefix}--cc-paypal{
+//   background-image: url(../../images/svg/cc-paypal.svg);
+// }
+//
+// .#{$icon_prefix}--cc-stripe, %#{$icon_prefix}--cc-stripe{
+//   background-image: url(../../images/svg/cc-stripe.svg);
+// }
+//
+// .#{$icon_prefix}--cc-visa, %#{$icon_prefix}--cc-visa{
+//   background-image: url(../../images/svg/cc-visa.svg);
+// }
+//
+// .#{$icon_prefix}--cc, %#{$icon_prefix}--cc{
+//   background-image: url(../../images/svg/cc.svg);
+// }
+//
+// .#{$icon_prefix}--certificate, %#{$icon_prefix}--certificate{
+//   background-image: url(../../images/svg/certificate.svg);
+// }
+//
+// .#{$icon_prefix}--chain-broken, %#{$icon_prefix}--chain-broken{
+//   background-image: url(../../images/svg/chain-broken.svg);
+// }
+//
+// .#{$icon_prefix}--check-circle-o, %#{$icon_prefix}--check-circle-o{
+//   background-image: url(../../images/svg/check-circle-o.svg);
+// }
+//
+// .#{$icon_prefix}--check-circle, %#{$icon_prefix}--check-circle{
+//   background-image: url(../../images/svg/check-circle.svg);
+// }
+//
+// .#{$icon_prefix}--check-square-o, %#{$icon_prefix}--check-square-o{
+//   background-image: url(../../images/svg/check-square-o.svg);
+// }
+//
+// .#{$icon_prefix}--check-square, %#{$icon_prefix}--check-square{
+//   background-image: url(../../images/svg/check-square.svg);
+// }
+//
+// .#{$icon_prefix}--check, %#{$icon_prefix}--check{
+//   background-image: url(../../images/svg/check.svg);
+// }
+//
+// .#{$icon_prefix}--chevron-circle-down, %#{$icon_prefix}--chevron-circle-down{
+//   background-image: url(../../images/svg/chevron-circle-down.svg);
+// }
+//
+// .#{$icon_prefix}--chevron-circle-left, %#{$icon_prefix}--chevron-circle-left{
+//   background-image: url(../../images/svg/chevron-circle-left.svg);
+// }
+//
+// .#{$icon_prefix}--chevron-circle-right, %#{$icon_prefix}--chevron-circle-right{
+//   background-image: url(../../images/svg/chevron-circle-right.svg);
+// }
+//
+// .#{$icon_prefix}--chevron-circle-up, %#{$icon_prefix}--chevron-circle-up{
+//   background-image: url(../../images/svg/chevron-circle-up.svg);
+// }
+//
+// .#{$icon_prefix}--chevron-down, %#{$icon_prefix}--chevron-down{
+//   background-image: url(../../images/svg/chevron-down.svg);
+// }
+//
+ .#{$icon_prefix}--chevron-left, %#{$icon_prefix}--chevron-left{
+   background-image: image-url('svg/chevron-left.svg');
+ }
+
+ .#{$icon_prefix}--chevron-right, %#{$icon_prefix}--chevron-right{
+   background-image: image-url('svg/chevron-right.svg');
+ }
+//
+// .#{$icon_prefix}--chevron-up, %#{$icon_prefix}--chevron-up{
+//   background-image: url(../../images/svg/chevron-up.svg);
+// }
+//
+// .#{$icon_prefix}--child, %#{$icon_prefix}--child{
+//   background-image: url(../../images/svg/child.svg);
+// }
+//
+// .#{$icon_prefix}--circle-o-notch, %#{$icon_prefix}--circle-o-notch{
+//   background-image: url(../../images/svg/circle-o-notch.svg);
+// }
+//
+// .#{$icon_prefix}--circle-o, %#{$icon_prefix}--circle-o{
+//   background-image: url(../../images/svg/circle-o.svg);
+// }
+//
+// .#{$icon_prefix}--circle-thin, %#{$icon_prefix}--circle-thin{
+//   background-image: url(../../images/svg/circle-thin.svg);
+// }
+//
+// .#{$icon_prefix}--circle, %#{$icon_prefix}--circle{
+//   background-image: url(../../images/svg/circle.svg);
+// }
+//
+// .#{$icon_prefix}--clipboard, %#{$icon_prefix}--clipboard{
+//   background-image: url(../../images/svg/clipboard.svg);
+// }
+//
+// .#{$icon_prefix}--clock-o, %#{$icon_prefix}--clock-o{
+//   background-image: url(../../images/svg/clock-o.svg);
+// }
+//
+// .#{$icon_prefix}--cloud-download, %#{$icon_prefix}--cloud-download{
+//   background-image: url(../../images/svg/cloud-download.svg);
+// }
+//
+// .#{$icon_prefix}--cloud-upload, %#{$icon_prefix}--cloud-upload{
+//   background-image: url(../../images/svg/cloud-upload.svg);
+// }
+//
+// .#{$icon_prefix}--cloud, %#{$icon_prefix}--cloud{
+//   background-image: url(../../images/svg/cloud.svg);
+// }
+//
+// .#{$icon_prefix}--code-fork, %#{$icon_prefix}--code-fork{
+//   background-image: url(../../images/svg/code-fork.svg);
+// }
+//
+// .#{$icon_prefix}--code, %#{$icon_prefix}--code{
+//   background-image: url(../../images/svg/code.svg);
+// }
+//
+// .#{$icon_prefix}--codepen, %#{$icon_prefix}--codepen{
+//   background-image: url(../../images/svg/codepen.svg);
+// }
+//
+// .#{$icon_prefix}--coffee, %#{$icon_prefix}--coffee{
+//   background-image: url(../../images/svg/coffee.svg);
+// }
+//
+// .#{$icon_prefix}--cog, %#{$icon_prefix}--cog{
+//   background-image: url(../../images/svg/cog.svg);
+// }
+//
+// .#{$icon_prefix}--cogs, %#{$icon_prefix}--cogs{
+//   background-image: url(../../images/svg/cogs.svg);
+// }
+//
+// .#{$icon_prefix}--columns, %#{$icon_prefix}--columns{
+//   background-image: url(../../images/svg/columns.svg);
+// }
+//
+// .#{$icon_prefix}--comment-o, %#{$icon_prefix}--comment-o{
+//   background-image: url(../../images/svg/comment-o.svg);
+// }
+//
+// .#{$icon_prefix}--comment, %#{$icon_prefix}--comment{
+//   background-image: url(../../images/svg/comment.svg);
+// }
+//
+// .#{$icon_prefix}--comments-o, %#{$icon_prefix}--comments-o{
+//   background-image: url(../../images/svg/comments-o.svg);
+// }
+//
+// .#{$icon_prefix}--comments, %#{$icon_prefix}--comments{
+//   background-image: url(../../images/svg/comments.svg);
+// }
+//
+// .#{$icon_prefix}--compass, %#{$icon_prefix}--compass{
+//   background-image: url(../../images/svg/compass.svg);
+// }
+//
+// .#{$icon_prefix}--compress, %#{$icon_prefix}--compress{
+//   background-image: url(../../images/svg/compress.svg);
+// }
+//
+// .#{$icon_prefix}--connectdevelop, %#{$icon_prefix}--connectdevelop{
+//   background-image: url(../../images/svg/connectdevelop.svg);
+// }
+//
+// .#{$icon_prefix}--copyright, %#{$icon_prefix}--copyright{
+//   background-image: url(../../images/svg/copyright.svg);
+// }
+//
+// .#{$icon_prefix}--credit-card, %#{$icon_prefix}--credit-card{
+//   background-image: url(../../images/svg/credit-card.svg);
+// }
+//
+// .#{$icon_prefix}--crop, %#{$icon_prefix}--crop{
+//   background-image: url(../../images/svg/crop.svg);
+// }
+//
+// .#{$icon_prefix}--crosshairs, %#{$icon_prefix}--crosshairs{
+//   background-image: url(../../images/svg/crosshairs.svg);
+// }
+//
+// .#{$icon_prefix}--css, %#{$icon_prefix}--css3{
+//   background-image: url(../../images/svg/css3.svg);
+// }
+//
+// .#{$icon_prefix}--cube, %#{$icon_prefix}--cube{
+//   background-image: url(../../images/svg/cube.svg);
+// }
+//
+// .#{$icon_prefix}--cubes, %#{$icon_prefix}--cubes{
+//   background-image: url(../../images/svg/cubes.svg);
+// }
+//
+// .#{$icon_prefix}--cutlery, %#{$icon_prefix}--cutlery{
+//   background-image: url(../../images/svg/cutlery.svg);
+// }
+//
+// .#{$icon_prefix}--dashcube, %#{$icon_prefix}--dashcube{
+//   background-image: url(../../images/svg/dashcube.svg);
+// }
+//
+// .#{$icon_prefix}--database, %#{$icon_prefix}--database{
+//   background-image: url(../../images/svg/database.svg);
+// }
+//
+// .#{$icon_prefix}--delicious, %#{$icon_prefix}--delicious{
+//   background-image: url(../../images/svg/delicious.svg);
+// }
+//
+// .#{$icon_prefix}--desktop, %#{$icon_prefix}--desktop{
+//   background-image: url(../../images/svg/desktop.svg);
+// }
+//
+// .#{$icon_prefix}--deviantart, %#{$icon_prefix}--deviantart{
+//   background-image: url(../../images/svg/deviantart.svg);
+// }
+//
+// .#{$icon_prefix}--diamond, %#{$icon_prefix}--diamond{
+//   background-image: url(../../images/svg/diamond.svg);
+// }
+//
+// .#{$icon_prefix}--digg, %#{$icon_prefix}--digg{
+//   background-image: url(../../images/svg/digg.svg);
+// }
+//
+// .#{$icon_prefix}--dot-circle-o, %#{$icon_prefix}--dot-circle-o{
+//   background-image: url(../../images/svg/dot-circle-o.svg);
+// }
+//
+// .#{$icon_prefix}--download, %#{$icon_prefix}--download{
+//   background-image: url(../../images/svg/download.svg);
+// }
+//
+// .#{$icon_prefix}--dribbble, %#{$icon_prefix}--dribbble{
+//   background-image: url(../../images/svg/dribbble.svg);
+// }
+//
+// .#{$icon_prefix}--dropbox, %#{$icon_prefix}--dropbox{
+//   background-image: url(../../images/svg/dropbox.svg);
+// }
+//
+// .#{$icon_prefix}--drupal, %#{$icon_prefix}--drupal{
+//   background-image: url(../../images/svg/drupal.svg);
+// }
+//
+// .#{$icon_prefix}--eject, %#{$icon_prefix}--eject{
+//   background-image: url(../../images/svg/eject.svg);
+// }
+//
+// .#{$icon_prefix}--ellipsis-h, %#{$icon_prefix}--ellipsis-h{
+//   background-image: url(../../images/svg/ellipsis-h.svg);
+// }
+//
+// .#{$icon_prefix}--ellipsis-v, %#{$icon_prefix}--ellipsis-v{
+//   background-image: url(../../images/svg/ellipsis-v.svg);
+// }
+//
+// .#{$icon_prefix}--empire, %#{$icon_prefix}--empire{
+//   background-image: url(../../images/svg/empire.svg);
+// }
+//
+// .#{$icon_prefix}--envelope-o, %#{$icon_prefix}--envelope-o{
+//   background-image: url(../../images/svg/envelope-o.svg);
+// }
+//
+// .#{$icon_prefix}--envelope-square, %#{$icon_prefix}--envelope-square{
+//   background-image: url(../../images/svg/envelope-square.svg);
+// }
+//
+// .#{$icon_prefix}--envelope, %#{$icon_prefix}--envelope{
+//   background-image: url(../../images/svg/envelope.svg);
+// }
+//
+// .#{$icon_prefix}--eraser, %#{$icon_prefix}--eraser{
+//   background-image: url(../../images/svg/eraser.svg);
+// }
+//
+// .#{$icon_prefix}--eur, %#{$icon_prefix}--eur{
+//   background-image: url(../../images/svg/eur.svg);
+// }
+//
+// .#{$icon_prefix}--exchange, %#{$icon_prefix}--exchange{
+//   background-image: url(../../images/svg/exchange.svg);
+// }
+//
+// .#{$icon_prefix}--exclamation-circle, %#{$icon_prefix}--exclamation-circle{
+//   background-image: url(../../images/svg/exclamation-circle.svg);
+// }
+//
+// .#{$icon_prefix}--exclamation-triangle, %#{$icon_prefix}--exclamation-triangle{
+//   background-image: url(../../images/svg/exclamation-triangle.svg);
+// }
+//
+// .#{$icon_prefix}--exclamation, %#{$icon_prefix}--exclamation{
+//   background-image: url(../../images/svg/exclamation.svg);
+// }
+//
+// .#{$icon_prefix}--expand, %#{$icon_prefix}--expand{
+//   background-image: url(../../images/svg/expand.svg);
+// }
+//
+// .#{$icon_prefix}--external-link-square, %#{$icon_prefix}--external-link-square{
+//   background-image: url(../../images/svg/external-link-square.svg);
+// }
+//
+// .#{$icon_prefix}--external-link, %#{$icon_prefix}--external-link{
+//   background-image: url(../../images/svg/external-link.svg);
+// }
+//
+// .#{$icon_prefix}--eye-slash, %#{$icon_prefix}--eye-slash{
+//   background-image: url(../../images/svg/eye-slash.svg);
+// }
+//
+// .#{$icon_prefix}--eye, %#{$icon_prefix}--eye{
+//   background-image: url(../../images/svg/eye.svg);
+// }
+//
+// .#{$icon_prefix}--eyedropper, %#{$icon_prefix}--eyedropper{
+//   background-image: url(../../images/svg/eyedropper.svg);
+// }
+//
+// .#{$icon_prefix}--facebook-official, %#{$icon_prefix}--facebook-official{
+//   background-image: url(../../images/svg/facebook-official.svg);
+// }
+//
+// .#{$icon_prefix}--facebook-square, %#{$icon_prefix}--facebook-square{
+//   background-image: url(../../images/svg/facebook-square.svg);
+// }
+//
+// .#{$icon_prefix}--facebook, %#{$icon_prefix}--facebook{
+//   background-image: url(../../images/svg/facebook.svg);
+// }
+//
+// .#{$icon_prefix}--fast-backward, %#{$icon_prefix}--fast-backward{
+//   background-image: url(../../images/svg/fast-backward.svg);
+// }
+//
+// .#{$icon_prefix}--fast-forward, %#{$icon_prefix}--fast-forward{
+//   background-image: url(../../images/svg/fast-forward.svg);
+// }
+//
+// .#{$icon_prefix}--fax, %#{$icon_prefix}--fax{
+//   background-image: url(../../images/svg/fax.svg);
+// }
+//
+// .#{$icon_prefix}--female, %#{$icon_prefix}--female{
+//   background-image: url(../../images/svg/female.svg);
+// }
+//
+// .#{$icon_prefix}--fighter-jet, %#{$icon_prefix}--fighter-jet{
+//   background-image: url(../../images/svg/fighter-jet.svg);
+// }
+//
+// .#{$icon_prefix}--file-archive-o, %#{$icon_prefix}--file-archive-o{
+//   background-image: url(../../images/svg/file-archive-o.svg);
+// }
+//
+// .#{$icon_prefix}--file-audio-o, %#{$icon_prefix}--file-audio-o{
+//   background-image: url(../../images/svg/file-audio-o.svg);
+// }
+//
+// .#{$icon_prefix}--file-code-o, %#{$icon_prefix}--file-code-o{
+//   background-image: url(../../images/svg/file-code-o.svg);
+// }
+//
+// .#{$icon_prefix}--file-excel-o, %#{$icon_prefix}--file-excel-o{
+//   background-image: url(../../images/svg/file-excel-o.svg);
+// }
+//
+// .#{$icon_prefix}--file-image-o, %#{$icon_prefix}--file-image-o{
+//   background-image: url(../../images/svg/file-image-o.svg);
+// }
+//
+// .#{$icon_prefix}--file-o, %#{$icon_prefix}--file-o{
+//   background-image: url(../../images/svg/file-o.svg);
+// }
+//
+// .#{$icon_prefix}--file-pdf-o, %#{$icon_prefix}--file-pdf-o{
+//   background-image: url(../../images/svg/file-pdf-o.svg);
+// }
+//
+// .#{$icon_prefix}--file-powerpoint-o, %#{$icon_prefix}--file-powerpoint-o{
+//   background-image: url(../../images/svg/file-powerpoint-o.svg);
+// }
+//
+// .#{$icon_prefix}--file-text-o, %#{$icon_prefix}--file-text-o{
+//   background-image: url(../../images/svg/file-text-o.svg);
+// }
+//
+// .#{$icon_prefix}--file-text, %#{$icon_prefix}--file-text{
+//   background-image: url(../../images/svg/file-text.svg);
+// }
+//
+// .#{$icon_prefix}--file-video-o, %#{$icon_prefix}--file-video-o{
+//   background-image: url(../../images/svg/file-video-o.svg);
+// }
+//
+// .#{$icon_prefix}--file-word-o, %#{$icon_prefix}--file-word-o{
+//   background-image: url(../../images/svg/file-word-o.svg);
+// }
+//
+// .#{$icon_prefix}--file, %#{$icon_prefix}--file{
+//   background-image: url(../../images/svg/file.svg);
+// }
+//
+// .#{$icon_prefix}--files-o, %#{$icon_prefix}--files-o{
+//   background-image: url(../../images/svg/files-o.svg);
+// }
+//
+// .#{$icon_prefix}--film, %#{$icon_prefix}--film{
+//   background-image: url(../../images/svg/film.svg);
+// }
+//
+// .#{$icon_prefix}--filter, %#{$icon_prefix}--filter{
+//   background-image: url(../../images/svg/filter.svg);
+// }
+//
+// .#{$icon_prefix}--fire-extinguisher, %#{$icon_prefix}--fire-extinguisher{
+//   background-image: url(../../images/svg/fire-extinguisher.svg);
+// }
+//
+// .#{$icon_prefix}--fire, %#{$icon_prefix}--fire{
+//   background-image: url(../../images/svg/fire.svg);
+// }
+//
+// .#{$icon_prefix}--flag-checkered, %#{$icon_prefix}--flag-checkered{
+//   background-image: url(../../images/svg/flag-checkered.svg);
+// }
+//
+// .#{$icon_prefix}--flag-o, %#{$icon_prefix}--flag-o{
+//   background-image: url(../../images/svg/flag-o.svg);
+// }
+//
+// .#{$icon_prefix}--flag, %#{$icon_prefix}--flag{
+//   background-image: url(../../images/svg/flag.svg);
+// }
+//
+// .#{$icon_prefix}--flask, %#{$icon_prefix}--flask{
+//   background-image: url(../../images/svg/flask.svg);
+// }
+//
+// .#{$icon_prefix}--flickr, %#{$icon_prefix}--flickr{
+//   background-image: url(../../images/svg/flickr.svg);
+// }
+//
+// .#{$icon_prefix}--floppy-o, %#{$icon_prefix}--floppy-o{
+//   background-image: url(../../images/svg/floppy-o.svg);
+// }
+//
+// .#{$icon_prefix}--folder-o, %#{$icon_prefix}--folder-o{
+//   background-image: url(../../images/svg/folder-o.svg);
+// }
+//
+// .#{$icon_prefix}--folder-open-o, %#{$icon_prefix}--folder-open-o{
+//   background-image: url(../../images/svg/folder-open-o.svg);
+// }
+//
+// .#{$icon_prefix}--folder-open, %#{$icon_prefix}--folder-open{
+//   background-image: url(../../images/svg/folder-open.svg);
+// }
+//
+// .#{$icon_prefix}--folder, %#{$icon_prefix}--folder{
+//   background-image: url(../../images/svg/folder.svg);
+// }
+//
+// .#{$icon_prefix}--font, %#{$icon_prefix}--font{
+//   background-image: url(../../images/svg/font.svg);
+// }
+//
+// .#{$icon_prefix}--forumbee, %#{$icon_prefix}--forumbee{
+//   background-image: url(../../images/svg/forumbee.svg);
+// }
+//
+// .#{$icon_prefix}--forward, %#{$icon_prefix}--forward{
+//   background-image: url(../../images/svg/forward.svg);
+// }
+//
+// .#{$icon_prefix}--foursquare, %#{$icon_prefix}--foursquare{
+//   background-image: url(../../images/svg/foursquare.svg);
+// }
+//
+// .#{$icon_prefix}--frown-o, %#{$icon_prefix}--frown-o{
+//   background-image: url(../../images/svg/frown-o.svg);
+// }
+//
+// .#{$icon_prefix}--futbol-o, %#{$icon_prefix}--futbol-o{
+//   background-image: url(../../images/svg/futbol-o.svg);
+// }
+//
+// .#{$icon_prefix}--gamepad, %#{$icon_prefix}--gamepad{
+//   background-image: url(../../images/svg/gamepad.svg);
+// }
+//
+// .#{$icon_prefix}--gavel, %#{$icon_prefix}--gavel{
+//   background-image: url(../../images/svg/gavel.svg);
+// }
+//
+// .#{$icon_prefix}--gbp, %#{$icon_prefix}--gbp{
+//   background-image: url(../../images/svg/gbp.svg);
+// }
+//
+// .#{$icon_prefix}--gift, %#{$icon_prefix}--gift{
+//   background-image: url(../../images/svg/gift.svg);
+// }
+//
+// .#{$icon_prefix}--git-square, %#{$icon_prefix}--git-square{
+//   background-image: url(../../images/svg/git-square.svg);
+// }
+//
+// .#{$icon_prefix}--git, %#{$icon_prefix}--git{
+//   background-image: url(../../images/svg/git.svg);
+// }
+//
+// .#{$icon_prefix}--github-alt, %#{$icon_prefix}--github-alt{
+//   background-image: url(../../images/svg/github-alt.svg);
+// }
+//
+// .#{$icon_prefix}--github-square, %#{$icon_prefix}--github-square{
+//   background-image: url(../../images/svg/github-square.svg);
+// }
+//
+// .#{$icon_prefix}--github, %#{$icon_prefix}--github{
+//   background-image: url(../../images/svg/github.svg);
+// }
+//
+// .#{$icon_prefix}--glass, %#{$icon_prefix}--glass{
+//   background-image: url(../../images/svg/glass.svg);
+// }
+//
+// .#{$icon_prefix}--globe, %#{$icon_prefix}--globe{
+//   background-image: url(../../images/svg/globe.svg);
+// }
+//
+// .#{$icon_prefix}--google-plus-square, %#{$icon_prefix}--google-plus-square{
+//   background-image: url(../../images/svg/google-plus-square.svg);
+// }
+//
+// .#{$icon_prefix}--google-plus, %#{$icon_prefix}--google-plus{
+//   background-image: url(../../images/svg/google-plus.svg);
+// }
+//
+// .#{$icon_prefix}--google-wallet, %#{$icon_prefix}--google-wallet{
+//   background-image: url(../../images/svg/google-wallet.svg);
+// }
+//
+// .#{$icon_prefix}--google, %#{$icon_prefix}--google{
+//   background-image: url(../../images/svg/google.svg);
+// }
+//
+// .#{$icon_prefix}--graduation-cap, %#{$icon_prefix}--graduation-cap{
+//   background-image: url(../../images/svg/graduation-cap.svg);
+// }
+//
+// .#{$icon_prefix}--gratipay, %#{$icon_prefix}--gratipay{
+//   background-image: url(../../images/svg/gratipay.svg);
+// }
+//
+// .#{$icon_prefix}--h-square, %#{$icon_prefix}--h-square{
+//   background-image: url(../../images/svg/h-square.svg);
+// }
+//
+// .#{$icon_prefix}--hacker-news, %#{$icon_prefix}--hacker-news{
+//   background-image: url(../../images/svg/hacker-news.svg);
+// }
+//
+// .#{$icon_prefix}--hand-o-down, %#{$icon_prefix}--hand-o-down{
+//   background-image: url(../../images/svg/hand-o-down.svg);
+// }
+//
+// .#{$icon_prefix}--hand-o-left, %#{$icon_prefix}--hand-o-left{
+//   background-image: url(../../images/svg/hand-o-left.svg);
+// }
+//
+// .#{$icon_prefix}--hand-o-right, %#{$icon_prefix}--hand-o-right{
+//   background-image: url(../../images/svg/hand-o-right.svg);
+// }
+//
+// .#{$icon_prefix}--hand-o-up, %#{$icon_prefix}--hand-o-up{
+//   background-image: url(../../images/svg/hand-o-up.svg);
+// }
+//
+// .#{$icon_prefix}--hdd-o, %#{$icon_prefix}--hdd-o{
+//   background-image: url(../../images/svg/hdd-o.svg);
+// }
+//
+// .#{$icon_prefix}--header, %#{$icon_prefix}--header{
+//   background-image: url(../../images/svg/header.svg);
+// }
+//
+// .#{$icon_prefix}--headphones, %#{$icon_prefix}--headphones{
+//   background-image: url(../../images/svg/headphones.svg);
+// }
+//
+// .#{$icon_prefix}--heart-o, %#{$icon_prefix}--heart-o{
+//   background-image: url(../../images/svg/heart-o.svg);
+// }
+//
+// .#{$icon_prefix}--heart, %#{$icon_prefix}--heart{
+//   background-image: url(../../images/svg/heart.svg);
+// }
+//
+// .#{$icon_prefix}--heartbeat, %#{$icon_prefix}--heartbeat{
+//   background-image: url(../../images/svg/heartbeat.svg);
+// }
+//
+// .#{$icon_prefix}--history, %#{$icon_prefix}--history{
+//   background-image: url(../../images/svg/history.svg);
+// }
+//
+// .#{$icon_prefix}--home, %#{$icon_prefix}--home{
+//   background-image: url(../../images/svg/home.svg);
+// }
+//
+// .#{$icon_prefix}--hospital-o, %#{$icon_prefix}--hospital-o{
+//   background-image: url(../../images/svg/hospital-o.svg);
+// }
+//
+// .#{$icon_prefix}--html, %#{$icon_prefix}--html5{
+//   background-image: url(../../images/svg/html5.svg);
+// }
+//
+// .#{$icon_prefix}--ils, %#{$icon_prefix}--ils{
+//   background-image: url(../../images/svg/ils.svg);
+// }
+//
+// .#{$icon_prefix}--inbox, %#{$icon_prefix}--inbox{
+//   background-image: url(../../images/svg/inbox.svg);
+// }
+//
+// .#{$icon_prefix}--indent, %#{$icon_prefix}--indent{
+//   background-image: url(../../images/svg/indent.svg);
+// }
+//
+// .#{$icon_prefix}--info-circle, %#{$icon_prefix}--info-circle{
+//   background-image: url(../../images/svg/info-circle.svg);
+// }
+//
+// .#{$icon_prefix}--info, %#{$icon_prefix}--info{
+//   background-image: url(../../images/svg/info.svg);
+// }
+//
+// .#{$icon_prefix}--inr, %#{$icon_prefix}--inr{
+//   background-image: url(../../images/svg/inr.svg);
+// }
+//
+// .#{$icon_prefix}--instagram, %#{$icon_prefix}--instagram{
+//   background-image: url(../../images/svg/instagram.svg);
+// }
+//
+// .#{$icon_prefix}--ioxhost, %#{$icon_prefix}--ioxhost{
+//   background-image: url(../../images/svg/ioxhost.svg);
+// }
+//
+// .#{$icon_prefix}--italic, %#{$icon_prefix}--italic{
+//   background-image: url(../../images/svg/italic.svg);
+// }
+//
+// .#{$icon_prefix}--joomla, %#{$icon_prefix}--joomla{
+//   background-image: url(../../images/svg/joomla.svg);
+// }
+//
+// .#{$icon_prefix}--jpy, %#{$icon_prefix}--jpy{
+//   background-image: url(../../images/svg/jpy.svg);
+// }
+//
+// .#{$icon_prefix}--jsfiddle, %#{$icon_prefix}--jsfiddle{
+//   background-image: url(../../images/svg/jsfiddle.svg);
+// }
+//
+// .#{$icon_prefix}--key, %#{$icon_prefix}--key{
+//   background-image: url(../../images/svg/key.svg);
+// }
+//
+// .#{$icon_prefix}--keyboard-o, %#{$icon_prefix}--keyboard-o{
+//   background-image: url(../../images/svg/keyboard-o.svg);
+// }
+//
+// .#{$icon_prefix}--krw, %#{$icon_prefix}--krw{
+//   background-image: url(../../images/svg/krw.svg);
+// }
+//
+// .#{$icon_prefix}--language, %#{$icon_prefix}--language{
+//   background-image: url(../../images/svg/language.svg);
+// }
+//
+// .#{$icon_prefix}--laptop, %#{$icon_prefix}--laptop{
+//   background-image: url(../../images/svg/laptop.svg);
+// }
+//
+// .#{$icon_prefix}--lastfm-square, %#{$icon_prefix}--lastfm-square{
+//   background-image: url(../../images/svg/lastfm-square.svg);
+// }
+//
+// .#{$icon_prefix}--lastfm, %#{$icon_prefix}--lastfm{
+//   background-image: url(../../images/svg/lastfm.svg);
+// }
+//
+// .#{$icon_prefix}--leaf, %#{$icon_prefix}--leaf{
+//   background-image: url(../../images/svg/leaf.svg);
+// }
+//
+// .#{$icon_prefix}--leanpub, %#{$icon_prefix}--leanpub{
+//   background-image: url(../../images/svg/leanpub.svg);
+// }
+//
+// .#{$icon_prefix}--lemon-o, %#{$icon_prefix}--lemon-o{
+//   background-image: url(../../images/svg/lemon-o.svg);
+// }
+//
+// .#{$icon_prefix}--level-down, %#{$icon_prefix}--level-down{
+//   background-image: url(../../images/svg/level-down.svg);
+// }
+//
+// .#{$icon_prefix}--level-up, %#{$icon_prefix}--level-up{
+//   background-image: url(../../images/svg/level-up.svg);
+// }
+//
+// .#{$icon_prefix}--life-ring, %#{$icon_prefix}--life-ring{
+//   background-image: url(../../images/svg/life-ring.svg);
+// }
+//
+// .#{$icon_prefix}--lightbulb-o, %#{$icon_prefix}--lightbulb-o{
+//   background-image: url(../../images/svg/lightbulb-o.svg);
+// }
+//
+// .#{$icon_prefix}--line-chart, %#{$icon_prefix}--line-chart{
+//   background-image: url(../../images/svg/line-chart.svg);
+// }
+//
+// .#{$icon_prefix}--link, %#{$icon_prefix}--link{
+//   background-image: url(../../images/svg/link.svg);
+// }
+//
+// .#{$icon_prefix}--linkedin-square, %#{$icon_prefix}--linkedin-square{
+//   background-image: url(../../images/svg/linkedin-square.svg);
+// }
+//
+// .#{$icon_prefix}--linkedin, %#{$icon_prefix}--linkedin{
+//   background-image: url(../../images/svg/linkedin.svg);
+// }
+//
+// .#{$icon_prefix}--linux, %#{$icon_prefix}--linux{
+//   background-image: url(../../images/svg/linux.svg);
+// }
+//
+// .#{$icon_prefix}--list-alt, %#{$icon_prefix}--list-alt{
+//   background-image: url(../../images/svg/list-alt.svg);
+// }
+//
+// .#{$icon_prefix}--list-ol, %#{$icon_prefix}--list-ol{
+//   background-image: url(../../images/svg/list-ol.svg);
+// }
+//
+// .#{$icon_prefix}--list-ul, %#{$icon_prefix}--list-ul{
+//   background-image: url(../../images/svg/list-ul.svg);
+// }
+//
+// .#{$icon_prefix}--list, %#{$icon_prefix}--list{
+//   background-image: url(../../images/svg/list.svg);
+// }
+//
+// .#{$icon_prefix}--location-arrow, %#{$icon_prefix}--location-arrow{
+//   background-image: url(../../images/svg/location-arrow.svg);
+// }
+//
+// .#{$icon_prefix}--lock, %#{$icon_prefix}--lock{
+//   background-image: url(../../images/svg/lock.svg);
+// }
+//
+// .#{$icon_prefix}--long-arrow-down, %#{$icon_prefix}--long-arrow-down{
+//   background-image: url(../../images/svg/long-arrow-down.svg);
+// }
+//
+// .#{$icon_prefix}--long-arrow-left, %#{$icon_prefix}--long-arrow-left{
+//   background-image: url(../../images/svg/long-arrow-left.svg);
+// }
+//
+// .#{$icon_prefix}--long-arrow-right, %#{$icon_prefix}--long-arrow-right{
+//   background-image: url(../../images/svg/long-arrow-right.svg);
+// }
+//
+// .#{$icon_prefix}--long-arrow-up, %#{$icon_prefix}--long-arrow-up{
+//   background-image: url(../../images/svg/long-arrow-up.svg);
+// }
+//
+// .#{$icon_prefix}--magic, %#{$icon_prefix}--magic{
+//   background-image: url(../../images/svg/magic.svg);
+// }
+//
+// .#{$icon_prefix}--magnet, %#{$icon_prefix}--magnet{
+//   background-image: url(../../images/svg/magnet.svg);
+// }
+//
+// .#{$icon_prefix}--male, %#{$icon_prefix}--male{
+//   background-image: url(../../images/svg/male.svg);
+// }
+//
+// .#{$icon_prefix}--map-marker, %#{$icon_prefix}--map-marker{
+//   background-image: url(../../images/svg/map-marker.svg);
+// }
+//
+// .#{$icon_prefix}--mars-double, %#{$icon_prefix}--mars-double{
+//   background-image: url(../../images/svg/mars-double.svg);
+// }
+//
+// .#{$icon_prefix}--mars-stroke-h, %#{$icon_prefix}--mars-stroke-h{
+//   background-image: url(../../images/svg/mars-stroke-h.svg);
+// }
+//
+// .#{$icon_prefix}--mars-stroke-v, %#{$icon_prefix}--mars-stroke-v{
+//   background-image: url(../../images/svg/mars-stroke-v.svg);
+// }
+//
+// .#{$icon_prefix}--mars-stroke, %#{$icon_prefix}--mars-stroke{
+//   background-image: url(../../images/svg/mars-stroke.svg);
+// }
+//
+// .#{$icon_prefix}--mars, %#{$icon_prefix}--mars{
+//   background-image: url(../../images/svg/mars.svg);
+// }
+//
+// .#{$icon_prefix}--maxcdn, %#{$icon_prefix}--maxcdn{
+//   background-image: url(../../images/svg/maxcdn.svg);
+// }
+//
+// .#{$icon_prefix}--meanpath, %#{$icon_prefix}--meanpath{
+//   background-image: url(../../images/svg/meanpath.svg);
+// }
+//
+// .#{$icon_prefix}--medium, %#{$icon_prefix}--medium{
+//   background-image: url(../../images/svg/medium.svg);
+// }
+//
+// .#{$icon_prefix}--medkit, %#{$icon_prefix}--medkit{
+//   background-image: url(../../images/svg/medkit.svg);
+// }
+//
+// .#{$icon_prefix}--meh-o, %#{$icon_prefix}--meh-o{
+//   background-image: url(../../images/svg/meh-o.svg);
+// }
+//
+// .#{$icon_prefix}--mercury, %#{$icon_prefix}--mercury{
+//   background-image: url(../../images/svg/mercury.svg);
+// }
+//
+// .#{$icon_prefix}--microphone-slash, %#{$icon_prefix}--microphone-slash{
+//   background-image: url(../../images/svg/microphone-slash.svg);
+// }
+//
+// .#{$icon_prefix}--microphone, %#{$icon_prefix}--microphone{
+//   background-image: url(../../images/svg/microphone.svg);
+// }
+//
+// .#{$icon_prefix}--minus-circle, %#{$icon_prefix}--minus-circle{
+//   background-image: url(../../images/svg/minus-circle.svg);
+// }
+//
+// .#{$icon_prefix}--minus-square-o, %#{$icon_prefix}--minus-square-o{
+//   background-image: url(../../images/svg/minus-square-o.svg);
+// }
+//
+// .#{$icon_prefix}--minus-square, %#{$icon_prefix}--minus-square{
+//   background-image: url(../../images/svg/minus-square.svg);
+// }
+//
+// .#{$icon_prefix}--minus, %#{$icon_prefix}--minus{
+//   background-image: url(../../images/svg/minus.svg);
+// }
+//
+// .#{$icon_prefix}--mobile, %#{$icon_prefix}--mobile{
+//   background-image: url(../../images/svg/mobile.svg);
+// }
+//
+// .#{$icon_prefix}--money, %#{$icon_prefix}--money{
+//   background-image: url(../../images/svg/money.svg);
+// }
+//
+// .#{$icon_prefix}--moon-o, %#{$icon_prefix}--moon-o{
+//   background-image: url(../../images/svg/moon-o.svg);
+// }
+//
+// .#{$icon_prefix}--motorcycle, %#{$icon_prefix}--motorcycle{
+//   background-image: url(../../images/svg/motorcycle.svg);
+// }
+//
+// .#{$icon_prefix}--music, %#{$icon_prefix}--music{
+//   background-image: url(../../images/svg/music.svg);
+// }
+//
+// .#{$icon_prefix}--neuter, %#{$icon_prefix}--neuter{
+//   background-image: url(../../images/svg/neuter.svg);
+// }
+//
+// .#{$icon_prefix}--newspaper-o, %#{$icon_prefix}--newspaper-o{
+//   background-image: url(../../images/svg/newspaper-o.svg);
+// }
+//
+// .#{$icon_prefix}--openid, %#{$icon_prefix}--openid{
+//   background-image: url(../../images/svg/openid.svg);
+// }
+//
+// .#{$icon_prefix}--outdent, %#{$icon_prefix}--outdent{
+//   background-image: url(../../images/svg/outdent.svg);
+// }
+//
+// .#{$icon_prefix}--pagelines, %#{$icon_prefix}--pagelines{
+//   background-image: url(../../images/svg/pagelines.svg);
+// }
+//
+// .#{$icon_prefix}--paint-brush, %#{$icon_prefix}--paint-brush{
+//   background-image: url(../../images/svg/paint-brush.svg);
+// }
+//
+// .#{$icon_prefix}--paper-plane-o, %#{$icon_prefix}--paper-plane-o{
+//   background-image: url(../../images/svg/paper-plane-o.svg);
+// }
+//
+// .#{$icon_prefix}--paper-plane, %#{$icon_prefix}--paper-plane{
+//   background-image: url(../../images/svg/paper-plane.svg);
+// }
+//
+// .#{$icon_prefix}--paperclip, %#{$icon_prefix}--paperclip{
+//   background-image: url(../../images/svg/paperclip.svg);
+// }
+//
+// .#{$icon_prefix}--paragraph, %#{$icon_prefix}--paragraph{
+//   background-image: url(../../images/svg/paragraph.svg);
+// }
+//
+// .#{$icon_prefix}--pause, %#{$icon_prefix}--pause{
+//   background-image: url(../../images/svg/pause.svg);
+// }
+//
+// .#{$icon_prefix}--paw, %#{$icon_prefix}--paw{
+//   background-image: url(../../images/svg/paw.svg);
+// }
+//
+// .#{$icon_prefix}--paypal, %#{$icon_prefix}--paypal{
+//   background-image: url(../../images/svg/paypal.svg);
+// }
+//
+// .#{$icon_prefix}--pencil-square-o, %#{$icon_prefix}--pencil-square-o{
+//   background-image: url(../../images/svg/pencil-square-o.svg);
+// }
+//
+// .#{$icon_prefix}--pencil-square, %#{$icon_prefix}--pencil-square{
+//   background-image: url(../../images/svg/pencil-square.svg);
+// }
+//
+// .#{$icon_prefix}--pencil, %#{$icon_prefix}--pencil{
+//   background-image: url(../../images/svg/pencil.svg);
+// }
+//
+// .#{$icon_prefix}--phone-square, %#{$icon_prefix}--phone-square{
+//   background-image: url(../../images/svg/phone-square.svg);
+// }
+//
+// .#{$icon_prefix}--phone, %#{$icon_prefix}--phone{
+//   background-image: url(../../images/svg/phone.svg);
+// }
+//
+// .#{$icon_prefix}--picture-o, %#{$icon_prefix}--picture-o{
+//   background-image: url(../../images/svg/picture-o.svg);
+// }
+//
+// .#{$icon_prefix}--pie-chart, %#{$icon_prefix}--pie-chart{
+//   background-image: url(../../images/svg/pie-chart.svg);
+// }
+//
+// .#{$icon_prefix}--pied-piper-alt, %#{$icon_prefix}--pied-piper-alt{
+//   background-image: url(../../images/svg/pied-piper-alt.svg);
+// }
+//
+// .#{$icon_prefix}--pied-piper, %#{$icon_prefix}--pied-piper{
+//   background-image: url(../../images/svg/pied-piper.svg);
+// }
+//
+// .#{$icon_prefix}--pinterest-p, %#{$icon_prefix}--pinterest-p{
+//   background-image: url(../../images/svg/pinterest-p.svg);
+// }
+//
+// .#{$icon_prefix}--pinterest-square, %#{$icon_prefix}--pinterest-square{
+//   background-image: url(../../images/svg/pinterest-square.svg);
+// }
+//
+// .#{$icon_prefix}--pinterest, %#{$icon_prefix}--pinterest{
+//   background-image: url(../../images/svg/pinterest.svg);
+// }
+//
+// .#{$icon_prefix}--plane, %#{$icon_prefix}--plane{
+//   background-image: url(../../images/svg/plane.svg);
+// }
+//
+// .#{$icon_prefix}--play-circle-o, %#{$icon_prefix}--play-circle-o{
+//   background-image: url(../../images/svg/play-circle-o.svg);
+// }
+//
+// .#{$icon_prefix}--play-circle, %#{$icon_prefix}--play-circle{
+//   background-image: url(../../images/svg/play-circle.svg);
+// }
+//
+// .#{$icon_prefix}--play, %#{$icon_prefix}--play{
+//   background-image: url(../../images/svg/play.svg);
+// }
+//
+// .#{$icon_prefix}--plug, %#{$icon_prefix}--plug{
+//   background-image: url(../../images/svg/plug.svg);
+// }
+//
+// .#{$icon_prefix}--plus-circle, %#{$icon_prefix}--plus-circle{
+//   background-image: url(../../images/svg/plus-circle.svg);
+// }
+//
+// .#{$icon_prefix}--plus-square-o, %#{$icon_prefix}--plus-square-o{
+//   background-image: url(../../images/svg/plus-square-o.svg);
+// }
+//
+// .#{$icon_prefix}--plus-square, %#{$icon_prefix}--plus-square{
+//   background-image: url(../../images/svg/plus-square.svg);
+// }
+//
+// .#{$icon_prefix}--plus, %#{$icon_prefix}--plus{
+//   background-image: url(../../images/svg/plus.svg);
+// }
+//
+// .#{$icon_prefix}--power-off, %#{$icon_prefix}--power-off{
+//   background-image: url(../../images/svg/power-off.svg);
+// }
+//
+// .#{$icon_prefix}--print, %#{$icon_prefix}--print{
+//   background-image: url(../../images/svg/print.svg);
+// }
+//
+// .#{$icon_prefix}--puzzle-piece, %#{$icon_prefix}--puzzle-piece{
+//   background-image: url(../../images/svg/puzzle-piece.svg);
+// }
+//
+// .#{$icon_prefix}--qq, %#{$icon_prefix}--qq{
+//   background-image: url(../../images/svg/qq.svg);
+// }
+//
+// .#{$icon_prefix}--qrcode, %#{$icon_prefix}--qrcode{
+//   background-image: url(../../images/svg/qrcode.svg);
+// }
+//
+// .#{$icon_prefix}--question-circle, %#{$icon_prefix}--question-circle{
+//   background-image: url(../../images/svg/question-circle.svg);
+// }
+//
+// .#{$icon_prefix}--question, %#{$icon_prefix}--question{
+//   background-image: url(../../images/svg/question.svg);
+// }
+//
+// .#{$icon_prefix}--quote-left, %#{$icon_prefix}--quote-left{
+//   background-image: url(../../images/svg/quote-left.svg);
+// }
+//
+// .#{$icon_prefix}--quote-right, %#{$icon_prefix}--quote-right{
+//   background-image: url(../../images/svg/quote-right.svg);
+// }
+//
+// .#{$icon_prefix}--random, %#{$icon_prefix}--random{
+//   background-image: url(../../images/svg/random.svg);
+// }
+//
+// .#{$icon_prefix}--rebel, %#{$icon_prefix}--rebel{
+//   background-image: url(../../images/svg/rebel.svg);
+// }
+//
+// .#{$icon_prefix}--recycle, %#{$icon_prefix}--recycle{
+//   background-image: url(../../images/svg/recycle.svg);
+// }
+//
+// .#{$icon_prefix}--reddit-square, %#{$icon_prefix}--reddit-square{
+//   background-image: url(../../images/svg/reddit-square.svg);
+// }
+//
+// .#{$icon_prefix}--reddit, %#{$icon_prefix}--reddit{
+//   background-image: url(../../images/svg/reddit.svg);
+// }
+//
+// .#{$icon_prefix}--refresh, %#{$icon_prefix}--refresh{
+//   background-image: url(../../images/svg/refresh.svg);
+// }
+//
+// .#{$icon_prefix}--renren, %#{$icon_prefix}--renren{
+//   background-image: url(../../images/svg/renren.svg);
+// }
+//
+// .#{$icon_prefix}--repeat, %#{$icon_prefix}--repeat{
+//   background-image: url(../../images/svg/repeat.svg);
+// }
+//
+// .#{$icon_prefix}--reply-all, %#{$icon_prefix}--reply-all{
+//   background-image: url(../../images/svg/reply-all.svg);
+// }
+//
+// .#{$icon_prefix}--reply, %#{$icon_prefix}--reply{
+//   background-image: url(../../images/svg/reply.svg);
+// }
+//
+// .#{$icon_prefix}--retweet, %#{$icon_prefix}--retweet{
+//   background-image: url(../../images/svg/retweet.svg);
+// }
+//
+// .#{$icon_prefix}--road, %#{$icon_prefix}--road{
+//   background-image: url(../../images/svg/road.svg);
+// }
+//
+// .#{$icon_prefix}--rocket, %#{$icon_prefix}--rocket{
+//   background-image: url(../../images/svg/rocket.svg);
+// }
+//
+// .#{$icon_prefix}--rss-square, %#{$icon_prefix}--rss-square{
+//   background-image: url(../../images/svg/rss-square.svg);
+// }
+//
+// .#{$icon_prefix}--rss, %#{$icon_prefix}--rss{
+//   background-image: url(../../images/svg/rss.svg);
+// }
+//
+// .#{$icon_prefix}--rub, %#{$icon_prefix}--rub{
+//   background-image: url(../../images/svg/rub.svg);
+// }
+//
+// .#{$icon_prefix}--scissors, %#{$icon_prefix}--scissors{
+//   background-image: url(../../images/svg/scissors.svg);
+// }
+//
+// .#{$icon_prefix}--search-minus, %#{$icon_prefix}--search-minus{
+//   background-image: url(../../images/svg/search-minus.svg);
+// }
+//
+// .#{$icon_prefix}--search-plus, %#{$icon_prefix}--search-plus{
+//   background-image: url(../../images/svg/search-plus.svg);
+// }
+//
+// .#{$icon_prefix}--search, %#{$icon_prefix}--search{
+//   background-image: url(../../images/svg/search.svg);
+// }
+//
+// .#{$icon_prefix}--sellsy, %#{$icon_prefix}--sellsy{
+//   background-image: url(../../images/svg/sellsy.svg);
+// }
+//
+// .#{$icon_prefix}--server, %#{$icon_prefix}--server{
+//   background-image: url(../../images/svg/server.svg);
+// }
+//
+// .#{$icon_prefix}--share-alt-square, %#{$icon_prefix}--share-alt-square{
+//   background-image: url(../../images/svg/share-alt-square.svg);
+// }
+//
+// .#{$icon_prefix}--share-alt, %#{$icon_prefix}--share-alt{
+//   background-image: url(../../images/svg/share-alt.svg);
+// }
+//
+// .#{$icon_prefix}--share-square-o, %#{$icon_prefix}--share-square-o{
+//   background-image: url(../../images/svg/share-square-o.svg);
+// }
+//
+// .#{$icon_prefix}--share-square, %#{$icon_prefix}--share-square{
+//   background-image: url(../../images/svg/share-square.svg);
+// }
+//
+// .#{$icon_prefix}--share, %#{$icon_prefix}--share{
+//   background-image: url(../../images/svg/share.svg);
+// }
+//
+// .#{$icon_prefix}--shield, %#{$icon_prefix}--shield{
+//   background-image: url(../../images/svg/shield.svg);
+// }
+//
+// .#{$icon_prefix}--ship, %#{$icon_prefix}--ship{
+//   background-image: url(../../images/svg/ship.svg);
+// }
+//
+// .#{$icon_prefix}--shirtsinbulk, %#{$icon_prefix}--shirtsinbulk{
+//   background-image: url(../../images/svg/shirtsinbulk.svg);
+// }
+//
+// .#{$icon_prefix}--shopping-cart, %#{$icon_prefix}--shopping-cart{
+//   background-image: url(../../images/svg/shopping-cart.svg);
+// }
+//
+// .#{$icon_prefix}--sign-in, %#{$icon_prefix}--sign-in{
+//   background-image: url(../../images/svg/sign-in.svg);
+// }
+//
+// .#{$icon_prefix}--sign-out, %#{$icon_prefix}--sign-out{
+//   background-image: url(../../images/svg/sign-out.svg);
+// }
+//
+// .#{$icon_prefix}--signal, %#{$icon_prefix}--signal{
+//   background-image: url(../../images/svg/signal.svg);
+// }
+//
+// .#{$icon_prefix}--simplybuilt, %#{$icon_prefix}--simplybuilt{
+//   background-image: url(../../images/svg/simplybuilt.svg);
+// }
+//
+// .#{$icon_prefix}--sitemap, %#{$icon_prefix}--sitemap{
+//   background-image: url(../../images/svg/sitemap.svg);
+// }
+//
+// .#{$icon_prefix}--skyatlas, %#{$icon_prefix}--skyatlas{
+//   background-image: url(../../images/svg/skyatlas.svg);
+// }
+//
+// .#{$icon_prefix}--skype, %#{$icon_prefix}--skype{
+//   background-image: url(../../images/svg/skype.svg);
+// }
+//
+// .#{$icon_prefix}--slack, %#{$icon_prefix}--slack{
+//   background-image: url(../../images/svg/slack.svg);
+// }
+//
+// .#{$icon_prefix}--sliders, %#{$icon_prefix}--sliders{
+//   background-image: url(../../images/svg/sliders.svg);
+// }
+//
+// .#{$icon_prefix}--slideshare, %#{$icon_prefix}--slideshare{
+//   background-image: url(../../images/svg/slideshare.svg);
+// }
+//
+// .#{$icon_prefix}--smile-o, %#{$icon_prefix}--smile-o{
+//   background-image: url(../../images/svg/smile-o.svg);
+// }
+//
+// .#{$icon_prefix}--sort-alpha-asc, %#{$icon_prefix}--sort-alpha-asc{
+//   background-image: url(../../images/svg/sort-alpha-asc.svg);
+// }
+//
+// .#{$icon_prefix}--sort-alpha-desc, %#{$icon_prefix}--sort-alpha-desc{
+//   background-image: url(../../images/svg/sort-alpha-desc.svg);
+// }
+//
+// .#{$icon_prefix}--sort-amount-asc, %#{$icon_prefix}--sort-amount-asc{
+//   background-image: url(../../images/svg/sort-amount-asc.svg);
+// }
+//
+// .#{$icon_prefix}--sort-amount-desc, %#{$icon_prefix}--sort-amount-desc{
+//   background-image: url(../../images/svg/sort-amount-desc.svg);
+// }
+//
+// .#{$icon_prefix}--sort-asc, %#{$icon_prefix}--sort-asc{
+//   background-image: url(../../images/svg/sort-asc.svg);
+// }
+//
+// .#{$icon_prefix}--sort-desc, %#{$icon_prefix}--sort-desc{
+//   background-image: url(../../images/svg/sort-desc.svg);
+// }
+//
+// .#{$icon_prefix}--sort-numeric-asc, %#{$icon_prefix}--sort-numeric-asc{
+//   background-image: url(../../images/svg/sort-numeric-asc.svg);
+// }
+//
+// .#{$icon_prefix}--sort-numeric-desc, %#{$icon_prefix}--sort-numeric-desc{
+//   background-image: url(../../images/svg/sort-numeric-desc.svg);
+// }
+//
+// .#{$icon_prefix}--sort, %#{$icon_prefix}--sort{
+//   background-image: url(../../images/svg/sort.svg);
+// }
+//
+// .#{$icon_prefix}--soundcloud, %#{$icon_prefix}--soundcloud{
+//   background-image: url(../../images/svg/soundcloud.svg);
+// }
+//
+// .#{$icon_prefix}--space-shuttle, %#{$icon_prefix}--space-shuttle{
+//   background-image: url(../../images/svg/space-shuttle.svg);
+// }
+//
+// .#{$icon_prefix}--spinner, %#{$icon_prefix}--spinner{
+//   background-image: url(../../images/svg/spinner.svg);
+// }
+//
+// .#{$icon_prefix}--spoon, %#{$icon_prefix}--spoon{
+//   background-image: url(../../images/svg/spoon.svg);
+// }
+//
+// .#{$icon_prefix}--spotify, %#{$icon_prefix}--spotify{
+//   background-image: url(../../images/svg/spotify.svg);
+// }
+//
+// .#{$icon_prefix}--square-o, %#{$icon_prefix}--square-o{
+//   background-image: url(../../images/svg/square-o.svg);
+// }
+//
+// .#{$icon_prefix}--square, %#{$icon_prefix}--square{
+//   background-image: url(../../images/svg/square.svg);
+// }
+//
+// .#{$icon_prefix}--stack-exchange, %#{$icon_prefix}--stack-exchange{
+//   background-image: url(../../images/svg/stack-exchange.svg);
+// }
+//
+// .#{$icon_prefix}--stack-overflow, %#{$icon_prefix}--stack-overflow{
+//   background-image: url(../../images/svg/stack-overflow.svg);
+// }
+//
+// .#{$icon_prefix}--star-half-o, %#{$icon_prefix}--star-half-o{
+//   background-image: url(../../images/svg/star-half-o.svg);
+// }
+//
+// .#{$icon_prefix}--star-half, %#{$icon_prefix}--star-half{
+//   background-image: url(../../images/svg/star-half.svg);
+// }
+//
+// .#{$icon_prefix}--star-o, %#{$icon_prefix}--star-o{
+//   background-image: url(../../images/svg/star-o.svg);
+// }
+//
+// .#{$icon_prefix}--star, %#{$icon_prefix}--star{
+//   background-image: url(../../images/svg/star.svg);
+// }
+//
+// .#{$icon_prefix}--steam-square, %#{$icon_prefix}--steam-square{
+//   background-image: url(../../images/svg/steam-square.svg);
+// }
+//
+// .#{$icon_prefix}--steam, %#{$icon_prefix}--steam{
+//   background-image: url(../../images/svg/steam.svg);
+// }
+//
+// .#{$icon_prefix}--step-backward, %#{$icon_prefix}--step-backward{
+//   background-image: url(../../images/svg/step-backward.svg);
+// }
+//
+// .#{$icon_prefix}--step-forward, %#{$icon_prefix}--step-forward{
+//   background-image: url(../../images/svg/step-forward.svg);
+// }
+//
+// .#{$icon_prefix}--stethoscope, %#{$icon_prefix}--stethoscope{
+//   background-image: url(../../images/svg/stethoscope.svg);
+// }
+//
+// .#{$icon_prefix}--stop, %#{$icon_prefix}--stop{
+//   background-image: url(../../images/svg/stop.svg);
+// }
+//
+// .#{$icon_prefix}--street-view, %#{$icon_prefix}--street-view{
+//   background-image: url(../../images/svg/street-view.svg);
+// }
+//
+// .#{$icon_prefix}--strikethrough, %#{$icon_prefix}--strikethrough{
+//   background-image: url(../../images/svg/strikethrough.svg);
+// }
+//
+// .#{$icon_prefix}--stumbleupon-circle, %#{$icon_prefix}--stumbleupon-circle{
+//   background-image: url(../../images/svg/stumbleupon-circle.svg);
+// }
+//
+// .#{$icon_prefix}--stumbleupon, %#{$icon_prefix}--stumbleupon{
+//   background-image: url(../../images/svg/stumbleupon.svg);
+// }
+//
+// .#{$icon_prefix}--subscript, %#{$icon_prefix}--subscript{
+//   background-image: url(../../images/svg/subscript.svg);
+// }
+//
+// .#{$icon_prefix}--subway, %#{$icon_prefix}--subway{
+//   background-image: url(../../images/svg/subway.svg);
+// }
+//
+// .#{$icon_prefix}--suitcase, %#{$icon_prefix}--suitcase{
+//   background-image: url(../../images/svg/suitcase.svg);
+// }
+//
+// .#{$icon_prefix}--sun-o, %#{$icon_prefix}--sun-o{
+//   background-image: url(../../images/svg/sun-o.svg);
+// }
+//
+// .#{$icon_prefix}--superscript, %#{$icon_prefix}--superscript{
+//   background-image: url(../../images/svg/superscript.svg);
+// }
+//
+// .#{$icon_prefix}--table, %#{$icon_prefix}--table{
+//   background-image: url(../../images/svg/table.svg);
+// }
+//
+// .#{$icon_prefix}--tablet, %#{$icon_prefix}--tablet{
+//   background-image: url(../../images/svg/tablet.svg);
+// }
+//
+// .#{$icon_prefix}--tachometer, %#{$icon_prefix}--tachometer{
+//   background-image: url(../../images/svg/tachometer.svg);
+// }
+//
+// .#{$icon_prefix}--tag, %#{$icon_prefix}--tag{
+//   background-image: url(../../images/svg/tag.svg);
+// }
+//
+// .#{$icon_prefix}--tags, %#{$icon_prefix}--tags{
+//   background-image: url(../../images/svg/tags.svg);
+// }
+//
+// .#{$icon_prefix}--tasks, %#{$icon_prefix}--tasks{
+//   background-image: url(../../images/svg/tasks.svg);
+// }
+//
+// .#{$icon_prefix}--taxi, %#{$icon_prefix}--taxi{
+//   background-image: url(../../images/svg/taxi.svg);
+// }
+//
+// .#{$icon_prefix}--tencent-weibo, %#{$icon_prefix}--tencent-weibo{
+//   background-image: url(../../images/svg/tencent-weibo.svg);
+// }
+//
+// .#{$icon_prefix}--terminal, %#{$icon_prefix}--terminal{
+//   background-image: url(../../images/svg/terminal.svg);
+// }
+//
+// .#{$icon_prefix}--text-height, %#{$icon_prefix}--text-height{
+//   background-image: url(../../images/svg/text-height.svg);
+// }
+//
+// .#{$icon_prefix}--text-width, %#{$icon_prefix}--text-width{
+//   background-image: url(../../images/svg/text-width.svg);
+// }
+//
+// .#{$icon_prefix}--th-large, %#{$icon_prefix}--th-large{
+//   background-image: url(../../images/svg/th-large.svg);
+// }
+//
+// .#{$icon_prefix}--th-list, %#{$icon_prefix}--th-list{
+//   background-image: url(../../images/svg/th-list.svg);
+// }
+//
+// .#{$icon_prefix}--th, %#{$icon_prefix}--th{
+//   background-image: url(../../images/svg/th.svg);
+// }
+//
+// .#{$icon_prefix}--thumb-tack, %#{$icon_prefix}--thumb-tack{
+//   background-image: url(../../images/svg/thumb-tack.svg);
+// }
+//
+// .#{$icon_prefix}--thumbs-down, %#{$icon_prefix}--thumbs-down{
+//   background-image: url(../../images/svg/thumbs-down.svg);
+// }
+//
+// .#{$icon_prefix}--thumbs-o-down, %#{$icon_prefix}--thumbs-o-down{
+//   background-image: url(../../images/svg/thumbs-o-down.svg);
+// }
+//
+// .#{$icon_prefix}--thumbs-o-up, %#{$icon_prefix}--thumbs-o-up{
+//   background-image: url(../../images/svg/thumbs-o-up.svg);
+// }
+//
+// .#{$icon_prefix}--thumbs-up, %#{$icon_prefix}--thumbs-up{
+//   background-image: url(../../images/svg/thumbs-up.svg);
+// }
+//
+// .#{$icon_prefix}--ticket, %#{$icon_prefix}--ticket{
+//   background-image: url(../../images/svg/ticket.svg);
+// }
+//
+// .#{$icon_prefix}--times-circle-o, %#{$icon_prefix}--times-circle-o{
+//   background-image: url(../../images/svg/times-circle-o.svg);
+// }
+//
+// .#{$icon_prefix}--times-circle, %#{$icon_prefix}--times-circle{
+//   background-image: url(../../images/svg/times-circle.svg);
+// }
+//
+// .#{$icon_prefix}--times, %#{$icon_prefix}--times{
+//   background-image: url(../../images/svg/times.svg);
+// }
+//
+// .#{$icon_prefix}--tint, %#{$icon_prefix}--tint{
+//   background-image: url(../../images/svg/tint.svg);
+// }
+//
+// .#{$icon_prefix}--toggle-off, %#{$icon_prefix}--toggle-off{
+//   background-image: url(../../images/svg/toggle-off.svg);
+// }
+//
+// .#{$icon_prefix}--toggle-on, %#{$icon_prefix}--toggle-on{
+//   background-image: url(../../images/svg/toggle-on.svg);
+// }
+//
+// .#{$icon_prefix}--train, %#{$icon_prefix}--train{
+//   background-image: url(../../images/svg/train.svg);
+// }
+//
+// .#{$icon_prefix}--transgender-alt, %#{$icon_prefix}--transgender-alt{
+//   background-image: url(../../images/svg/transgender-alt.svg);
+// }
+//
+// .#{$icon_prefix}--transgender, %#{$icon_prefix}--transgender{
+//   background-image: url(../../images/svg/transgender.svg);
+// }
+//
+// .#{$icon_prefix}--trash-o, %#{$icon_prefix}--trash-o{
+//   background-image: url(../../images/svg/trash-o.svg);
+// }
+//
+// .#{$icon_prefix}--trash, %#{$icon_prefix}--trash{
+//   background-image: url(../../images/svg/trash.svg);
+// }
+//
+// .#{$icon_prefix}--tree, %#{$icon_prefix}--tree{
+//   background-image: url(../../images/svg/tree.svg);
+// }
+//
+// .#{$icon_prefix}--trello, %#{$icon_prefix}--trello{
+//   background-image: url(../../images/svg/trello.svg);
+// }
+//
+// .#{$icon_prefix}--trophy, %#{$icon_prefix}--trophy{
+//   background-image: url(../../images/svg/trophy.svg);
+// }
+//
+// .#{$icon_prefix}--truck, %#{$icon_prefix}--truck{
+//   background-image: url(../../images/svg/truck.svg);
+// }
+//
+// .#{$icon_prefix}--try, %#{$icon_prefix}--try{
+//   background-image: url(../../images/svg/try.svg);
+// }
+//
+// .#{$icon_prefix}--tty, %#{$icon_prefix}--tty{
+//   background-image: url(../../images/svg/tty.svg);
+// }
+//
+// .#{$icon_prefix}--tumblr-square, %#{$icon_prefix}--tumblr-square{
+//   background-image: url(../../images/svg/tumblr-square.svg);
+// }
+//
+// .#{$icon_prefix}--tumblr, %#{$icon_prefix}--tumblr{
+//   background-image: url(../../images/svg/tumblr.svg);
+// }
+//
+// .#{$icon_prefix}--twitch, %#{$icon_prefix}--twitch{
+//   background-image: url(../../images/svg/twitch.svg);
+// }
+//
+// .#{$icon_prefix}--twitter-square, %#{$icon_prefix}--twitter-square{
+//   background-image: url(../../images/svg/twitter-square.svg);
+// }
+//
+// .#{$icon_prefix}--twitter, %#{$icon_prefix}--twitter{
+//   background-image: url(../../images/svg/twitter.svg);
+// }
+//
+// .#{$icon_prefix}--umbrella, %#{$icon_prefix}--umbrella{
+//   background-image: url(../../images/svg/umbrella.svg);
+// }
+//
+// .#{$icon_prefix}--underline, %#{$icon_prefix}--underline{
+//   background-image: url(../../images/svg/underline.svg);
+// }
+//
+// .#{$icon_prefix}--undo, %#{$icon_prefix}--undo{
+//   background-image: url(../../images/svg/undo.svg);
+// }
+//
+// .#{$icon_prefix}--university, %#{$icon_prefix}--university{
+//   background-image: url(../../images/svg/university.svg);
+// }
+//
+// .#{$icon_prefix}--unlock-alt, %#{$icon_prefix}--unlock-alt{
+//   background-image: url(../../images/svg/unlock-alt.svg);
+// }
+//
+// .#{$icon_prefix}--unlock, %#{$icon_prefix}--unlock{
+//   background-image: url(../../images/svg/unlock.svg);
+// }
+//
+// .#{$icon_prefix}--upload, %#{$icon_prefix}--upload{
+//   background-image: url(../../images/svg/upload.svg);
+// }
+//
+// .#{$icon_prefix}--usd, %#{$icon_prefix}--usd{
+//   background-image: url(../../images/svg/usd.svg);
+// }
+//
+// .#{$icon_prefix}--user-md, %#{$icon_prefix}--user-md{
+//   background-image: url(../../images/svg/user-md.svg);
+// }
+//
+// .#{$icon_prefix}--user-plus, %#{$icon_prefix}--user-plus{
+//   background-image: url(../../images/svg/user-plus.svg);
+// }
+//
+// .#{$icon_prefix}--user-secret, %#{$icon_prefix}--user-secret{
+//   background-image: url(../../images/svg/user-secret.svg);
+// }
+//
+// .#{$icon_prefix}--user-times, %#{$icon_prefix}--user-times{
+//   background-image: url(../../images/svg/user-times.svg);
+// }
+//
+// .#{$icon_prefix}--user, %#{$icon_prefix}--user{
+//   background-image: url(../../images/svg/user.svg);
+// }
+//
+// .#{$icon_prefix}--users, %#{$icon_prefix}--users{
+//   background-image: url(../../images/svg/users.svg);
+// }
+//
+// .#{$icon_prefix}--venus-double, %#{$icon_prefix}--venus-double{
+//   background-image: url(../../images/svg/venus-double.svg);
+// }
+//
+// .#{$icon_prefix}--venus-mars, %#{$icon_prefix}--venus-mars{
+//   background-image: url(../../images/svg/venus-mars.svg);
+// }
+//
+// .#{$icon_prefix}--venus, %#{$icon_prefix}--venus{
+//   background-image: url(../../images/svg/venus.svg);
+// }
+//
+// .#{$icon_prefix}--viacoin, %#{$icon_prefix}--viacoin{
+//   background-image: url(../../images/svg/viacoin.svg);
+// }
+//
+// .#{$icon_prefix}--video-camera, %#{$icon_prefix}--video-camera{
+//   background-image: url(../../images/svg/video-camera.svg);
+// }
+//
+// .#{$icon_prefix}--vimeo-square, %#{$icon_prefix}--vimeo-square{
+//   background-image: url(../../images/svg/vimeo-square.svg);
+// }
+//
+// .#{$icon_prefix}--vine, %#{$icon_prefix}--vine{
+//   background-image: url(../../images/svg/vine.svg);
+// }
+//
+// .#{$icon_prefix}--vk, %#{$icon_prefix}--vk{
+//   background-image: url(../../images/svg/vk.svg);
+// }
+//
+// .#{$icon_prefix}--volume-down, %#{$icon_prefix}--volume-down{
+//   background-image: url(../../images/svg/volume-down.svg);
+// }
+//
+// .#{$icon_prefix}--volume-off, %#{$icon_prefix}--volume-off{
+//   background-image: url(../../images/svg/volume-off.svg);
+// }
+//
+// .#{$icon_prefix}--volume-up, %#{$icon_prefix}--volume-up{
+//   background-image: url(../../images/svg/volume-up.svg);
+// }
+//
+// .#{$icon_prefix}--weibo, %#{$icon_prefix}--weibo{
+//   background-image: url(../../images/svg/weibo.svg);
+// }
+//
+// .#{$icon_prefix}--weixin, %#{$icon_prefix}--weixin{
+//   background-image: url(../../images/svg/weixin.svg);
+// }
+//
+// .#{$icon_prefix}--whatsapp, %#{$icon_prefix}--whatsapp{
+//   background-image: url(../../images/svg/whatsapp.svg);
+// }
+//
+// .#{$icon_prefix}--wheelchair, %#{$icon_prefix}--wheelchair{
+//   background-image: url(../../images/svg/wheelchair.svg);
+// }
+//
+// .#{$icon_prefix}--wifi, %#{$icon_prefix}--wifi{
+//   background-image: url(../../images/svg/wifi.svg);
+// }
+//
+// .#{$icon_prefix}--windows, %#{$icon_prefix}--windows{
+//   background-image: url(../../images/svg/windows.svg);
+// }
+//
+// .#{$icon_prefix}--wordpress, %#{$icon_prefix}--wordpress{
+//   background-image: url(../../images/svg/wordpress.svg);
+// }
+//
+// .#{$icon_prefix}--wrench, %#{$icon_prefix}--wrench{
+//   background-image: url(../../images/svg/wrench.svg);
+// }
+//
+// .#{$icon_prefix}--xing-square, %#{$icon_prefix}--xing-square{
+//   background-image: url(../../images/svg/xing-square.svg);
+// }
+//
+// .#{$icon_prefix}--xing, %#{$icon_prefix}--xing{
+//   background-image: url(../../images/svg/xing.svg);
+// }
+//
+// .#{$icon_prefix}--yahoo, %#{$icon_prefix}--yahoo{
+//   background-image: url(../../images/svg/yahoo.svg);
+// }
+//
+// .#{$icon_prefix}--yelp, %#{$icon_prefix}--yelp{
+//   background-image: url(../../images/svg/yelp.svg);
+// }
+//
+// .#{$icon_prefix}--youtube-play, %#{$icon_prefix}--youtube-play{
+//   background-image: url(../../images/svg/youtube-play.svg);
+// }
+//
+// .#{$icon_prefix}--youtube-square, %#{$icon_prefix}--youtube-square{
+//   background-image: url(../../images/svg/youtube-square.svg);
+// }
+//
+// .#{$icon_prefix}--youtube, %#{$icon_prefix}--youtube{
+//   background-image: url(../../images/svg/youtube.svg);
+// }

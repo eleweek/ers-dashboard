@@ -1,0 +1,427 @@
+/* Components: Navigation
+========================================================================== */
+.navbar {
+  background-color: $brand-secondary;
+  font-size: 16px;
+
+  // fix the flash of tall navbar on page load
+  @include media-breakpoint-up(lg) {
+    max-height: 80px;
+  }
+
+  &-wrapper {
+    position: relative;
+  }
+}
+
+.search-toggle {
+  &:before {
+    content: "";
+    background-image: image-url('svg/search.svg');
+    // background-size: 100%;
+    background-size: 18px;
+    background-repeat: no-repeat;
+    background-position: center;
+    width: 22px;
+    height: 22px;
+    margin-right: 6px;
+    display: block;
+    float: left;
+  }
+
+  @include media-breakpoint-up(lg) {
+    display: none;
+  }
+
+  @include media-breakpoint-down(lg) {
+    .open-search & {
+      background-color: lighten($brand-secondary, 10);
+      &:before {
+        background-image: image-url('svg/times.svg');
+      }
+    }
+  }
+
+}
+
+.search-toggle,
+.menu-toggle {
+  appearance: none;
+  border: none;
+  background-color: transparent;
+  font-size: 18px;
+  font-weight: bold;
+  color: $colour--white;
+  padding: 20px 10px;
+  width: auto;
+
+  &:focus {
+    outline: none;
+  }
+
+}
+
+.menu-toggle {
+  float: right;
+  display: flex;
+  align-items: center;
+
+  &:after {
+    content: "";
+    background-image: image-url('svg/bars.svg');
+    // background-size: 100%;
+    background-size: 18px;
+    background-repeat: no-repeat;
+    background-position: center;
+    width: 22px;
+    height: 22px;
+    margin-right: 6px;
+    display: block;
+    float: left;
+  }
+
+  @include media-breakpoint-up(lg) {
+    display: none;
+  }
+
+  @include media-breakpoint-down(lg) {
+    .open & {
+      background-color: lighten($brand-secondary, 10);
+      &:after {
+        background-image: image-url('svg/times.svg');
+      }
+    }
+  }
+
+  .menu-title {
+    display: block;
+    float: left;
+    margin-right: 10px;
+  }
+
+}
+
+.navbar {
+
+  .navbar-collapse {
+    display: none;
+
+    @include media-breakpoint-up(lg) {
+      display: block;
+    }
+
+  }
+
+  @include media-breakpoint-down(lg) {
+    &.open {
+
+      .navbar-collapse {
+        display: block !important;
+      }
+
+      .navbar__search {
+        @include media-breakpoint-down(md) {
+          display: table;
+        }
+
+      }
+
+    }
+  }
+
+}
+
+.navbar {
+
+  ul.menu {
+    margin: 0;
+    padding: 0;
+    clear: left;
+    @include media-breakpoint-down(md) {
+      background-color: $brand-secondary;
+    }
+
+    .children,
+    .sub-menu {
+      display: none;
+      background-color: $colour--white;
+      padding: 10px;
+      z-index: 100;
+      @include media-breakpoint-up(lg) {
+        padding: 30px 20px;
+      }
+      li a {
+        color: $colour--black;
+        font-size: 14px;
+        font-weight: 500;
+        padding-top: 12px;
+        padding-bottom: 12px;
+      }
+
+      .page_item a
+      .menu-item a {
+        padding-left: 30px;
+      }
+
+      .sub-menu {
+        @include media-breakpoint-down(md) {
+          padding: 0;
+        }
+        li {
+          display: none;
+        }
+      }
+
+    }
+
+    @include media-breakpoint-down(md) {
+      .open .children,
+      .open .sub-menu {
+        display: block !important;
+      }
+
+    }
+
+    & > .page_item,
+    & > .menu-item {
+      display: block;
+
+      @include media-breakpoint-down(md) {
+        border-bottom: 2px solid $colour--white;
+      }
+
+      @include media-breakpoint-up(lg) {
+        float: left;
+        margin: 0;
+        position: relative;
+      }
+
+    }
+
+    & > .page_item,
+    & > .menu-item,
+    & > .navbar__more {
+
+      @include media-breakpoint-up(lg) {
+        transition: 250ms all;
+        &:hover, &:focus {
+          background-color: $brand-primary;
+        }
+      }
+
+      a {
+        // padding: 1em 1.5em;
+        padding: 20px 15px;
+
+        @include media-breakpoint-up(lg) {
+          padding: 29px 15px;
+        }
+
+        display: block;
+        color: $colour--white;
+        background-color: transparent;
+        transition: 250ms all;
+        text-decoration: none;
+        font-weight: bold;
+        font-size: 18px; // reduced font size slightly as 'More' option was showing at desktop
+
+      }
+
+    }
+
+    & > .navbar__more {
+      background-color: darken($brand-secondary, 5);
+
+      > a {
+        padding-left: 1.4em;
+        padding-right: 1.4em;
+      }
+    }
+
+    > .page_item_has_children,
+    > .menu-item-has-children {
+
+      position: relative;
+
+      .sub-menu {
+        li {
+          a {
+            &:hover {
+              background: darken(white, 10);
+            }
+          }
+        }
+      }
+
+      @include media-breakpoint-up(lg) {
+
+        .sub-menu {
+          box-shadow: 3px 3px 3px 0px rgba(49,49,49,0.5);
+        }
+
+        .children,
+        .sub-menu {
+          background-color: $brand-primary;
+          position: absolute;
+          left: 0;
+          width: 540px;
+
+          li {
+            float: left;
+            display: inline-block;
+            width: 250px;
+
+            a {
+              display: block;
+              color: white;
+              font-size: 18px;
+              font-weight: 400;
+              &:hover {
+                background-color: transparent;
+                text-decoration: underline;
+              }
+            }
+          }
+        }
+
+        &:hover {
+          .children,
+          > .sub-menu {
+            display: block !important;
+          }
+
+        }
+
+      }
+
+      & > a {
+        background: {
+          image: image-url('svg/chevron-down.svg') !important;
+          position: center right 20px;
+          size: 12px 12px;
+          repeat: no-repeat;
+        }
+        padding-right: 36px;
+
+        @include media-breakpoint-up(lg) {
+          background-image: none;
+        }
+
+      }
+
+      @include media-breakpoint-down(md) {
+        &.open > a {
+          background: {
+            image: image-url('svg/chevron-right.svg') !important;
+          }
+
+          &:hover {
+            color: $colour--white;
+          }
+
+        }
+      }
+
+    }
+
+  }
+
+}
+
+@include media-breakpoint-down(md) {
+  .open-search {
+    .menu {
+      display: none;
+    }
+
+    .navbar-collapse {
+      display: block;
+    }
+
+    .navbar__search {
+      display: table;
+    }
+  }
+}
+
+.navbar__search {
+  background-color: lighten($brand-secondary, 10);
+  width: 100%;
+  table-layout: fixed;
+  position: relative;
+  display: none;
+
+  input {
+    font-size: 12px;
+    // display: table-cell;
+    display: block;
+    margin: 3%;
+    border-radius: 4px;
+    vertical-align: top;
+  }
+
+  input[type="text"] {
+    width: 58%;
+    font-size: 16px;
+    font-weight: bold;
+    float: left;
+  }
+
+  input[type="submit"] {
+    width: 30%;
+    font-weight: 500;
+    font-size: 18px;
+    font-weight: bold;
+    float: right;
+    -webkit-appearance: none;
+  }
+
+}
+
+.navbar__more {
+
+  float: right;
+  position: relative;
+  list-style: none;
+
+  .navbar-wrapper > & {
+    opacity: 0; // fix the flash of unstyled content of the more button on page load
+  }
+
+  &_btn {
+    background: {
+      image: image-url('svg/caret-down.svg');
+      size: 20px 20px;
+      repeat: no-repeat;
+      position: center right 1.25rem;
+    }
+    padding-right: 60px;
+
+    &:hover {
+      cursor: pointer;
+    }
+
+    &.active {
+      background: {
+        image: image-url('svg/caret-up.svg');
+      }
+    }
+  }
+
+  &_list {
+    width: 250px;
+    position: absolute;
+    list-style: none;
+    z-index: 10;
+    right: 0;
+    top: 100%;
+    display: none;
+    a {
+      background-color: lighten($colour--grey, 60%);
+    }
+    .navbar ul & {
+      background-color: $colour--light-grey;
+    }
+  }
+
+}

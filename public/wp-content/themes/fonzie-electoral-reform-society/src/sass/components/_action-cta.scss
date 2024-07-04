@@ -1,0 +1,60 @@
+.action-cta-anchor {
+	margin-top: -150px;
+	padding-top: 150px;
+}
+
+.action-cta {
+	align-items: flex-start;
+	background-color: $brand-primary;
+	font-size: 18px;
+	margin-bottom: 80px;
+	padding: 20px;
+
+	@include media-breakpoint-up(md) {
+		display: flex;
+		margin-bottom: 120px;
+		padding: 30px;
+	}
+
+	@include media-breakpoint-up(xl) {
+		padding: 75px 100px;
+	}
+}
+
+.action-cta__title {
+	font-size: 28px;
+	margin-bottom: 5px;
+	padding: 0;
+}
+
+.action-cta__image {
+	margin: 0 30px 10px 0;
+	width: 100%;
+
+	img {
+		width: 100%;
+	}
+
+	@include media-breakpoint-up(lg) {
+		flex: 1 0 400px;
+		margin: 0 70px 0 0;
+	}
+}
+
+.action-cta__btn {
+	background-color: #574992;
+	color: #fff;
+	margin: 10px 0 0;
+	width: 100%;
+
+	@include media-breakpoint-up(sm) {
+		padding-left: 40px;
+		padding-right: 40px;
+		width: auto;
+	}
+
+	&:hover,
+	&:focus {
+		background-color: #3C2D78;
+	}
+}

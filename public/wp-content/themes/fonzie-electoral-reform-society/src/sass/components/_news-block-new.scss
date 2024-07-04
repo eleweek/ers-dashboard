@@ -1,0 +1,160 @@
+.new-block-item-container {
+	min-height: 0;
+}
+
+.new-block-item {
+	align-items: flex-start;
+	background-color: #FFFFFF;
+	border: 1px solid #9B9B9B;
+	border-radius: 4px;
+	display: flex;
+	padding: 15px 20px 20px 20px;
+	position: relative;
+	width: 100%;
+	height: 100%;
+
+	@include media-breakpoint-up(sm) {
+		padding: 0;
+	}
+
+	&:hover,
+	&:focus,
+	&:active {
+		background-color: #f9fbfd;
+
+		a {
+			background-color: transparent;
+			color: #fd98bc;
+			text-decoration: none;
+		}
+	}
+}
+
+.new-block-item--publications {
+	font-size: 16px;
+
+	@include media-breakpoint-up(sm) {
+		padding: 0;
+	}
+
+	p {
+		line-height: 1.4;
+	}
+}
+
+.new-block-item__image {
+	display: block;
+	margin-top: 5px;
+	width: 85px;
+
+	@include media-breakpoint-up(sm) {
+		margin-top: 0;
+		position: absolute;
+		top: 0;
+		left: 0;
+		bottom: 0;
+		width: 135px;
+	}
+
+	.new-block-item--publications & {
+
+		@include media-breakpoint-down(xs) {
+			display: none;
+		}
+	}
+
+	img {
+		display: block;
+		width: 100%;
+		height: 100%;
+
+		@include media-breakpoint-up(sm) {
+			object-fit: cover;
+			font-family: "object-fit: cover;";
+		}
+	}
+}
+
+.new-block-item__content {
+	display: flex;
+	flex: 1;
+	flex-direction: column;
+	justify-content: space-between;
+	height: 100%;
+
+	@include media-breakpoint-up(sm) {
+		padding: 15px 20px;
+	}
+
+	.new-block-item-container--reverse & {
+		flex-direction: column-reverse;
+	}
+
+	.new-block-item--publications & {
+		justify-content: flex-start;
+
+		@include media-breakpoint-up(sm) {
+			padding: 30px;
+		}
+	}
+
+	.new-block-item--publications.new-block-item--image & {
+		padding-left: 0;
+
+		@include media-breakpoint-up(sm) {
+			padding-left: 165px;
+		}
+	}
+
+	.new-block-item--image & {
+		padding-left: 15px;
+
+		@include media-breakpoint-up(sm) {
+			padding-left: 150px;
+		}
+	}
+}
+
+.new-block-item__heading {
+	line-height: 1.3;
+	margin-bottom: 5px;
+	padding: 0;
+
+	@include media-breakpoint-up(sm) {
+		margin-bottom: 25px;
+	}
+
+	.new-block-item--publications & {
+		margin-bottom: 5px;
+	}
+
+	&,
+	a {
+		background-color: transparent;
+		color: #303A52;
+		font-size: 20px;
+	}
+}
+
+.new-block-item__meta {
+	color: #574992;
+	font-family: $din-bold;
+	font-size: 14px;
+	text-transform: uppercase;
+
+	.new-block-item-container--reverse & {
+		margin-bottom: 5px;
+	}
+
+	span {
+		color: #9F559F;
+		margin-right: 5px;
+	}
+}
+
+.new-block-item__link {
+	background-color: transparent !important;
+	color: #574794;
+	font-family: $din-bold;
+	font-size: 16px;
+}

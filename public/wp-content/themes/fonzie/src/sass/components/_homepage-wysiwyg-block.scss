@@ -1,0 +1,24 @@
+.homepage-wysiwyg-block {
+	.block__text {
+		padding: 20px;
+	}
+	.block__item {
+		&--no-border {
+			min-height: 0;
+
+			.block__content {
+				min-height: 0;
+				border: 0;
+
+				&:hover,
+				&:focus {
+					background: none;
+				}
+
+				.block__text {
+					padding: 0;
+				}
+			}
+		}
+	}
+}

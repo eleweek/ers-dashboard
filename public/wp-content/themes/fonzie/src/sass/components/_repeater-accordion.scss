@@ -1,0 +1,93 @@
+.accordion {
+	margin-bottom: 50px;
+	word-break: break-word;
+
+	table {
+		word-break: normal;
+	}
+
+	&__item {
+		border-radius: 4px;
+		position: relative;
+		overflow: hidden;
+		margin-bottom: 10px;
+		&__heading {
+			cursor: pointer;
+			background-color: $brand-primary;
+			padding: 16px 60px 16px 24px;
+			color: white;
+			font-weight: 600;
+			position: relative;
+			transition: background-color 0.3s;
+			border-radius: 4px;
+			font-size: 16px;
+			@include media-breakpoint-up(md) {
+				font-size: 18px;
+			}
+			&:hover {
+				background-color: darken($brand-primary, 7);
+			}
+			.accordion__item--open & {
+				background-color: $brand-secondary;
+				border-radius: 0;
+				.icon {
+					&.plus {
+						display: none;
+					}
+					&.minus {
+						display: block;
+					}
+				}
+			}
+			.icon {
+				$icon-size: 24px;
+				position: absolute;
+				right: 27px;
+				top: 50%;
+				transform: translateY(-50%);
+				display: block;
+				width: $icon-size;
+				height: $icon-size;
+				&.minus {
+					display: none;
+				}
+				svg {
+					width: $icon-size;
+					height: $icon-size;
+				}
+			}
+		}
+		&__content {
+			background-color: lighten($colour--lighter-grey, 7);
+			height: 0;
+			box-sizing: border-box;
+			transition: height 0.3s;
+			padding: 1px;
+			overflow: hidden;
+
+			.accordion__item--open & {
+				// height: auto;
+				border: 1px solid $border-color;
+				padding: 0;
+			}
+			h3, h4, h5, p, .btn {
+				&:first-child {
+					padding-top: 0;
+				}
+				&:last-child {
+					margin-bottom: 0;
+				}
+			}
+			>div {
+				padding: 15px;
+				@include media-breakpoint-up(md) {
+					padding: 30px;
+				}
+			}
+
+			.embed-container {
+	    	margin-bottom: 20px;
+			}
+		}
+	}
+}

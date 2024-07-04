@@ -1,0 +1,38 @@
+.breadcrumbs {
+	padding-top: 30px;
+	padding-bottom: 10px;
+	font-size: 16px;
+	display: none;
+	&.breadcrumbs_mobile {
+		display: block;
+		padding: 0;
+		@include media-breakpoint-up(md) {
+			display: none;
+		}
+		a {
+			display: block;
+			padding: 16px 15px;
+			margin-right: 0;
+			svg {
+				margin-right: 7px;
+			}
+		}
+	}
+	@include media-breakpoint-up(md) {
+		display: block;
+	}
+	&__separator {
+		margin-left: 8px;
+		margin-right: 8px;
+		width: 15px;
+		display: inline-block;
+	}
+	svg {
+		height: 16px;
+		position: relative;
+		top: 3px;
+		path {
+			fill: $brand-primary;
+		}
+	}
+}

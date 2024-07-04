@@ -1,0 +1,18 @@
+.selected-pages {
+	padding: 20px 0 20px;
+
+	@include media-breakpoint-up(md) {
+		padding-top: 35px;
+	}
+}
+
+.selected-pages__title {
+	color: #303A52;
+	font-size: 20px;
+	margin-bottom: 15px;
+	padding: 0;
+
+	@include media-breakpoint-up(md) {
+		margin-bottom: 20px;
+	}
+}

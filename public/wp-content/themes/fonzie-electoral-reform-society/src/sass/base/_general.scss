@@ -1,0 +1,26 @@
+/* Base: General
+   ========================================================================== */
+
+body {
+	font-family: $crimson-text;
+}
+
+input,
+label {
+	font-family: $din-regular;
+}
+
+.follow-link,
+.btn,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+	font-family: $din-bold;
+}
+
+.element-link {
+	cursor: pointer;
+}

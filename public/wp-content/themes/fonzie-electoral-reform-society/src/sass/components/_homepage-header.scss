@@ -1,0 +1,60 @@
+.homepage-header--single-image-single-cta {
+
+	@include media-breakpoint-down(sm) {
+		background-color: transparent;
+	}
+
+	.homepage-header_right {
+
+		@include media-breakpoint-down(sm) {
+			margin-top: -30px;
+			padding: 0 15px;
+		}
+	}
+
+	.homepage-header_right_content {
+		padding: 25px 15px;
+
+		@include media-breakpoint-up(md) {
+			padding: 50px;
+		}
+
+		@include media-breakpoint-up(xl) {
+			padding: 100px;
+		}
+	}
+
+	h2 {
+		font-size: 33px;
+
+		@include media-breakpoint-up(md) {
+			font-size: 48px;
+		}
+	}
+
+	p {
+		font-size: 18px;
+
+		@include media-breakpoint-up(md) {
+			font-size: 24px;
+		}
+	}
+
+	.btn {
+		color: #fff;
+		margin-top: 21px;
+		padding: 0;
+
+		&,
+		&:hover,
+		&:focus {
+			background: none;
+			border: none;
+		}
+
+		&:hover,
+		&:focus {
+			color: $brand-primary;
+		}
+	}
+}

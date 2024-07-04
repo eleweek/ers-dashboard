@@ -1,0 +1,139 @@
+.voting-leader {
+	margin: 0 -15px 15px;
+
+	@include media-breakpoint-up(sm) {
+		display: flex;
+		flex-wrap: wrap;
+	}
+
+	@include media-breakpoint-up(md) {
+		margin-bottom: 50px;
+	}
+}
+
+.voting-leader__item {
+	margin-bottom: 15px;
+	padding: 0 15px;
+	flex: 1 0 100%;
+	animation: fadein 2s;
+	width: 100%;
+
+	@include media-breakpoint-up(md) {
+		flex: 0;
+		flex-basis: percentage(1/2);
+		margin-bottom: 30px;
+		width: percentage(1/2);
+	}
+
+	@include media-breakpoint-up(lg) {
+		flex-basis: percentage(1/3);
+		width: percentage(1/3);
+	}
+}
+
+.voting-leader-child {
+	border: 1px solid #979797;
+	border-radius: 4px;
+	display: flex;
+	flex-direction: column;
+	flex-wrap: wrap;
+	height: 100%;
+}
+
+.voting-leader-child__main,
+.voting-leader-child__locations,
+.voting-leader-child__ratings {
+	padding-left: 15px;
+	padding-right: 15px;
+	max-width: 100%;
+}
+
+.voting-leader-child__locations,
+.voting-leader-child__ratings {
+	padding-top: 15px;
+	padding-bottom: 15px;
+}
+
+.voting-leader-child__main {
+	border-bottom: 1px solid #DEDEDE;
+	display: flex;
+	flex-direction: column;
+	flex-grow: 1;
+	font-size: 16px;
+	padding-top: 25px;
+	padding-bottom: 25px;
+	text-align: center;
+}
+
+.voting-leader-child__locations {
+	border-bottom: 1px solid #DEDEDE;
+}
+
+.voting-leader-child__number {
+	display: none;
+}
+
+.voting-leader-child__ratings {
+	font-size: 14px;
+}
+
+.voting-leader-child__rating {
+	display: flex;
+
+	span {
+		flex-grow: 0;
+		padding-right: 15px;
+		width: 180px;
+	}
+}
+
+.voting-leader-child__stars {
+	flex-shrink: 0;
+
+	svg {
+		margin-left: 3px;
+	}
+}
+
+.voting-leader-child__heading {
+	font-size: 28px;
+	line-height: 1.2;
+	margin-bottom: 10px;
+	padding: 0;
+}
+
+.voting-leader-child__text {
+	flex-grow: 1;
+	line-height: 1.4;
+	margin-bottom: 15px;
+}
+
+.voting-leader-child__link {
+
+	a {
+		color: #574794;
+		font-family: $din-bold;
+	}
+}
+
+.voting-leader-child__sub-heading {
+	font-family: $din-bold;
+	font-size: 14px;
+	line-height: 1.2;
+	margin-bottom: 5px;
+	text-transform: uppercase;
+}
+
+.voting-leader-child__list {
+	display: flex;
+	flex-wrap: wrap;
+	font-size: 16px;
+	margin: 0;
+	padding: 0;
+
+	li {
+		line-height: 1.4;
+		margin-left: 20px;
+		margin-right: 10px;
+	}
+}

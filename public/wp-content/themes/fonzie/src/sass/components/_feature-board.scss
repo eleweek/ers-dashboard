@@ -1,0 +1,39 @@
+.feature-board {
+	margin: 30px 0;
+
+	&__filter {
+		margin-bottom: 30px;
+
+		.btn {
+			background-color: lighten($brand-tertiary, 4);
+			color: $brand-primary;
+			border: 1px solid $brand-primary;
+
+			&:hover, &:focus {
+			  background-color: lighten($brand-tertiary, 1);
+			  color: $brand-secondary;
+			}
+
+			&.active {
+				background-color: $brand-primary;
+				color: $colour--white;
+			}
+		}
+	}
+
+	&__content {
+		.block__item {
+			@include media-breakpoint-up(xl) {
+				min-height: 360px;
+			}
+		}
+
+		.block__content {
+			h2 {
+				@include media-breakpoint-up(xl) {
+					min-height: 3em;
+				}
+			}
+		}
+	}
+}

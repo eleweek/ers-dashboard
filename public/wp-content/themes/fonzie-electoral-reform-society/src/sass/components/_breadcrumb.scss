@@ -1,0 +1,24 @@
+/* Components: Breadcrumb
+   ========================================================================== */
+
+.breadcrumbs {
+	font-family: $din-regular;
+	font-size: 14px;
+	background-color: $brand-additional-tertiary;
+	padding: 10px 0;
+
+	&,
+	a {
+		color: $brand-secondary;
+	}
+
+	a {
+		@include media-breakpoint-up(md) {
+			text-decoration: underline;
+
+			&:hover {
+				text-decoration: none;
+			}
+		}
+	}
+}

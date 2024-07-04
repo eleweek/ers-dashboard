@@ -1,0 +1,121 @@
+.campaign-progress {
+	margin-bottom: 50px;
+	// tools along the top
+	.tools {
+		div {
+			float: left;
+			// margin: 0 10px 0 10px;
+			text-align: center;
+			box-sizing: border-box;
+			@include media-breakpoint-up(md) {
+				margin: 0 5px 0 5px;
+			}
+			&.amount-raised {
+				width: 100%;
+				@include media-breakpoint-up(md) {
+					padding-right: 20px;
+					width: auto;
+				}
+				.raised, .target {
+					width: 45%;
+					@include media-breakpoint-up(md) {
+						width: auto;
+					}
+				}
+				.of {
+					width: 10%;
+					@include media-breakpoint-up(md) {
+						width: auto;
+					}
+				}
+			}
+			&.days-remaining {
+				text-align: center;
+				width: 100%;
+				margin-bottom: 10px;
+				@include media-breakpoint-up(md) {
+					padding-left: 20px;
+					width: auto;
+					// margin-bottom: 0;
+				}
+			}
+			&.double-border-left {
+				@include media-breakpoint-up(md) {
+					position: relative;
+					&:after {
+						content: '';
+						width: 5px;
+						height: calc(100% - 10px);
+						position: absolute;
+						left: -5px;
+						top: 5px;
+						display: block;
+						border-left: 1px solid $colour--light-grey;
+						border-right: 1px solid $colour--light-grey;
+					}
+				}
+			}
+			strong {
+				display: block;
+				font-size: 22px;
+				font-weight: 700;
+			}
+			span {
+				display: block;
+				font-size: 15px;
+				font-weight: 400;
+				color: darken($colour--light-grey,10);
+			}
+		}
+		.btn {
+			width: 100%;
+			@include media-breakpoint-up(md) {
+				float: right;
+				width: auto;
+			}
+			@include media-breakpoint-up(lg) {
+				margin-top: -15px;
+				width: 20%;
+			}
+			@include media-breakpoint-up(xl) {
+				margin-top: 0;
+				width: auto;
+			}
+
+
+		}
+	}
+	// progress bar along the bottom
+	.progress-container {
+		height: 43px;
+		width: 100%;
+		position: relative;
+		overflow: hidden;
+		background-color: $colour--lighter-grey;
+		border-radius: 50px;
+		.progress-bar {
+			position: absolute;
+			top: 0;
+			left: 0;
+			height: 100%;
+			background-color: $colour--progress-bar;
+			border-radius: 50px;
+			width: 0;
+			transition: width 2s ease-out 2s;
+		}
+		.progress-bar-value {
+			color: darken($colour--progress-bar, 25);
+			font-size: 20px;
+			font-weight: 600;
+			position: absolute;
+			right: 15px;
+			top: 50%;
+			transform: translateY(-50%);
+			opacity: 0;
+			transition: opacity 2s ease-out 2s;
+			&.show {
+				opacity: 1;
+			}
+		}
+	}
+}

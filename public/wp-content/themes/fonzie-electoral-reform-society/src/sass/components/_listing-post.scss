@@ -1,0 +1,15 @@
+.listing-post {
+	&.publications {
+		.listing-post__image {
+			display: none;
+
+			@include media-breakpoint-up(md) {
+				display: block;
+			}
+
+			@include media-breakpoint-up(lg) {
+				width: 22%;
+			}
+		}
+	}
+}

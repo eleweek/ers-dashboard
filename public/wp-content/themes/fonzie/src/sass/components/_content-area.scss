@@ -1,0 +1,29 @@
+.content-area {
+  ul, ol {
+    line-height: 30px;
+  }
+}
+
+.content {
+  ul {
+    padding-left: 0;
+    list-style: none;
+
+    li {
+      padding-left: 40px;
+      position: relative;
+      &:before {
+        content: '\00b7';
+        font-size: 35px;
+        position: absolute;
+        top: 1px;
+        left: 17px;
+      }
+    }
+  }
+}
+
+.flexible-block {
+  padding-top: 20px;
+  padding-bottom: 20px;
+}

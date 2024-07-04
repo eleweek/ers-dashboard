@@ -1,0 +1,133 @@
+.panel-group{
+  margin-top: 30px;
+  margin-bottom: 20px;
+}
+
+.panel-location{
+  border: 0;
+  border-top: 2px solid $colour--white;
+
+  .panel{
+
+    &-heading {
+      padding: 0;
+      border-radius: 0;
+      background-color: $brand-primary;
+      border: 0;
+      color: $colour--white;
+
+      a {
+        color: $colour--white;
+        font-size: 21px;
+        padding: 20px 25px 18px;
+        box-shadow: none;
+        display: block;
+        text-decoration: none;
+        text-transform: none;
+
+        &:hover {
+          color: $colour--white;
+          background-color: $brand-secondary;
+        }
+
+      }
+
+      .icon-minus {
+        display: none;
+        opacity: 0;
+        svg path {
+          fill: $brand-primary;
+        }
+      }
+
+      .icon-plus {
+        display: inline-block;
+        opacity: 1;
+      }
+
+      &.active {
+
+        a{
+          color: $brand-text;
+          background-color: $brand-tertiary;
+
+          .icon-plus{
+            display: none;
+            opacity: 0;
+          }
+
+          .icon-minus{
+            display: inline-block;
+            opacity: 1;
+          }
+        }
+
+      }
+
+      + .panel-collapse > {
+
+        .list-group,
+        .panel-body{
+          border-top: none;
+        }
+
+      }
+
+    }
+
+    &-body{
+      border-top: 0;
+      padding: 0 25px 15px;
+    }
+
+    &-collapse{
+      background-color: $brand-tertiary;
+    }
+
+    &-title {
+      padding-top: 0;
+      padding-bottom: 0;
+    }
+
+  }
+
+  .panel-group & + & {
+    margin-top: 0;
+  }
+
+  .twin-info {
+    display: flex;
+    align-items: center;
+
+    > div{
+      width: 50%;
+    }
+
+  }
+
+  .location-address {
+    p {
+      font-size: 16px;
+    }
+  }
+
+  .location-info {
+    &--label {
+      font-weight: 600;
+    }
+    &--field {
+      margin-bottom: 15px;
+    }
+  }
+
+  .toggle-indicator {
+    float: right;
+
+    svg{
+      width: 16px;
+      height: 16px;
+    }
+
+  }
+
+}

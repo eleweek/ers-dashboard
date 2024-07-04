@@ -1,0 +1,89 @@
+.job-post {
+  margin: 30px 0;
+  text-align: center;
+
+  ul {
+    padding: 0;
+    border: 1px solid $border-color;
+    border-radius: $border-radius;
+    margin: 0;
+    list-style: none;
+
+    @include media-breakpoint-up(md) {
+      display: table;
+      width: 100%;
+      padding: 22px 0;
+    }
+  }
+
+  li {
+    position: relative;
+    padding: 18px;
+    border-bottom: 1px solid $border-color;
+
+    @include media-breakpoint-up(md) {
+      display: table-cell;
+      vertical-align: top;
+      width: 25%;
+      padding-top: 0;
+      padding-bottom: 0;
+      border-right: 1px solid $border-color;
+      border-bottom: 0;
+    }
+
+    &:after {
+      content: '';
+      position: absolute;
+      right: 0;
+      bottom: 5px;
+      left: 0;
+      border-top: 1px solid $border-color;
+
+      @include media-breakpoint-up(md) {
+        top: 0;
+        bottom: 0;
+        right: 5px;
+        left: auto;
+        border-top: 0;
+        border-right: 1px solid $border-color;
+      }
+    }
+
+    &:last-child {
+      border-bottom: 0;
+
+      @include media-breakpoint-up(md) {
+        border-right: 0;
+      }
+
+      &:after {
+        display: none;
+      }
+    }
+  }
+
+  h3 {
+    padding: 0;
+    margin-bottom: 5px;
+    line-height: 28px;
+    font-size: 14px;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: $brand-text;
+  }
+
+  p {
+    margin: 0;
+    line-height: 23px;
+    font-size: 16px;
+    font-weight: 400;
+  }
+}
+
+.job-title {
+  padding-bottom: 10px;
+}
+
+.job-location {
+  padding-top: 0;
+}

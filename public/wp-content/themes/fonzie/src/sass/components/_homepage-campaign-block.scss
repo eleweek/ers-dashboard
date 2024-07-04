@@ -1,0 +1,71 @@
+.homepage-campaign-block {
+	margin-bottom: 50px;
+	background-color: lighten($colour--lighter-grey, 4.5);
+	word-break: break-word;
+	@include clearfix();
+	position: relative;
+	&__content {
+		@include media-breakpoint-up(lg) {
+			width: 40%;
+			height: 100%;
+			// float: left;
+			position: absolute;
+			left: 0;
+			top: 0;
+		}
+		&__text {
+			text-align: center;
+			padding: 30px 20px 0;
+			@include media-breakpoint-up(xl) {
+				padding: 40px 60px 0;
+			}
+		}
+		h2 {
+			margin-top: 0;
+			padding-bottom: 15px;
+			padding-top: 0;
+		}
+		p {
+			line-height: 1.6em;
+			@include media-breakpoint-up(lg) {
+				font-size: 16px;
+			}
+			@include media-breakpoint-up(xl) {
+				font-size: 18px;
+			}
+		}
+		.btn {
+			margin-top: -15px;
+		}
+		.campaign-progress {
+			background-color: $brand-secondary;
+			padding: 20px 20px 10px;
+			@include media-breakpoint-up(xl) {
+				padding: 20px 50px 10px;
+			}
+			margin-bottom: 0;
+			text-align: center;
+			@include media-breakpoint-up(lg) {
+				position: absolute;
+				bottom: 0;
+				left: 0;
+				width: 100%;
+			}
+			.progress-container {
+				height: 30px;
+			}
+			p {
+				color: white;
+				margin-bottom: 0;
+				margin-top: 3px;
+				font-size: 16px;
+			}
+		}
+	}
+	&__video, &__image {
+		@include media-breakpoint-up(lg) {
+			width: 60%;
+			float: right;
+		}
+	}
+}

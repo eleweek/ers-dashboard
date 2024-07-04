@@ -1,0 +1,31 @@
+{
+  "name": "fonzie",
+  "version": "1.0.0",
+  "description": "Fonzie",
+  "author": "Reason Digital <hello@reasondigital.com> (http://www.reasondigital.com/)",
+  "private": true,
+  "devDependencies": {
+    "autoprefixer": "latest",
+    "gulp": "latest",
+    "gulp-changed": "latest",
+    "gulp-compass-imagehelper": "^0.2.10",
+    "gulp-concat": "latest",
+    "gulp-cssnano": "^2.1.0",
+    "gulp-dest": "latest",
+    "gulp-filter": "^4.0.0",
+    "gulp-imagemin": "latest",
+    "gulp-jshint": "latest",
+    "gulp-livereload": "latest",
+    "gulp-order": "latest",
+    "gulp-plumber": "latest",
+    "gulp-postcss": "^6.0.1",
+    "gulp-sass": "^2.1.1",
+    "gulp-sourcemaps": "latest",
+    "gulp-uglify": "latest",
+    "gulp-watch": "latest",
+    "jshint": "^2.8.0",
+    "jshint-stylish": "latest",
+    "postcss-pxtorem": "^3.1.1",
+    "rimraf": "latest"
+  }
+}

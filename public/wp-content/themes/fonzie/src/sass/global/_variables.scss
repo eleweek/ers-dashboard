@@ -1,0 +1,65 @@
+/* Global: Variables
+========================================================================== */
+// Grid containers
+$container-max-widths: (
+        sm: 576px,
+        md: 720px,
+        lg: 940px,
+        xl: 1200px
+);
+
+// Colours
+$colour--black: #000 !default;
+$colour--white: #fff !default;
+$colour--blue: #00a0d2 !default;
+$colour--dark-grey: #333 !default;
+$colour--grey: #555 !default;
+$colour--light-grey: #ababab !default;
+$colour--lighter-grey: #E6E6E6 !default;
+$colour--lightest-grey: #f9f7f7 !default;
+$colour--sigma: #ededed !default;
+
+// Social Colours
+$colour--facebook: #3b5998 !default;
+$colour--twitter: #55acee !default;
+$colour--linkedin: #0077b5 !default;
+$colour--email: #6D767D !default;
+
+// Misc
+$icon_prefix : "icon" !default;
+$border-color: #d7d7d7 !default;
+$border-radius: 6px !default;
+$overlay-colour-light: #fff !default;
+$overlay-colour-dark: #52545b !default;
+
+// Error
+$colour--error: #d9534f !default;
+
+// Progress Bar
+$colour--progress-bar: #3acf91 !default;
+
+//Buttons
+$btn--margin: 15px !default;
+
+//Table
+$table-header-colour: #eceff3 !default;
+$table-data-colour: #f9fbfd !default;
+
+//Fonts
+$font-pairing: (
+        'open-sans': (
+                'heading': 'Open Sans',
+                'body': 'Open Sans'
+        ),
+        'merriweather': (
+                'heading': 'Merriweather',
+                'body': 'Open Sans'
+        ),
+        'montserrat': (
+                'heading': 'Montserrat',
+                'body': 'Open Sans'
+        )
+) !default;
+
+//Image Path
+$image-path: "../../images/" !default;

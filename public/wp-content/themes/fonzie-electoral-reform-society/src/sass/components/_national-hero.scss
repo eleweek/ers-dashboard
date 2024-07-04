@@ -1,0 +1,95 @@
+.national-hero {
+	padding: 30px 0 30px;
+
+	@include media-breakpoint-up(lg) {
+		align-items: flex-start;
+		display: flex;
+		padding: 45px 0 100px;
+	}
+}
+
+.national-hero__image {
+	display: none;
+
+	@include media-breakpoint-up(lg) {
+		display: block;
+		flex: 1 0 400px;
+	}
+}
+
+.national-hero__content {
+	flex-grow: 1;
+	font-size: 20px;
+	line-height: 1.4;
+
+	@include media-breakpoint-up(md) {
+		font-size: 24px;
+	}
+
+	@include media-breakpoint-up(lg) {
+		padding-left: 30px;
+	}
+
+	@include media-breakpoint-up(xl) {
+		padding-left: 100px;
+	}
+}
+
+.national-hero__heading {
+	margin: 0 0 10px;
+	padding: 0;
+}
+
+.national-hero__contact {
+	margin-top: 25px;
+
+	@include media-breakpoint-up(sm) {
+		display: flex;
+	}
+}
+
+.national-hero__online {
+	flex-shrink: 0;
+}
+
+.national-hero__contact-detail {
+	align-items: center;
+	color: #606060;
+	cursor: pointer;
+	display: flex;
+	font-family: $din-regular;
+	font-size: 16px;
+	margin-bottom: 5px;
+	word-break: break-word;
+	word-wrap: break-word;
+
+	&:hover,
+	&:focus {
+		text-decoration: none;
+	}
+
+	svg {
+		flex-shrink: 0;
+		margin-right: 10px;
+		width: 16px;
+		height: 18px;
+
+		path {
+			fill: #606060;
+		}
+	}
+}
+
+.national-hero__contact-info {
+
+	@include media-breakpoint-up(sm) {
+		padding-left: 30px;
+	}
+}
+
+.national-hero__sub-heading {
+	color: #A25EA1;
+	font-size: 14px;
+	padding: 0;
+	text-transform: uppercase;
+}

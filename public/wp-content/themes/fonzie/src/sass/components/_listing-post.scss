@@ -1,0 +1,85 @@
+.listing-post {
+	float: left;
+	@include clearfix();
+	border-bottom: 1px solid $border-color;
+	padding-bottom: 30px;
+	margin-bottom: 30px;
+	position: relative;
+	width: 100%;
+	&:last-child {
+		border-bottom: 0;
+	}
+	&:after {
+		content: '';
+		display: table;
+		clear:both;
+	}
+
+	// event block
+	.event-info {
+		display: block;
+		width: 100%;
+		margin-bottom: 0;
+		min-height: 0;
+		@include media-breakpoint-up(md) {
+			display: table-cell;
+			position: absolute;
+			left: 0;
+			top: 16px;
+			width: 108px;
+			height: 91px;
+			&__date {
+				height: 91px;
+			}
+		}
+	}
+
+	h2 {
+		padding-bottom: 0;
+		padding-top: 10px;
+	}
+	p {
+		margin-top: 15px;
+		&.address, &.date {
+			font-size: 14px;
+			font-weight: 700;
+			line-height: 28px;
+			text-transform: uppercase;
+			margin-top: 3px;
+			line-height: 1.5em;
+			margin-bottom: 0;
+			color: black;
+		}
+	}
+	&__text {
+
+		@include media-breakpoint-up(md) {
+			width: 62%;
+			float: left;
+			min-height: 117px;
+			&--has-date {
+				padding-left: 108px;
+			}
+		}
+
+		&:after {
+			content: '';
+			display: table;
+			clear:both;
+		}
+	}
+	&__image {
+		@include media-breakpoint-up(md) {
+			width: 31%;
+			float: right;
+		}
+		img {
+			border-radius: $border-radius;
+		}
+	}
+}
+
+.listing-post-none {
+	padding-bottom: 30px;
+	margin-bottom: 30px;
+}

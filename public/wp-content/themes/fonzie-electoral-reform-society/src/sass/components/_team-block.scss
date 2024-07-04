@@ -1,0 +1,44 @@
+.team-block {
+	background-color: #FFFFFF;
+	border-radius: 4px;
+	color: #303A53;
+	display: block;
+	line-height: 1.4;
+	font-size: 16px;
+	padding: 35px 25px 19px;
+	text-align: center;
+	word-break: break-word;
+
+	p {
+		line-height: 1.8;
+	}
+}
+
+.team-block__image {
+	margin-bottom: 20px;
+}
+
+.team-block__name {
+	font-family: $din-bold;
+	font-size: 28px;
+	line-height: 1.1;
+	margin-bottom: 5px;
+}
+
+.team-block__role {
+	font-family: $din-bold;
+	font-size: 20px;
+	margin-bottom: 10px;
+}
+
+.team-block__contact {
+	color: #574992;
+	font-family: $din-bold;
+	font-size: 14px;
+	margin-bottom: 15px;
+	text-transform: uppercase;
+
+	> a {
+		color: #574992;
+	}
+}

@@ -1,0 +1,67 @@
+.campaign-hero {
+	align-items: center;
+	background-color: rgb(48, 58, 82);
+	color: #fff;
+	display: flex;
+	justify-content: center;
+	padding: 40px 15px 25px;
+	text-align: center;
+
+	@include media-breakpoint-up(md) {
+		min-height: 390px;
+	}
+}
+
+.campaign-hero--national {
+	padding: 30px 15px 14px;
+
+	@include media-breakpoint-up(md) {
+		min-height: 0;
+		padding: 60px 15px 44px;
+	}
+
+	.campaign-hero__content {
+		max-width: 835px;
+	}
+}
+
+.campaign-hero--image {
+	background-size: cover;
+	background-position: center;
+	position: relative;
+	z-index: 0;
+}
+
+.campaign-hero__overlay {
+	background-color: rgba(48, 58, 82, 0.85);
+	position: absolute;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	z-index: 1;
+}
+
+.campaign-hero__title {
+	color: #fff;
+	margin-bottom: 15px;
+	padding: 0;
+
+	@include media-breakpoint-up(md) {
+		margin-bottom: 10px;
+	}
+}
+
+.campaign-hero__content {
+	max-width: 750px;
+	width: 100%;
+	z-index: 2;
+}
+
+.campaign-hero__text {
+	font-size: 18px;
+
+	@include media-breakpoint-up(md) {
+		font-size: 24px;
+	}
+}

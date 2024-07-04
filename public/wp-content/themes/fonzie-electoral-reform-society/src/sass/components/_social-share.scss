@@ -1,0 +1,13 @@
+.btn-list_social-share {
+
+	ul {
+
+		li {
+			padding-left: 0;
+
+			&:before {
+				display: none;
+			}
+		}
+	}
+}

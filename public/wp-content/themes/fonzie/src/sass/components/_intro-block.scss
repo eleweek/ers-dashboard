@@ -1,0 +1,53 @@
+.intro-block {
+  margin: 30px 0;
+  text-align: center;
+
+  @include media-breakpoint-up(md) {
+    margin: 60px 0;
+  }
+
+  &--leader {
+    margin: 10px 0;
+  }//.intro-block--leader
+
+  &_left {
+    text-align: left;
+  }
+
+  &_right {
+    text-align: right;
+  }
+
+  &_donation{
+    margin-bottom: 10px;
+    @include media-breakpoint-up(md) {
+      margin-bottom: 20px;
+    }
+  }
+
+  &_404{
+    border-top: 1px solid $gray;
+    border-bottom: 1px solid $gray;
+    padding: 30px 0;
+  }
+
+}
+
+.section-intro--text {
+  p {
+    font-size: 20px;
+    line-height: 32px;
+    @include media-breakpoint-up(sm) {
+      font-size: 22px;
+    }
+  }
+  margin-bottom: 30px;
+}
+
+.filter_select {
+  margin-bottom: 30px + $btn--margin;
+  display: inline-block;
+  @include media-breakpoint-up(md) {
+    margin-right: $btn--margin;
+  }
+}

@@ -1,0 +1,484 @@
+.donation-process {
+    .wrapper {
+      padding-bottom: 10px;
+      margin-top: 20px;
+      border-bottom: 1px solid #dddddc;
+
+      @include media-breakpoint-up(sm) {
+
+        html.no-flexbox & {
+          display: table;
+          width: 100%;
+          & > .process-step {
+            display: table-cell;
+            text-align: center;
+          }
+        }
+
+        html.flexbox & {
+          display: flex;
+          justify-content: space-between;
+        }
+
+      }
+
+      @include media-breakpoint-up(lg) {
+        margin-top: 0;
+      }
+    }
+
+	@include media-breakpoint-up(md) {
+		margin: 60px 0 0;
+	}
+
+	h1 {
+		margin-bottom: 30px;
+	}
+
+	&__wrap {
+		background: $colour--sigma;
+	}
+
+	&__block {
+		padding: 30px 15px;
+		background: $colour--white;
+
+		@include media-breakpoint-up(md) {
+			padding: 40px 30px;
+		}
+
+		h2,
+		.h2 {
+			padding: 0;
+			margin-bottom: 15px;
+		}
+
+		label {
+			> span {
+				color: $colour--error;
+			}
+
+			&:not(.h2) {
+				font-size: 17px;
+			}
+		}
+
+		textarea {
+			min-height: 120px;
+		}
+
+		.btn {
+			width: 100%;
+			font-weight: 400;
+
+			@include media-breakpoint-up(md) {
+				font-size: 22px;
+			}
+
+			@include media-breakpoint-up(lg) {
+				font-size: 26px;
+			}
+		}
+
+		.selectboxit-container {
+			select {
+				width: 100% !important;
+			}
+			.selectboxit {
+				min-width: 100%;
+			}
+		}
+
+		.form-section {
+			padding: 1px;
+			margin-bottom: 15px;
+
+			@include media-breakpoint-up(md) {
+				margin-bottom: 30px;
+			}
+
+			&:last-child {
+				margin-bottom: 0;
+			}
+		}
+
+		label.error {
+			margin: 10px 0;
+			line-height: 1.4;
+			color: $colour--error;
+		}
+
+		input.error {
+			border-color: $colour--error;
+		}
+
+		.error-message {
+			padding: 30px;
+			margin: 0 0 30px;
+			background: $colour--sigma;
+			color: $colour--error;
+		}
+
+		.form-group {
+			margin-bottom: 25px;
+
+			&--giftaid {
+				position: relative;
+
+				label {
+					display: block;
+					padding: 20px 20px 20px 55px;
+					background: $colour--sigma;
+					cursor: pointer;
+
+					&:before {
+						left: 20px;
+					}
+				}
+
+				input[type=checkbox]:checked+label:after {
+					left: 25px;
+				}
+			}
+
+			&--alt {
+				margin-bottom: 15px;
+			}
+		}
+
+		.form-sub-text {
+			margin: 8px 0;
+			font-size: 15px;
+			color: #7b7b7b;
+		}
+	}
+
+	&__amount {
+		position: relative;
+
+		p {
+			position: absolute;
+			top: 50%;
+			left: 20px;
+			margin: -16px 0 0;
+			font-size: 36px;
+			font-weight: 400;
+			line-height: 1;
+			text-transform: uppercase;
+			color: $colour--dark-grey;
+		}
+		.error + p {
+			margin-top: -30px;
+		}
+		.error[style*="none"] + p {
+			margin-top: -16px;
+		}
+
+		input {
+			padding: 20px 100px 20px 50px;
+			font-size: 28px;
+		}
+
+		&-edit {
+			position: absolute;
+			top: 27px;
+			right: 40px;
+			width: auto;
+			border: 0;
+			font-size: 16px;
+			background: none;
+			color: $brand-secondary;
+		}
+
+		&.active {
+			.donation-process__amount-edit {
+				display: none;
+			}
+		}
+	}
+
+	&__giftaid {
+		padding-bottom: 30px;
+		border-bottom: 1px solid $colour--sigma;
+		margin-bottom: 30px;
+
+		p {
+			&:last-child {
+				margin-bottom: 0;
+				font-size: 15px;
+				font-style: italic;
+				line-height: 1.3;
+				color: #7b7b7b;
+			}
+		}
+
+		.form-group {
+			margin: 30px 0;
+		}
+
+		&-logo {
+			margin-bottom: 15px;
+
+			svg {
+				width: 142px;
+				height: 50px;
+
+				@include media-breakpoint-up(md) {
+					width: auto;
+					height: auto;
+				}
+			}
+		}
+	}
+
+	&__home-address {
+		display: none;
+
+		&.active {
+			display: block;
+		}
+	}
+
+	&__secure {
+		margin: 30px 0;
+
+		h3 {
+			padding-top: 0;
+		}
+
+		&-text {
+			margin-bottom: 0;
+
+			svg {
+				width: 20px;
+				height: 25px;
+				vertical-align: middle;
+				margin-right: 5px;
+
+				path {
+					fill: $brand-secondary;
+				}
+			}
+		}
+	}
+
+	&__extra {
+		text-align: center;
+
+		h3 {
+			padding-top: 0;
+		}
+
+		img {
+			display: block;
+			width: 100%;
+			margin-bottom: 20px;
+		}
+	}
+
+	&__btn-next {
+		&[disabled] {
+			opacity: 0.4;
+			cursor: not-allowed;
+		}
+	}
+
+	&__step-two {
+		display: none;
+	}
+
+	&__end {
+		padding: 30px 0;
+		text-align: center;
+
+		@include media-breakpoint-up(md) {
+			padding: 60px 0;
+		}
+
+		h1 {
+			padding: 0;
+			margin-bottom: 30px;
+		}
+
+		h4 {
+			padding: 0;
+			margin: 40px 0 20px;
+			font-size: 24px;
+		}
+
+		p {
+			font-size: 20px;
+			line-height: 1.4;
+
+			@include media-breakpoint-up(md) {
+				font-size: 26px;
+			}
+		}
+
+		img {
+			margin: 30px 0 50px;
+		}
+
+		.heading-tick {
+			> span {
+				display: inline-block;
+				vertical-align: middle;
+			}
+
+			.icon svg {
+				width: 24px;
+				height: 24px;
+			}
+		}
+
+		.btn {
+			margin: 15px 0 0;
+
+			@include media-breakpoint-up(md) {
+				margin: 30px 0 0;
+			}
+		}
+
+		.btn-list {
+			margin-bottom: 0;
+
+			li {
+				margin-top: 8px;
+				margin-bottom: 8px;
+			}
+
+			a {
+				margin: 0;
+			}
+		}
+
+		.share-box {
+			margin: 0;
+
+			&__message {
+				word-break: break-word;
+
+				@include media-breakpoint-up(md) {
+					font-size: 22px;
+				}
+			}
+		}
+	}
+}
+
+.process-step {
+  position: relative;
+  color: $brand-text;
+  font-weight: 600;
+
+  &:after {
+    @include media-breakpoint-up(sm) {
+      content: '';
+      position: absolute;
+      top: 100%;
+      left: 50%;
+      width: 10px;
+      height: 10px;
+      margin-top: 5px;
+      margin-left: -5px;
+      border-radius: 50%;
+      background: #bfbfbf;
+    }
+  }
+
+  &.active {
+    color: $brand-primary;
+
+    &:after {
+      background: $brand-primary;
+    }
+  }
+
+  @include media-breakpoint-up(sm) {
+    &--details{
+      align-self: flex-start;
+    }
+    &--payment{
+      align-self: center;
+    }
+    &--success{
+      align-self: flex-end;
+    }
+  }
+}
+
+.heading-tick {
+  .icon {
+    display: block;
+    @include media-breakpoint-up(sm) {
+      display: inline-block;
+      vertical-align: middle;
+      margin-right: 20px;
+    }
+    svg {
+      height: 75px;
+      fill: $brand-secondary;
+    }
+  }
+}
+
+.share-box {
+  text-align: center;
+  background: $colour--white;
+  padding: 40px;
+  margin-bottom: 60px;
+
+  &__message {
+    font-weight: 400;
+    color: #2c2c2c;
+    font-size: 24px;
+    font-style: italic;
+    margin-bottom: 20px;
+    line-height: 30px;
+  }
+
+  @include media-breakpoint-down(xs) {
+    ul {
+      li {
+        margin-bottom: 10px;
+        margin-right: 0;
+        width: 100%;
+        a {
+          width: 100%;
+        }
+      }
+    }
+  }
+}
+
+.donation-social-share {
+	padding: 15px;
+	margin: 30px 0 50px;
+
+	@include media-breakpoint-up(md) {
+		padding: 30px;
+	}
+
+	&__items {
+		a {
+			display: inline-block;
+			vertical-align: middle;
+			margin: 0 5px;
+		}
+
+		svg {
+			width: 50px;
+			height: 50px;
+
+			@include media-breakpoint-up(md) {
+				width: 80px;
+				height: 80px;
+			}
+
+			@include media-breakpoint-up(lg) {
+				width: 100px;
+				height: 100px;
+			}
+		}
+	}
+}

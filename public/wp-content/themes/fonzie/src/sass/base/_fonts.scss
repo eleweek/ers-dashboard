@@ -1,0 +1,33 @@
+@each $name, $value in $font-pairing {
+
+  @at-root body.#{$name} {
+
+    @each $type, $type-val in $value {
+
+      @if( $type == 'body' ) {
+        font-family: $type-val;
+
+        input,
+        textarea,
+        button {
+          font-family: $type-val;
+        }
+      }
+
+      @if( $type == 'heading' ) {
+
+        h1, .h1,
+        h2, .h2,
+        h3, .h3,
+        h4, .h4,
+        h5, .h5,
+        h6, .h6 {
+          font-family: $type-val;
+        }
+
+      }
+
+    }
+  }
+
+}

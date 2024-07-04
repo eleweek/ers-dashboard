@@ -1,0 +1,36 @@
+.action-strip {
+	background-color: $brand-primary;
+	color: #303A52;
+	padding: 12px 0;
+	position: sticky;
+	top: 0;
+	z-index: 100;
+
+	.admin-bar & {
+		top: 32px;
+	}
+
+	@include media-breakpoint-down(sm) {
+		text-align: center;
+	}
+}
+
+.action-strip__text {
+	font-size: 18px;
+
+	@include media-breakpoint-down(sm) {
+		display: block;
+	}
+}
+
+.action-strip__btn {
+	background-color: #fff;
+	font-size: 16px;
+	margin: 10px 0 0;
+	padding-top: 5px;
+	padding-bottom: 5px;
+
+	@include media-breakpoint-up(md) {
+		margin: 0 0 0 10px;
+	}
+}

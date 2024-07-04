@@ -1,0 +1,17 @@
+/* Some quick brand fixes for visual accessibility; can be removed in Phase 2 */
+
+.block__item--cta-home {
+	.block__link {
+		color: $brand-secondary !important;
+
+		svg path {
+			fill: currentColor !important;
+		}
+	}
+
+	&:hover {
+		.block__link {
+			color: $brand-additional-primary !important;
+		}
+	}
+}
