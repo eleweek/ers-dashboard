@@ -1226,7 +1226,10 @@ function App() {
       )}
       <div className="gap-40"></div>
       <MagicButtons />
-      <JoinNewsletter setSubscribePopupOpened={setSubscribePopupOpened} />
+      <JoinNewsletter
+        setSubscribePopupOpened={setSubscribePopupOpened}
+        enablePopup={false}
+      />
       <Footer />
     </div>
   );
