@@ -2,7 +2,92 @@ import oldStaticData from "./old-static-data.json";
 import oldHexData from "./2019-constituencies.json";
 import oldFullData from "./old-data.json";
 
-function convertHexjsonToStaticData(hexjsonData) {
+import newHexData from "./uk-constituencies-2023.json";
+import newFullData from "./new-data.json";
+
+const hexNameToPaName = {
+  "Central Devon": "Devon Central",
+  "Central Suffolk & North Ipswich": "Suffolk Central & North Ipswich",
+  "City of Durham": "Durham, City of",
+  "East Hampshire": "Hampshire East",
+  "East Surrey": "Surrey East",
+  "East Thanet": "Thanet East",
+  "East Wiltshire": "Wiltshire East",
+  "East Worthing & Shoreham": "Worthing East & Shoreham",
+  "Kingston upon Hull East": "Hull East",
+  "Kingston upon Hull North & Cottingham": "Hull North & Cottingham",
+  "Kingston upon Hull West & Haltemprice": "Hull West & Haltemprice",
+  "Mid Bedfordshire": "Bedfordshire Mid",
+  "Mid Buckinghamshire": "Buckinghamshire Mid",
+  "Mid Cheshire": "Cheshire Mid",
+  "Mid Derbyshire": "Derbyshire Mid",
+  "Mid Dorset & North Poole": "Dorset Mid & North Poole",
+  "Mid Leicestershire": "Leicestershire Mid",
+  "Mid Norfolk": "Norfolk Mid",
+  "Mid Sussex": "Sussex Mid",
+  "North Bedfordshire": "Bedfordshire North",
+  "North Cornwall": "Cornwall North",
+  "North Cotswolds": "Cotswolds North",
+  "North Devon": "Devon North",
+  "North Dorset": "Dorset North",
+  "North Durham": "Durham North",
+  "North East Cambridgeshire": "Cambridgeshire North East",
+  "North East Derbyshire": "Derbyshire North East",
+  "North East Hampshire": "Hampshire North East",
+  "North East Hertfordshire": "Hertfordshire North East",
+  "North East Somerset & Hanham": "Somerset North East & Hanham",
+  "North Herefordshire": "Herefordshire North",
+  "North Norfolk": "Norfolk North",
+  "North Northumberland": "Northumberland North",
+  "North Shropshire": "Shropshire North",
+  "North Somerset": "Somerset North",
+  "North Warwickshire & Bedworth": "Warwickshire North & Bedworth",
+  "North West Cambridgeshire": "Cambridgeshire North West",
+  "North West Essex": "Essex North West",
+  "North West Hampshire": "Hampshire North West",
+  "North West Leicestershire": "Leicestershire North West",
+  "North West Norfolk": "Norfolk North West",
+  "South Basildon & East Thurrock": "Basildon South & East Thurrock",
+  "South Cambridgeshire": "Cambridgeshire South",
+  "South Cotswolds": "Cotswolds South",
+  "South Derbyshire": "Derbyshire South",
+  "South Devon": "Devon South",
+  "South Dorset": "Dorset South",
+  "South East Cornwall": "Cornwall South East",
+  "South Holland & the Deepings": "South Holland & The Deepings",
+  "South Leicestershire": "Leicestershire South",
+  "South Norfolk": "Norfolk South",
+  "South Northamptonshire": "Northamptonshire South",
+  "South Shropshire": "Shropshire South",
+  "South Suffolk": "Suffolk South",
+  "South West Devon": "Devon South West",
+  "South West Hertfordshire": "Hertfordshire South West",
+  "South West Norfolk": "Norfolk South West",
+  "South West Wiltshire": "Wiltshire South West",
+  "the Wrekin": "Wrekin, The",
+  "West Dorset": "Dorset West",
+  "West Lancashire": "Lancashire West",
+  "West Suffolk": "Suffolk West",
+  "West Worcestershire": "Worcestershire West",
+  "East Antrim": "Antrim East",
+  "South Antrim": "Antrim South",
+  "East Londonderry": "Londonderry East",
+  "West Tyrone": "Tyrone West",
+  "North Antrim": "Antrim North",
+  "Mid Ulster": "Ulster Mid",
+  "East Renfrewshire": "Renfrewshire East",
+  "West Dunbartonshire": "Dunbartonshire West",
+  "West Aberdeenshire & Kincardine": "Aberdeenshire West & Kincardine",
+  "Central Ayrshire": "Ayrshire Central",
+  "North Ayrshire & Arran": "Ayrshire North & Arran",
+  "Mid Dunbartonshire": "Dunbartonshire Mid",
+  "North East Fife": "Fife North East",
+  "Mid & South Pembrokeshire": "Pembrokeshire Mid & South",
+  "Montgomeryshire & Glyndŵr": "Montgomeryshire & Glyndwr",
+  "Ynys Môn": "Ynys Mon",
+};
+
+function convertHexjsonToStaticData(hexjsonData, fullData) {
   const constituenciesPcon18ToNumbers = {};
   const constituenciesNumbersToRegions = {};
   const constituenciesPcon18ToNames = {};
@@ -23,13 +108,47 @@ function convertHexjsonToStaticData(hexjsonData) {
     N92000002: "Northern Ireland",
   };
 
-  let counter = 1;
+  // Create a mapping of constituency names to their numbers from fullData
+  const constituencyNameToNumber = {};
+  fullData.constituencies.forEach((constituency) => {
+    if (
+      constituency.Election &&
+      constituency.Election[0] &&
+      constituency.Election[0].Constituency &&
+      constituency.Election[0].Constituency[0]
+    ) {
+      const constituencyName = constituency.Election[0].Constituency[0].$.name;
+      const constituencyNumber =
+        constituency.Election[0].Constituency[0].$.number;
+      constituencyNameToNumber[constituencyName] = constituencyNumber;
+      // console.log("Pa media constituencyName", constituencyName);
+    }
+  });
+
+  console.log(
+    "constituencyNameToNumber",
+    constituencyNameToNumber,
+    constituencyNameToNumber["Bridlington & The Wolds"]
+  );
+
   for (const [pcon18, hexData] of Object.entries(hexjsonData.hexes)) {
-    constituenciesPcon18ToNumbers[pcon18] = counter;
-    constituenciesNumbersToRegions[counter] =
-      gssToRegionName[hexData.region] || hexData.region;
-    constituenciesPcon18ToNames[pcon18] = hexData.n;
-    counter++;
+    const name = hexData.n.replace(" and ", " & ").replace("The", "the");
+    let constituencyNumber = constituencyNameToNumber[name];
+    if (!constituencyNumber) {
+      const paName = hexNameToPaName[name];
+      if (paName) {
+        constituencyNumber = constituencyNameToNumber[paName];
+      }
+    }
+
+    if (constituencyNumber) {
+      constituenciesPcon18ToNumbers[pcon18] = constituencyNumber;
+      constituenciesNumbersToRegions[constituencyNumber] =
+        gssToRegionName[hexData.region] || hexData.region;
+      constituenciesPcon18ToNames[pcon18] = name;
+    } else {
+      console.warn(`No matching number found for constituency: ${name}`);
+    }
   }
 
   return {
@@ -39,8 +158,11 @@ function convertHexjsonToStaticData(hexjsonData) {
   };
 }
 
+// Usage:
+const newStaticData = convertHexjsonToStaticData(newHexData, newFullData);
+
 export {
-  oldStaticData as staticData,
-  oldHexData as hexData,
-  oldFullData as fullData,
+  newStaticData as staticData,
+  newHexData as hexData,
+  newFullData as fullData,
 };
