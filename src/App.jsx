@@ -1121,10 +1121,16 @@ function RegionAndUKPage({ data, unfilteredData, page, pageParam }) {
               (unrepresented).
             </p>
             <div className="gap-20"></div>
-
+          </div>
+        </div>
+        <div className="row">
+          <div className="col-lg-10">
             <VotesTypesBarChart parties={data.parties} region={regionName} />
-
-            <div className="gap-40"></div>
+          </div>
+        </div>
+        <div className="gap-40"></div>
+        <div className="row">
+          <div className="col-lg-10">
             <HexMaps
               data={data}
               unfilteredData={unfilteredData}

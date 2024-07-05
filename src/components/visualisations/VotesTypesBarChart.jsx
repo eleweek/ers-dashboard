@@ -19,7 +19,7 @@ export default function VotesTypesBarChart({ parties, region }) {
   }, [parties]);
 
   const createChart = () => {
-    const width = 928;
+    const width = 1200;
     const height = 350;
     const marginTop = 45;
     const marginRight = 140;
