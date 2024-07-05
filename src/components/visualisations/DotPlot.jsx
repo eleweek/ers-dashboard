@@ -6,7 +6,7 @@ export default function DotPlot({ parties }) {
   const [hoveredParty, setHoveredParty] = useState(null);
 
   const width = 1000;
-  const height = 400;
+  const height = parties.length * 35;
   const margin = { top: 40, right: 100, bottom: 40, left: 180 };
   const plotWidth = width - margin.left - margin.right;
   const plotHeight = height - margin.top - margin.bottom;
