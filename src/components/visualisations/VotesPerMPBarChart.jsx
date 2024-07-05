@@ -90,7 +90,7 @@ export default function VotesPerMPBarChart({ parties }) {
     svg
       .append("g")
       .attr("transform", `translate(0,${marginTop})`)
-      .call(d3.axisTop(x).ticks(width / 80))
+      .call(d3.axisTop(x).ticks(width / 140))
       .call((g) => {
         g.select(".domain").remove();
         g.selectAll(".tick text").attr("font-size", "14px"); // Add this line

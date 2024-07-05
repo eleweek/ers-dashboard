@@ -1094,8 +1094,6 @@ function RegionAndUKPage({ data, unfilteredData, page, pageParam }) {
         selectedConstituency={null}
         selectedRegionName={selectedRegionName}
       />{" "}
-      <div className="gap-40"></div>
-      <div className="container-fluid"></div>
     </>
   );
 }
@@ -1273,7 +1271,6 @@ function App() {
           )}
         </>
       )}
-      <div className="gap-40"></div>
       <MagicButtons />
       <JoinNewsletter
         setSubscribePopupOpened={setSubscribePopupOpened}
