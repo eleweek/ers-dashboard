@@ -1320,9 +1320,28 @@ function App() {
     return newData;
   };
 
-  const selectedConstituency =
-    page === "constituency" &&
-    data.constituencies[0].data.Election[0].Constituency[0];
+  let constituencyCounting = false;
+  let constituencyCountingName = "";
+  console.log("!!! DC", data.constituencies);
+  if (page === "constituency" && data.constituencies.length === 0) {
+    const fullConstituenciesFiltered = fullData.constituencies.filter(
+      (constituency) =>
+        escapeString(constituency.data.Election[0].Constituency[0].$.name) ===
+        pageParam
+    );
+    console.log("!!! FC", fullConstituenciesFiltered);
+
+    if (fullConstituenciesFiltered[0]) {
+      constituencyCounting = true;
+      constituencyCountingName =
+        fullConstituenciesFiltered[0].data.Election[0].Constituency[0].$.name;
+    }
+  }
+
+  const selectedConstituency = !constituencyCounting
+    ? page === "constituency" &&
+      data.constituencies[0].data.Election[0].Constituency[0]
+    : null;
 
   const selectedConstituencyRegionName =
     page === "constituency"
@@ -1353,8 +1372,19 @@ function App() {
         page={page}
         pageParam={pageParam}
       />
+      {constituencyCounting && (
+        <div className="container-fluid">
+          <h1>{constituencyCountingName}</h1>
+          <p style={{ fontSize: 25 }}>
+            This constituency is currently counting votes. Come back in a few
+            hours for the result.
+          </p>
+          <div className="gap-40"></div>
+          <div className="gap-40"></div>
+        </div>
+      )}
 
-      {dataLoaded && (
+      {!constituencyCounting && dataLoaded && (
         <>
           {!data.constituencies.length && <h1>No data</h1>}
           {data.constituencies.length > 0 && (
