@@ -539,6 +539,10 @@ function HexMaps({ data, unfilteredData, selectedRegion }) {
         valueType={valueType}
         displayMode="value"
       />
+      <h5 style={{ textAlign: "center", padding: 0, margin: 0 }}>
+        Percentage of decisive votes, unrepresented votes and surplus votes in
+        2024 by constituency
+      </h5>
       <div className="caption" style={{ textAlign: "center" }}>
         Different areas have different mixes of decisive, unrepresented or
         surplus votes
@@ -873,12 +877,12 @@ function UKLevelOnly() {
   return (
     <div className="row">
       <div className="col-lg-8">
-        <HistoricalDataGrid />
-        <div className="caption">
+        {/* <HistoricalDataGrid /> */}
+        {/* <div className="caption">
           There is no clear correlation between how many people vote for a
           party, and how many seats they win. When more people decide to support
           a party, it can lead to more MPs, the same number of MPs or fewer MPs
-        </div>
+        </div> */}
         <div className="gap-40"></div>
 
         <h2>It doesn’t have to be like this</h2>
@@ -888,49 +892,53 @@ function UKLevelOnly() {
           than FPTP in terms of proportionality, voter choice, and
           representation. In other words, systems that work much better for you.
         </p>
-        <div className="gap-20"></div>
-        <h2>The 2024 General Election under Proportional Representation</h2>
-        <p>
-          What if we had used the same electoral system they use for the
-          Scottish and Welsh Parliaments instead? With the Additional Member
-          System (AMS) you choose a constituency candidate and have a second
-          vote for your preferred party to represent you regionally. You can
-          cast both votes for the same party or vote for different parties in
-          your constituency and regional ballots. Regional seats are then
-          allocated to parties on a proportional basis, taking into account the
-          constituency MPs each party won
-        </p>
-        <p>
-          It is important to note from the outset that it is impossible to
-          predict with certainty what electoral results under different voting
-          systems would be. This projection is merely an indication of what the
-          results of this general election – conducted under FPTP – would have
-          looked like using a different electoral system.
-        </p>
-        <p>
-          It is of course impossible to account for the other changes that would
-          accompany a switch to an alternative electoral system, such as changes
-          in voter behaviour, party campaigning, or the number of parties
-          standing candidates.
-        </p>
-        <p>
-          Our projection shows a result that is more in line with how we voted
-          at the 2024 general election. Based on our projection, the Labour
-          Party is still the largest party, but more in line with their
-          percentage of the vote.
-        </p>
-        <p>
-          While Labour have fewer seats, the Conservatives, Liberal Democrats,
-          SNP, Green Party and Reform UK have shares far closer to their share
-          of the vote.
-        </p>
-        <p>
-          No government should be able to win a big majority on a minority of
-          the vote. Westminster’s voting system is warping our politics and
-          we’re all paying the price. Under a proportional voting systems, seats
-          more closely match votes, so we can all have more impact on what
-          happens in Westminster.
-        </p>
+        {false && (
+          <>
+            <div className="gap-20"></div>
+            <h2>The 2024 General Election under Proportional Representation</h2>
+            <p>
+              What if we had used the same electoral system they use for the
+              Scottish and Welsh Parliaments instead? With the Additional Member
+              System (AMS) you choose a constituency candidate and have a second
+              vote for your preferred party to represent you regionally. You can
+              cast both votes for the same party or vote for different parties
+              in your constituency and regional ballots. Regional seats are then
+              allocated to parties on a proportional basis, taking into account
+              the constituency MPs each party won
+            </p>
+            <p>
+              It is important to note from the outset that it is impossible to
+              predict with certainty what electoral results under different
+              voting systems would be. This projection is merely an indication
+              of what the results of this general election – conducted under
+              FPTP – would have looked like using a different electoral system.
+            </p>
+            <p>
+              It is of course impossible to account for the other changes that
+              would accompany a switch to an alternative electoral system, such
+              as changes in voter behaviour, party campaigning, or the number of
+              parties standing candidates.
+            </p>
+            <p>
+              Our projection shows a result that is more in line with how we
+              voted at the 2024 general election. Based on our projection, the
+              Labour Party is still the largest party, but more in line with
+              their percentage of the vote.
+            </p>
+            <p>
+              While Labour have fewer seats, the Conservatives, Liberal
+              Democrats, SNP, Green Party and Reform UK have shares far closer
+              to their share of the vote.
+            </p>
+            <p>
+              No government should be able to win a big majority on a minority
+              of the vote. Westminster’s voting system is warping our politics
+              and we’re all paying the price. Under a proportional voting
+              systems, seats more closely match votes, so we can all have more
+              impact on what happens in Westminster.
+            </p>
+          </>
+        )}
       </div>
     </div>
   );
@@ -1043,7 +1051,7 @@ function RegionAndUKPage({ data, unfilteredData, page, pageParam }) {
               to win the representation they deserve in Westminster.
             </p>
             <div className="gap-10"></div>
-            <VotesPerMPBarChart parties={data.parties} />
+            <VotesPerMPBarChart parties={data.parties} region={regionName} />
             <div className="gap-20"></div>
 
             <p>
@@ -1065,7 +1073,7 @@ function RegionAndUKPage({ data, unfilteredData, page, pageParam }) {
         <div className="gap-40"></div>
         <div className="row">
           <div className="col-xl-9 col-lg-10 col-md-12">
-            <h2>Full Results</h2>
+            <h2>Full Results {regionName && `in ${regionName}`}</h2>
 
             <FullResultsTable
               partiesTableItems={partiesTableItems}
@@ -1114,7 +1122,7 @@ function RegionAndUKPage({ data, unfilteredData, page, pageParam }) {
             </p>
             <div className="gap-20"></div>
 
-            <VotesTypesBarChart parties={data.parties} />
+            <VotesTypesBarChart parties={data.parties} region={regionName} />
 
             <div className="gap-40"></div>
             <HexMaps
@@ -1168,8 +1176,8 @@ function RegionAndUKPage({ data, unfilteredData, page, pageParam }) {
             </p>
           </div>
           <div className="gap-40"></div>
-          {page !== "region" && <UKLevelOnly />}
         </div>
+        {page !== "region" && <UKLevelOnly />}
       </div>
       <div className="gap-40"></div>
       <SignPetition

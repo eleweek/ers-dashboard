@@ -2,12 +2,13 @@ import React, { useEffect, useRef } from "react";
 import * as d3 from "d3";
 import { displayedPartyName } from "./utils";
 
-export default function VotesTypesBarChart({ parties }) {
+export default function VotesTypesBarChart({ parties, region }) {
   const svgRef = useRef();
   const containerRef = useRef();
 
   const title =
-    "Percentage of decisive votes, unrepresented votes and surplus votes in 2024 by party";
+    "Percentage of decisive votes, unrepresented votes and surplus votes in 2024 by party" +
+    (region ? ` in ${region}` : "");
   const caption =
     "Parties with geographically concentrated supporters tend to do better under First Past the Post";
 

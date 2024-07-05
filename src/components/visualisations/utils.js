@@ -33,3 +33,26 @@ export const displayedPartyName = (party) => {
       return party.name;
   }
 };
+
+const partyNameMapping = {
+  lab: "Labour",
+  c: "Conservative",
+  ld: "Liberal Democrat",
+  snp: "Scottish National Party",
+  sf: "Sinn Féin",
+  reform: "Reform UK",
+  green: "Green Party",
+  pc: "Plaid Cymru",
+  dup: "Democratic Unionist Party",
+  sdlp: "Social Democratic and Labour Party",
+  alliance: "Alliance",
+  uup: "Ulster Unionist Party",
+  speaker: "The Speaker",
+  wpb: "Workers Party of Britain",
+  others: "Others",
+};
+
+export function getPartyName(abbreviation) {
+  const name = partyNameMapping[abbreviation.toLowerCase()];
+  return name || abbreviation;
+}

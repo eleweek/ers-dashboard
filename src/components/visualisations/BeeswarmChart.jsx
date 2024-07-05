@@ -2,7 +2,7 @@
 import React, { useEffect, useRef } from "react";
 import * as d3 from "d3";
 import { AccurateBeeswarm } from "accurate-beeswarm-plot";
-import { getPartyColor } from "./utils";
+import { getPartyColor, getPartyName } from "./utils";
 
 const SingleBeeswarmChart = ({
   data,
@@ -65,9 +65,9 @@ const SingleBeeswarmChart = ({
       .append("text")
       .attr("x", margin.left)
       .attr("y", margin.top - 5)
-      .attr("font-size", "12px")
+      .attr("font-size", "14px")
       .attr("font-weight", "bold")
-      .text(party);
+      .text(getPartyName(party));
 
     // Add tooltip
     const tooltip = d3

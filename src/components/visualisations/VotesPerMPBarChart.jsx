@@ -3,12 +3,13 @@ import * as d3 from "d3";
 
 import { displayedPartyName, getPartyColor } from "./utils";
 
-export default function VotesPerMPBarChart({ parties }) {
+export default function VotesPerMPBarChart({ parties, region }) {
   const svgRef = useRef();
   const captionRef = useRef();
 
   const title =
-    "Votes required to elect one MP for each party in the 2024 general election";
+    "Votes required to elect one MP for each party in the 2024 general election" +
+    (region ? ` in ${region}` : "");
 
   useEffect(() => {
     if (parties && parties.length > 0) {
