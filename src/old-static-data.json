@@ -1320,29 +1320,6 @@
     "Ind": "#535353",
     "Alliance": "#F6CB2F"
   },
-  "turnoutHistory": { "2005": 61.4, "2010": 65.1, "2015": 66.1, "2017": 68.7 },
-  "mainParties": ["Lab", "C", "LD", "Green", "SNP", "PC", "Brexit"],
-  "extendedParties": [
-    "Lab",
-    "C",
-    "LD",
-    "Green",
-    "SNP",
-    "PC",
-    "Brexit",
-    "DUP",
-    "SF",
-    "PC",
-    "SDLP",
-    "Alliance",
-    "Brexit",
-    "UUP",
-    "UKIP",
-    "Lib",
-    "Yorkshire",
-    "Change"
-  ],
-  "niParties": ["DUP", "SF", "UUP", "SDLP", "Alliance"],
   "constituenciesPcon18ToNames": {
     "E14000678": "Devon East",
     "E14000838": "Devon North",
@@ -1994,6 +1971,5 @@
     "E14000843": "Derbyshire North East",
     "E14000665": "Devizes",
     "E14000623": "Devon Central"
-  },
-  "electionStarts": "2019-12-12 22:00:00+00"
+  }
 }
