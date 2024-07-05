@@ -595,6 +595,26 @@ function ConstituencyPage({ data, selectedConstituency, page }) {
       })
     : null;
 
+  const constituencyData =
+    data.constituencies[0].data.Election[0].Constituency[0];
+  const winningCandidate = constituencyData.Candidate.find((c) => c.$.elected);
+  const secondPlaceCandidate = constituencyData.Candidate.filter(
+    (c) => !c.$.elected
+  ).sort(
+    (a, b) => parseInt(b.Party[0].$.votes) - parseInt(a.Party[0].$.votes)
+  )[0];
+
+  const totalVotes = constituencyData.Candidate.reduce(
+    (sum, candidate) => sum + parseInt(candidate.Party[0].$.votes),
+    0
+  );
+  const winningVotes = parseInt(winningCandidate.Party[0].$.votes);
+  const secondPlaceVotes = parseInt(secondPlaceCandidate.Party[0].$.votes);
+  const otherVotes = totalVotes - winningVotes;
+  const surplusVotes = winningVotes - secondPlaceVotes - 1;
+
+  const otherVotesPercentage = Math.round((otherVotes / totalVotes) * 100);
+
   return (
     <>
       <div className="container-fluid">
@@ -682,6 +702,40 @@ function ConstituencyPage({ data, selectedConstituency, page }) {
         </div>
         <div className="gap-40"></div>
       </div>
+      <div className="container-fluid">
+        <div className="row">
+          <div className="col-lg-8">
+            <h2>What impact did the votes cast have?</h2>
+            <p>
+              {commas(totalVotes)} votes were cast in {constituencyData.$.name},
+              but not everyone had an impact on Westminster.{" "}
+              {commas(otherVotes)} or {otherVotesPercentage}% of voters wanted
+              someone else to be an MP.
+            </p>
+            <p>
+              Not every vote for {winningCandidate.$.firstName}{" "}
+              {winningCandidate.$.surname} made a difference. They only needed
+              one more vote than {secondPlaceCandidate.$.firstName}{" "}
+              {secondPlaceCandidate.$.surname} to win the seat, so every vote
+              they won beyond this level is surplus to requirements - that's{" "}
+              {commas(surplusVotes)} {winningCandidate.Party[0].$.name} voters
+              who could have stayed at home, and the result would have been the
+              same.
+            </p>
+            <h2>A National Contest</h2>
+            <p>
+              The UK general election isn’t a single election, but 650
+              winner-takes-all elections. To really understand how our electoral
+              system works, you need to look{" "}
+              <a href="/">at the national picture</a>. The fact that millions of
+              our votes make no difference to who sits in parliament means the
+              politicians can ignore millions of us, and it makes no difference
+              to them.
+            </p>
+          </div>
+        </div>
+      </div>
+      <div className="gap-40"></div>
       <SignPetition
         oneDecimal={oneDecimal}
         wastedVotes={wastedVotes}
