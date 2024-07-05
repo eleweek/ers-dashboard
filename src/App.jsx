@@ -74,67 +74,70 @@ const filterConstituenciesByPage = (constituencies, page, pageParam) => {
 };
 
 const processConstituencies = (constituencies) => {
-  return constituencies.map((constituency) => {
-    console.log("constituency", constituency);
+  return constituencies
+    .filter((c) => c.hasResults)
+    .map((constituency) => {
+      console.log("constituency", constituency);
 
-    const constituencyDeepData = constituency.data.Election[0].Constituency[0];
-    console.log("constituencyDeepData", constituencyDeepData);
+      const constituencyDeepData =
+        constituency.data.Election[0].Constituency[0];
+      console.log("constituencyDeepData", constituencyDeepData);
 
-    const candidates = constituencyDeepData.Candidate;
+      const candidates = constituencyDeepData.Candidate;
 
-    let winningVotes = 0;
-    let secondPlaceVotes = 0;
-    let wastedVotes = 0;
-    let totalVotes = 0;
+      let winningVotes = 0;
+      let secondPlaceVotes = 0;
+      let wastedVotes = 0;
+      let totalVotes = 0;
 
-    candidates.forEach((candidate) => {
-      const votes = parseFloat(candidate.Party[0].$.votes);
-      totalVotes += votes;
+      candidates.forEach((candidate) => {
+        const votes = parseFloat(candidate.Party[0].$.votes);
+        totalVotes += votes;
 
-      if (candidate.$.elected) {
-        winningVotes = votes;
-      } else {
-        wastedVotes += votes;
-        secondPlaceVotes = Math.max(secondPlaceVotes, votes);
-      }
-    });
+        if (candidate.$.elected) {
+          winningVotes = votes;
+        } else {
+          wastedVotes += votes;
+          secondPlaceVotes = Math.max(secondPlaceVotes, votes);
+        }
+      });
 
-    const surplusVotes = winningVotes - secondPlaceVotes - 1;
-    const decisiveVotes = secondPlaceVotes + 1;
+      const surplusVotes = winningVotes - secondPlaceVotes - 1;
+      const decisiveVotes = secondPlaceVotes + 1;
 
-    return {
-      ...constituency,
-      wastedVotes,
-      surplusVotes,
-      decisiveVotes,
-      totalVotes,
-      data: {
-        ...constituency.data,
-        Election: [
-          {
-            Constituency: [
-              {
-                ...constituencyDeepData,
-                $: {
-                  ...constituencyDeepData.$,
-                  region:
-                    staticData.constituenciesNumbersToRegions[
-                      constituencyDeepData.$.number
-                    ],
-                  regionEscaped: escapeString(
-                    staticData.constituenciesNumbersToRegions[
-                      constituencyDeepData.$.number
-                    ]
-                  ),
-                  nameEscaped: escapeString(constituencyDeepData.$.name),
+      return {
+        ...constituency,
+        wastedVotes,
+        surplusVotes,
+        decisiveVotes,
+        totalVotes,
+        data: {
+          ...constituency.data,
+          Election: [
+            {
+              Constituency: [
+                {
+                  ...constituencyDeepData,
+                  $: {
+                    ...constituencyDeepData.$,
+                    region:
+                      staticData.constituenciesNumbersToRegions[
+                        constituencyDeepData.$.number
+                      ],
+                    regionEscaped: escapeString(
+                      staticData.constituenciesNumbersToRegions[
+                        constituencyDeepData.$.number
+                      ]
+                    ),
+                    nameEscaped: escapeString(constituencyDeepData.$.name),
+                  },
                 },
-              },
-            ],
-          },
-        ],
-      },
-    };
-  });
+              ],
+            },
+          ],
+        },
+      };
+    });
 };
 
 const calculatePartyData = (constituencies) => {
@@ -146,13 +149,12 @@ const calculatePartyData = (constituencies) => {
   constituencies.forEach((constituency) => {
     console.log("constituency", constituency);
     const candidates = constituency.data.Election[0].Constituency[0].Candidate;
-    const prevCandidates =
-      constituency.data.PreviousElection[0].Constituency[0].Candidate;
+    const prevElection = constituency.data.PreviousElection
+      ? constituency.data.PreviousElection[0]
+      : constituency.data.PreviousNotionalElection[0];
+    const prevCandidates = prevElection.Constituency[0].Candidate;
 
-    totalVotesPrev += parseInt(
-      constituency.data.PreviousElection[0].Constituency[0].$.turnout,
-      10
-    );
+    totalVotesPrev += parseInt(prevElection.Constituency[0].$.turnout, 10);
 
     let winningPartyName = null;
     let winningPartyVotes = 0;
