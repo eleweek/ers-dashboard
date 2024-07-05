@@ -67,25 +67,43 @@ export default function VotesPerMPBarChart({ parties }) {
       .attr("height", y.bandwidth())
       .attr("fill", (d) => d.colour);
 
+    // Add this function at the beginning of your component or in a utility file
+    function isColorDark(color) {
+      const rgb = d3.color(color).rgb();
+      const luminance = (0.299 * rgb.r + 0.587 * rgb.g + 0.114 * rgb.b) / 255;
+      return luminance < 0.5;
+    }
+
+    // In your createChart function, replace the text creation code with this:
     svg
       .append("g")
-      .attr("fill", "white")
-      .attr("text-anchor", "start")
       .selectAll("text")
       .data(sortedParties)
       .join("text")
-      .attr("x", (d) => x(0) + 10)
+      .attr("text-anchor", "start")
+      .attr("x", marginLeft + 5) // Start all text inside the bar
       .attr("y", (d) => y(displayedPartyName(d)) + y.bandwidth() / 2)
       .attr("dy", "0.35em")
-      .attr("dx", -4)
       .text((d) => (d.totalSeats === 0 ? "No MPs elected" : ""))
-      .call((text) =>
-        text
-          .filter((d) => x(d.totalVotesPerSeat) - marginLeft < 20)
-          .attr("dx", +4)
-          .attr("fill", "black")
-          .attr("text-anchor", "start")
-      );
+      .each(function (d) {
+        const textWidth = this.getComputedTextLength();
+        const barWidth = x(d.totalVotesPerSeat) - marginLeft;
+        const textElement = d3.select(this);
+
+        if (d.totalSeats === 0) {
+          if (textWidth > barWidth - 10) {
+            // Move text outside if it doesn't fit
+            textElement
+              .attr("x", x(d.totalVotesPerSeat) + 5)
+              .attr("fill", "black"); // Always black when outside
+          } else {
+            // Text fits inside, set color based on background
+            textElement
+              .attr("x", x(0) + 10)
+              .attr("fill", isColorDark(d.colour) ? "white" : "black");
+          }
+        }
+      });
 
     svg
       .append("g")
