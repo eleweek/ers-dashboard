@@ -25,10 +25,7 @@ async function processXmlFile(sftp, filePath) {
     const data = await sftp.get(filePath);
     const xmlString = data.toString();
 
-    const parser = new xml2js.Parser({
-      explicitArray: false,
-      mergeAttrs: true,
-    });
+    const parser = new xml2js.Parser();
     const result = await parser.parseStringPromise(xmlString);
 
     return result.FirstPastThePostResult || result.FirstPastThePostNominations;
@@ -38,11 +35,13 @@ async function processXmlFile(sftp, filePath) {
   }
 }
 
-function getLatestRevision(files) {
+function getLatestRevision(files, prefix) {
   const fileMap = {};
 
   files
-    .filter((file) => file.name.endsWith(".xml"))
+    .filter(
+      (file) => file.name.startsWith(prefix) && file.name.endsWith(".xml")
+    )
     .forEach((file) => {
       const parts = file.name.split("_");
       const revision = parseInt(parts[parts.length - 1].split(".")[0]);
@@ -73,10 +72,17 @@ async function main() {
     const nominationFiles = await sftp.list(NOMINATIONS_FOLDER);
     const resultFiles = await sftp.list(RESULTS_FOLDER);
 
-    console.log(`nominations: ${nominationFiles.length}`);
-    console.log(`results: ${resultFiles.length}`);
+    const latestNominationFiles = getLatestRevision(
+      nominationFiles,
+      "General_Election_nominations_"
+    );
+    const latestResultFiles = getLatestRevision(
+      resultFiles,
+      "General_Election_result_"
+    );
 
-    const latestNominationFiles = getLatestRevision(nominationFiles);
+    console.log(`latest nominations: ${latestNominationFiles.length}`);
+    console.log(`latest results: ${latestResultFiles.length}`);
 
     // Check if there are exactly 650 unique nominations after considering revisions
     if (latestNominationFiles.length !== 650) {
@@ -89,8 +95,14 @@ async function main() {
       const filePath = `${NOMINATIONS_FOLDER}/${fileName}`;
       console.log(`Processing nomination file: ${filePath}`);
       const data = await processXmlFile(sftp, filePath);
-      if (data && data.Election && data.Election.Constituency) {
-        const constituencyNumber = data.Election.Constituency.number;
+      if (
+        data &&
+        data.Election &&
+        data.Election[0] &&
+        data.Election[0].Constituency &&
+        data.Election[0].Constituency[0]
+      ) {
+        const constituencyNumber = data.Election[0].Constituency[0].$.number;
         constituencies[constituencyNumber] = data;
       }
     }
@@ -103,15 +115,18 @@ async function main() {
       );
     }
 
-    // Process results
-    const latestResultFiles = getLatestRevision(resultFiles);
-
     for (const fileName of latestResultFiles) {
       const filePath = `${RESULTS_FOLDER}/${fileName}`;
       console.log(`Processing result file: ${filePath}`);
       const data = await processXmlFile(sftp, filePath);
-      if (data && data.Election && data.Election.Constituency) {
-        const constituencyNumber = data.Election.Constituency.number;
+      if (
+        data &&
+        data.Election &&
+        data.Election[0] &&
+        data.Election[0].Constituency &&
+        data.Election[0].Constituency[0]
+      ) {
+        const constituencyNumber = data.Election[0].Constituency[0].$.number;
         if (constituencies[constituencyNumber]) {
           constituencies[constituencyNumber] = {
             ...constituencies[constituencyNumber],
@@ -132,6 +147,8 @@ async function main() {
     );
     fs.writeFileSync(outputFilename, jsonOutput);
     console.log(`JSON file has been written successfully to ${outputFilename}`);
+    console.log(`Total constituencies: ${Object.keys(constituencies).length}`);
+    console.log(`Total results: ${latestResultFiles.length}`);
   } catch (err) {
     console.error("Error:", err);
   } finally {
