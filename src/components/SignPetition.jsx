@@ -56,15 +56,6 @@ const SignPetition = ({
           </div>
         </div>
       </div>
-      {page !== "constituency" &&
-        data.constituencies.length < data.constituenciesTotal && (
-          <div className="container">
-            <div className="col-lg-3"></div>
-            <div className="col-lg-6 text-center">
-              <SeatsDeclared data={data} />
-            </div>
-          </div>
-        )}
     </div>
   );
 };

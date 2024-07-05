@@ -36,7 +36,10 @@ import VotesPerMPBarChart from "./components/visualisations/VotesPerMPBarChart";
 import VotesTypesBarChart from "./components/visualisations/VotesTypesBarChart";
 import classNames from "classnames";
 import HistoricalDataGrid from "./components/visualisations/HistoricalDataGrid";
-import { displayedPartyName } from "./components/visualisations/utils";
+import {
+  displayedPartyName,
+  getPartyColor,
+} from "./components/visualisations/utils";
 
 const BACKEND_HOST = "https://ge2019.electoral-reform.org.uk";
 
@@ -166,7 +169,7 @@ const calculatePartyData = (constituencies) => {
 
       if (!parties[partyName]) {
         parties[partyName] = {
-          colour: partyColourByAbbr(partyAbbr),
+          colour: getPartyColor(partyAbbr),
           name: partyNameProcessed,
           candidate: `${candidate.$.firstName} ${candidate.$.surname}`,
           abbreviation: partyAbbr,
@@ -743,14 +746,18 @@ function LeadBarChartParties({ data }) {
       table.push([
         displayedPartyName(party),
         oneDecimal(party.totalVotesShare),
-        `color: ${party.colour}; opacity: 0.6; stroke-width: 0`,
+        `color: ${getPartyColor(
+          party.abbreviation
+        )}; opacity: 0.6; stroke-width: 0`,
         oneDecimal(party.totalSeatsShare),
-        `color: ${party.colour}; stroke-width: 0`,
+        `color: ${getPartyColor(party.abbreviation)}; stroke-width: 0`,
       ]);
     });
 
     return table;
   }, [data.parties]);
+
+  console.log("Parties chart data", partiesChartData);
 
   return (
     <>

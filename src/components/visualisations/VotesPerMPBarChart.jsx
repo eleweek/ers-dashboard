@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from "react";
 import * as d3 from "d3";
 
-import { displayedPartyName } from "./utils";
+import { displayedPartyName, getPartyColor } from "./utils";
 
 export default function VotesPerMPBarChart({ parties }) {
   const svgRef = useRef();
@@ -65,7 +65,7 @@ export default function VotesPerMPBarChart({ parties }) {
       .attr("y", (d) => y(displayedPartyName(d)))
       .attr("width", (d) => x(d.totalVotesPerSeat) - marginLeft)
       .attr("height", y.bandwidth())
-      .attr("fill", (d) => d.colour);
+      .attr("fill", (d) => getPartyColor(d.abbreviation));
 
     // Add this function at the beginning of your component or in a utility file
     function isColorDark(color) {
