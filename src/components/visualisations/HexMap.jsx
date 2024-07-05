@@ -155,8 +155,14 @@ export default function HexMap({ hexjson, data, valueType, displayMode }) {
 
     const updateHexmapColors = (instance) => {
       instance.updateColours((r) => {
+        if (!data[r]) {
+          return "#CCCCCC"; // Default color if no data
+        }
+        console.log("updateColours r", r, data[r]);
         if (displayMode === "winningParty") {
+          console.log("hexmap r", r, data[r]);
           const color = data[r].winningPartyColor || "#CCCCCC"; // Default color if no winning party
+          console.log("Winning party color", color, data[r].winningParty);
           if (data[r].isSelected) {
             return color;
           } else {
@@ -262,13 +268,20 @@ export default function HexMap({ hexjson, data, valueType, displayMode }) {
         tip.classList.add("tooltip");
         svg.appendChild(tip);
       }
+
       let tooltipContent = `${e.data.data.n}<br />`;
       if (displayMode === "winningParty") {
-        tooltipContent += `Winning Party: ${data[e.data.region].winningParty}`;
+        if (data[e.data.region]) {
+          tooltipContent += `Winning Party: ${
+            data[e.data.region].winningParty
+          }`;
+        } else {
+          tooltipContent += "Still counting";
+        }
       } else {
-        tooltipContent += `${data[
-          e.data.region
-        ].value.toLocaleString()} ${valueType}`;
+        tooltipContent += data[e.data.region]
+          ? `${data[e.data.region].value.toLocaleString()} ${valueType}`
+          : "Still counting";
       }
       tip.innerHTML = tooltipContent;
 

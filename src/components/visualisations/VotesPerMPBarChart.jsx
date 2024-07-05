@@ -19,7 +19,9 @@ export default function VotesPerMPBarChart({ parties }) {
   const createChart = () => {
     // Sort parties by totalVotesPerSeat in descending order
     const sortedParties = [...parties]
-      .filter((party) => party.name !== "Others")
+      .filter(
+        (party) => party.name !== "Others" && party.name !== "The Speaker"
+      )
       .sort((a, b) => b.totalVotesPerSeat - a.totalVotesPerSeat);
 
     const barHeight = 35;

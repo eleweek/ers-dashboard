@@ -24,7 +24,7 @@
 
 .hexmap .tooltip {
   position: absolute;
-  text-align: center;
+  text-align: left;
   background: black;
   color: white;
   padding: 0.25em 0.5em;
