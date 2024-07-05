@@ -6,8 +6,8 @@ export default function DotPlot({ parties }) {
   const [hoveredParty, setHoveredParty] = useState(null);
 
   const width = 1000;
-  const height = parties.length * 35;
-  const margin = { top: 40, right: 100, bottom: 40, left: 180 };
+  const height = 100 + parties.length * 30;
+  const margin = { top: 40, right: 100, bottom: 40, left: 200 };
   const plotWidth = width - margin.left - margin.right;
   const plotHeight = height - margin.top - margin.bottom;
 
@@ -35,7 +35,7 @@ export default function DotPlot({ parties }) {
     value === 0 ? "no" : `${value.toFixed(1)}%`;
 
   const shouldCombineLabels = (votesShare, seatsShare) => {
-    return Math.abs(xScale(votesShare) - xScale(seatsShare)) < 50;
+    return Math.abs(xScale(votesShare) - xScale(seatsShare)) < 60;
   };
 
   const isSmallParty = (votesShare, seatsShare) => {
@@ -47,8 +47,8 @@ export default function DotPlot({ parties }) {
     return votesShare < seatsShare
       ? `${formatPercent(votesShare)} votes ${arrow} ${formatPercent(
           seatsShare
-        )} seats`
-      : `${formatPercent(seatsShare)} seats ${arrow} ${formatPercent(
+        )} MPs`
+      : `${formatPercent(seatsShare)} MPs ${arrow} ${formatPercent(
           votesShare
         )} votes`;
   };
@@ -231,7 +231,7 @@ export default function DotPlot({ parties }) {
                           textAnchor="middle"
                           fontSize="12px"
                         >
-                          {`${formatPercent(party.totalSeatsShare)} seats`}
+                          {`${formatPercent(party.totalSeatsShare)} MPs`}
                         </text>
                       </>
                     ))}
