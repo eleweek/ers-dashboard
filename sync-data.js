@@ -1,20 +1,64 @@
 require("dotenv").config();
 
-const fs = require("fs");
 const Client = require("ssh2-sftp-client");
-const xmlParser = require("xml2js").Parser();
+const xml2js = require("xml2js");
+const fs = require("fs");
+const path = require("path");
 
 const { PA_HOST, PA_USER, PA_PASSWORD } = process.env;
 
+const NOMINATIONS_FOLDER = "/nominations";
 const RESULTS_FOLDER = "/results";
-const FILENAME_PREFIX = process.env.IS_TEST ? "Test_" : "";
 
-let constituencies = [];
+// Get the output filename from command-line arguments
+const outputFilename = process.argv[2];
 
-async function run() {
-  console.log("Running syncing process...");
+if (!outputFilename) {
+  console.error(
+    "Please provide an output filename as a command-line argument."
+  );
+  process.exit(1);
+}
 
+async function processXmlFile(sftp, filePath) {
+  try {
+    const data = await sftp.get(filePath);
+    const xmlString = data.toString();
+
+    const parser = new xml2js.Parser({
+      explicitArray: false,
+      mergeAttrs: true,
+    });
+    const result = await parser.parseStringPromise(xmlString);
+
+    return result.FirstPastThePostResult || result.FirstPastThePostNominations;
+  } catch (error) {
+    console.error(`Error processing file ${filePath}:`, error);
+    return null;
+  }
+}
+
+function getLatestRevision(files) {
+  const fileMap = {};
+
+  files
+    .filter((file) => file.name.endsWith(".xml"))
+    .forEach((file) => {
+      const parts = file.name.split("_");
+      const revision = parseInt(parts[parts.length - 1].split(".")[0]);
+      const baseFileName = parts.slice(0, -1).join("_");
+
+      if (!fileMap[baseFileName] || revision > fileMap[baseFileName].revision) {
+        fileMap[baseFileName] = { name: file.name, revision: revision };
+      }
+    });
+
+  return Object.values(fileMap).map((file) => file.name);
+}
+
+async function main() {
   const sftp = new Client();
+  const constituencies = {};
 
   try {
     await sftp.connect({
@@ -23,138 +67,82 @@ async function run() {
       password: PA_PASSWORD,
     });
 
-    console.log("SFTP connection established successfully.");
+    console.log("Connected to SFTP server");
 
-    const resultsFilesList = await sftp.list(RESULTS_FOLDER);
-    console.log(
-      `Found ${resultsFilesList.length} files in the results folder.`
+    // Get file counts
+    const nominationFiles = await sftp.list(NOMINATIONS_FOLDER);
+    const resultFiles = await sftp.list(RESULTS_FOLDER);
+
+    console.log(`nominations: ${nominationFiles.length}`);
+    console.log(`results: ${resultFiles.length}`);
+
+    const latestNominationFiles = getLatestRevision(nominationFiles);
+
+    // Check if there are exactly 650 unique nominations after considering revisions
+    if (latestNominationFiles.length !== 650) {
+      throw new Error(
+        `Expected 650 unique nominations after revisions, but found ${latestNominationFiles.length}`
+      );
+    }
+
+    for (const fileName of latestNominationFiles) {
+      const filePath = `${NOMINATIONS_FOLDER}/${fileName}`;
+      console.log(`Processing nomination file: ${filePath}`);
+      const data = await processXmlFile(sftp, filePath);
+      if (data && data.Election && data.Election.Constituency) {
+        const constituencyNumber = data.Election.Constituency.number;
+        constituencies[constituencyNumber] = data;
+      }
+    }
+
+    // Check if we have 650 constituencies after processing nominations
+    const constituencyCount = Object.keys(constituencies).length;
+    if (constituencyCount !== 650) {
+      throw new Error(
+        `Mismatch in constituency count: Expected 650, but found ${constituencyCount} in nominations`
+      );
+    }
+
+    // Process results
+    const latestResultFiles = getLatestRevision(resultFiles);
+
+    for (const fileName of latestResultFiles) {
+      const filePath = `${RESULTS_FOLDER}/${fileName}`;
+      console.log(`Processing result file: ${filePath}`);
+      const data = await processXmlFile(sftp, filePath);
+      if (data && data.Election && data.Election.Constituency) {
+        const constituencyNumber = data.Election.Constituency.number;
+        if (constituencies[constituencyNumber]) {
+          constituencies[constituencyNumber] = {
+            ...constituencies[constituencyNumber],
+            ...data,
+          };
+        } else {
+          throw new Error(
+            `Mismatch: Result file found for constituency ${constituencyNumber} which was not in nominations`
+          );
+        }
+      }
+    }
+
+    const jsonOutput = JSON.stringify(
+      { constituencies: Object.values(constituencies) },
+      null,
+      2
     );
-
-    const constituenciesResultsMeta =
-      getConstituenciesResultsMeta(resultsFilesList);
-    console.log(
-      `Identified ${
-        Object.keys(constituenciesResultsMeta).length
-      } unique constituencies to process.`
-    );
-
-    await syncNewConstituenciesResults(sftp, constituenciesResultsMeta);
-
-    console.log(`Sync done. Writing results to file...`);
-
-    fs.writeFileSync(
-      "election_results.json",
-      JSON.stringify({ constituencies }, null, 2)
-    );
-    console.log(`Results written to election_results.json`);
+    fs.writeFileSync(outputFilename, jsonOutput);
+    console.log(`JSON file has been written successfully to ${outputFilename}`);
   } catch (err) {
-    console.error("An error occurred:", err);
+    console.error("Error:", err);
   } finally {
     await sftp.end();
-    console.log("SFTP connection closed.");
+    console.log("SFTP connection closed");
   }
 }
 
-async function syncNewConstituenciesResults(sftp, constituenciesResultsMeta) {
-  const totalConstituencies = Object.keys(constituenciesResultsMeta).length;
-  let processedCount = 0;
-
-  for (let constituencyName in constituenciesResultsMeta) {
-    processedCount++;
-    const constituencyResultsVersion =
-      constituenciesResultsMeta[constituencyName];
-    await syncConstituencyResults(
-      sftp,
-      constituencyName,
-      constituencyResultsVersion
-    );
-    console.log(
-      `Processed ${processedCount} of ${totalConstituencies} constituencies.`
-    );
-  }
-}
-
-async function syncConstituencyResults(
-  sftp,
-  constituencyName,
-  constituencyResultsVersion
-) {
-  console.log(
-    `Syncing ${constituencyName} constituency revision ${constituencyResultsVersion}...`
-  );
-
-  const constituencyResults = await getConstituencyResults(
-    sftp,
-    constituencyName,
-    constituencyResultsVersion
-  );
-
-  const constituencyData = {
-    id: constituencies.length + 1,
-    fileName: constituencyName,
-    resultsVersion: constituencyResultsVersion,
-    data: constituencyResults.FirstPastThePostResult,
-    name: constituencyResults.FirstPastThePostResult.Election[0].Constituency[0].$.name.toLowerCase(),
-    search: `${constituencyResults.FirstPastThePostResult.Election[0].Constituency[0].$.name.toLowerCase()} ${
-      constituencyResults.FirstPastThePostResult.Election[0].Constituency[0]
-        .Candidate[0].$.firstName
-    } ${
-      constituencyResults.FirstPastThePostResult.Election[0].Constituency[0]
-        .Candidate[0].$.surname
-    }`,
-    createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString(),
-  };
-
-  constituencies.push(constituencyData);
-  console.log(`Added ${constituencyName} to the results.`);
-}
-
-async function getConstituencyResults(
-  sftp,
-  constituencyName,
-  constituencyResultsVersion
-) {
-  const filePath = `${RESULTS_FOLDER}/${FILENAME_PREFIX}Snap_General_Election_result_${constituencyName}_${constituencyResultsVersion}.xml`;
-  console.log(`Downloading file: ${filePath}`);
-
-  const xmlContents = await sftp.get(filePath);
-  console.log(`File downloaded: ${filePath}`);
-
-  const parsedResults = await xmlParser.parseStringPromise(
-    xmlContents.toString()
-  );
-  console.log(`File parsed: ${filePath}`);
-
-  return parsedResults;
-}
-
-function getConstituenciesResultsMeta(resultsFilesList) {
-  const meta = {};
-
-  resultsFilesList.forEach((file) => {
-    const match = file.name.match(/_result_(.*?)_(\d+).xml/);
-
-    if (!match) return;
-
-    const constituencyName = match[1];
-    const resultsVersion = parseInt(match[2]);
-    const currentResultsVersion = meta[constituencyName] || 0;
-
-    if (currentResultsVersion < resultsVersion) {
-      meta[constituencyName] = resultsVersion;
-    }
-  });
-
-  return meta;
-}
-
-run()
-  .then(() => {
-    console.log("Process completed successfully.");
-    process.exit(0);
-  })
+main()
+  .then(() => process.exit(0))
   .catch((err) => {
-    console.error("An error occurred during execution:", err);
+    console.error("Unhandled error:", err);
     process.exit(1);
   });
