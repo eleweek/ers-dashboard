@@ -428,7 +428,7 @@ const computeWinningPartyData = (constituencies, allConstituencies) => {
     winningPartyData[pcon] = {
       value: winningParty,
       winningParty: winningParty,
-      winningPartyColor: partyColourByAbbr(winningParty),
+      winningPartyColor: getPartyColor(winningParty),
       isSelected: selectedConstituencies.has(constituencyData.$.number),
     };
   });
@@ -444,6 +444,8 @@ function WinningPartyHexMap({ data, unfilteredData }) {
       ),
     [data.constituencies, unfilteredData.constituencies]
   );
+
+  console.log("Winning party data", winningPartyData);
 
   return (
     <HexMap

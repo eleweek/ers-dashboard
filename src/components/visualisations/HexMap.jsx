@@ -88,6 +88,7 @@ export default function HexMap({ hexjson, data, valueType, displayMode }) {
   const hexmapRef = useRef(null);
   const hexInstanceRef = useRef(null);
   const [isRendered, setIsRendered] = useState(false);
+  console.log("HexMap data", data, hexjson);
 
   const { min, max } = useMemo(() => {
     let min = Infinity;
