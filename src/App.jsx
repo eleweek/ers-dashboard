@@ -810,7 +810,7 @@ const processDataForBeeswarm = (data) => {
 function LeadBarChartParties({ data }) {
   const partiesChartData = useMemo(() => {
     const table = [
-      ["Party", "MPs %", { role: "style" }, "MPs %", { role: "style" }],
+      ["Party", "Votes %", { role: "style" }, "MPs %", { role: "style" }],
     ];
 
     data.parties.forEach((party) => {
@@ -1217,6 +1217,7 @@ function App() {
     if (location.search) {
       navigate(location.pathname.replace(/\/$/, ""));
     }
+
     const newData = processData();
     console.log("newData", newData);
     setData(newData);
@@ -1287,7 +1288,10 @@ function App() {
       //   specificParties: staticData.mainParties,
       // });
 
-      const voteLimit = !page || pageParam === "england" ? 75000 : 10000;
+      const voteLimit =
+        page !== "region" || page !== "constituency" || pageParam === "england"
+          ? 75000
+          : 10000;
       newData.parties = condenseParties(newData.parties, "dynamic", {
         voteLimit,
         seatLimit: 1,

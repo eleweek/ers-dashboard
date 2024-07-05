@@ -60,8 +60,9 @@ const ConstituencyFinder = ({ escapeString }) => {
           const winnerData = constituencyObj.Candidate[0].$;
 
           const constituencyName = constituencyData.name.toLowerCase();
-          const winnerName =
-            `${winnerData.firstName} ${winnerData.surname}`.toLowerCase();
+          const winnerName = constituency.hasResults
+            ? `${winnerData.firstName} ${winnerData.surname}`.toLowerCase()
+            : "";
 
           return (
             constituencyName.includes(query.toLocaleLowerCase()) ||
@@ -76,7 +77,9 @@ const ConstituencyFinder = ({ escapeString }) => {
           return {
             constituencyName: constituencyData.name,
             constituencyNameEscaped: escapeString(constituencyData.name),
-            winnerName: `${winnerData.firstName} ${winnerData.surname}`,
+            winnerName: constituency.hasResults
+              ? `${winnerData.firstName} ${winnerData.surname}`
+              : "Still counting",
           };
         });
 
