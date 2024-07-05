@@ -1,6 +1,7 @@
 import React from "react";
 
 const SeatsDeclared = ({ data }) => {
+  console.log("SeatsDeclared data", data);
   const declared = data.constituencies.length;
   const total = data.constituenciesTotal;
   const message =

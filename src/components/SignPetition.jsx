@@ -61,7 +61,7 @@ const SignPetition = ({
           <div className="container">
             <div className="col-lg-3"></div>
             <div className="col-lg-6 text-center">
-              <SeatsDeclared />
+              <SeatsDeclared data={data} />
             </div>
           </div>
         )}

@@ -1,10 +1,10 @@
+import { getPartyColor } from "./components/visualisations/utils";
 import { staticData } from "./dataPointers";
 
 export const othersColor = "#A6A6A6";
 
 export const partyColourByAbbr = (partyAbbr) => {
-  const partyColour = staticData.partiesAbbreviationsToColours[partyAbbr];
-  return partyColour || othersColor;
+  getPartyColor(partyAbbr);
 };
 
 export const fixPartyName = (partyName) => {

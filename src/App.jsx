@@ -77,11 +77,8 @@ const processConstituencies = (constituencies) => {
   return constituencies
     .filter((c) => c.hasResults)
     .map((constituency) => {
-      console.log("constituency", constituency);
-
       const constituencyDeepData =
         constituency.data.Election[0].Constituency[0];
-      console.log("constituencyDeepData", constituencyDeepData);
 
       const candidates = constituencyDeepData.Candidate;
 
@@ -147,12 +144,12 @@ const calculatePartyData = (constituencies) => {
   let totalVotesPrev = 0;
 
   constituencies.forEach((constituency) => {
-    console.log("constituency", constituency);
     const candidates = constituency.data.Election[0].Constituency[0].Candidate;
     const prevElection = constituency.data.PreviousElection
       ? constituency.data.PreviousElection[0]
       : constituency.data.PreviousNotionalElection[0];
-    const prevCandidates = prevElection.Constituency[0].Candidate;
+
+    const isPreviousNotional = !!constituency.data.PreviousNotionalElection;
 
     totalVotesPrev += parseInt(prevElection.Constituency[0].$.turnout, 10);
 
@@ -211,18 +208,36 @@ const calculatePartyData = (constituencies) => {
     parties[winningPartyName].decisiveVotes =
       parties[winningPartyName].decisiveVotes + secondPlaceVotes + 1;
 
-    prevCandidates.forEach((candidate, index) => {
-      const partyData = candidate.Party[0].$;
-      const partyAbbr = partyData.abbreviation;
-      const partyName = partyAbbr === "Lab Co-op" ? "Labour" : partyData.name;
+    if (isPreviousNotional) {
+      prevElection.Constituency[0].Party.forEach((party) => {
+        const partyData = party.$;
+        const partyAbbr = partyData.abbreviation;
+        const partyName = partyAbbr === "Lab Co-op" ? "Labour" : partyData.name;
 
-      if (parties[partyName]) {
-        if (index === 0) {
-          parties[partyName].totalSeatsPrev += 1;
+        if (parties[partyName]) {
+          if (
+            partyData.abbreviation ===
+            prevElection.Constituency[0].$.winningParty
+          ) {
+            parties[partyName].totalSeatsPrev += 1;
+          }
+          parties[partyName].totalVotesPrev += parseFloat(partyData.votes);
         }
-        parties[partyName].totalVotesPrev += parseFloat(partyData.votes);
-      }
-    });
+      });
+    } else {
+      prevElection.Constituency[0].Candidate.forEach((candidate, index) => {
+        const partyData = candidate.Party[0].$;
+        const partyAbbr = partyData.abbreviation;
+        const partyName = partyAbbr === "Lab Co-op" ? "Labour" : partyData.name;
+
+        if (parties[partyName]) {
+          if (index === 0) {
+            parties[partyName].totalSeatsPrev += 1;
+          }
+          parties[partyName].totalVotesPrev += parseFloat(partyData.votes);
+        }
+      });
+    }
   });
 
   return {
@@ -879,6 +894,7 @@ function RegionAndUKPage({ data, unfilteredData, page, pageParam }) {
 
   const regionName = getPlaceName(selectedRegionName, true);
 
+  console.log("Render data", data);
   return (
     <>
       <div className="container-fluid non-constituency-page">
@@ -1114,6 +1130,7 @@ function App() {
       navigate(location.pathname.replace(/\/$/, ""));
     }
     const newData = processData();
+    console.log("newData", newData);
     setData(newData);
     setUnfilteredData(newData);
 
@@ -1131,6 +1148,7 @@ function App() {
       setPage(newPage);
       setPageParam(newPageParam);
       const newData = processData(newPage, newPageParam);
+      console.log("useEffect location page pageParam", newData);
       setData(newData);
     }
   }, [location, page, pageParam]);
