@@ -88,7 +88,6 @@ export default function HexMap({ hexjson, data, valueType, displayMode }) {
   const hexmapRef = useRef(null);
   const hexInstanceRef = useRef(null);
   const [isRendered, setIsRendered] = useState(false);
-  console.log("HexMap data", data, hexjson);
 
   const { min, max } = useMemo(() => {
     let min = Infinity;
@@ -158,11 +157,8 @@ export default function HexMap({ hexjson, data, valueType, displayMode }) {
         if (!data[r]) {
           return "#CCCCCC"; // Default color if no data
         }
-        console.log("updateColours r", r, data[r]);
         if (displayMode === "winningParty") {
-          console.log("hexmap r", r, data[r]);
           const color = data[r].winningPartyColor || "#CCCCCC"; // Default color if no winning party
-          console.log("Winning party color", color, data[r].winningParty);
           if (data[r].isSelected) {
             return color;
           } else {

@@ -34,8 +34,9 @@ const ConstituencyFinder = ({ escapeString }) => {
         const response = await axios.get(
           `https://api.postcodes.io/postcodes/${query}`
         );
+        console.log("postcode response", response.data);
         const constituencyPcon18cd =
-          response.data.result.codes.parliamentary_constituency;
+          response.data.result.codes.parliamentary_constituency_2024;
         const constituencyName =
           staticData.constituenciesPcon18ToNames[constituencyPcon18cd];
         const constituencyNameEscaped = escapeString(constituencyName);
