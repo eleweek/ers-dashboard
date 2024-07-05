@@ -3,7 +3,6 @@ require("dotenv").config();
 const Client = require("ssh2-sftp-client");
 const xml2js = require("xml2js");
 const fs = require("fs");
-const path = require("path");
 
 const { PA_HOST, PA_USER, PA_PASSWORD } = process.env;
 
@@ -28,7 +27,25 @@ async function processXmlFile(sftp, filePath) {
     const parser = new xml2js.Parser();
     const result = await parser.parseStringPromise(xmlString);
 
-    return result.FirstPastThePostResult || result.FirstPastThePostNominations;
+    const parsedData =
+      result.FirstPastThePostResult || result.FirstPastThePostNominations;
+
+    // Extract constituency name and number
+    const constituencyName = parsedData.Election[0].Constituency[0].$.name;
+    const constituencyNumber = parsedData.Election[0].Constituency[0].$.number;
+
+    return {
+      id: parseInt(constituencyNumber),
+      fileName: constituencyName.replace(/\s+/g, "_"),
+      resultsVersion: parseInt(parsedData.$.revision),
+      data: parsedData,
+      name: constituencyName.toLowerCase(),
+      search: `${constituencyName.toLowerCase()} ${
+        parsedData.Election[0].Constituency[0].Candidate[0].$.firstName
+      } ${parsedData.Election[0].Constituency[0].Candidate[0].$.surname}`,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    };
   } catch (error) {
     console.error(`Error processing file ${filePath}:`, error);
     return null;
@@ -68,7 +85,6 @@ async function main() {
 
     console.log("Connected to SFTP server");
 
-    // Get file counts
     const nominationFiles = await sftp.list(NOMINATIONS_FOLDER);
     const resultFiles = await sftp.list(RESULTS_FOLDER);
 
@@ -84,7 +100,6 @@ async function main() {
     console.log(`latest nominations: ${latestNominationFiles.length}`);
     console.log(`latest results: ${latestResultFiles.length}`);
 
-    // Check if there are exactly 650 unique nominations after considering revisions
     if (latestNominationFiles.length !== 650) {
       throw new Error(
         `Expected 650 unique nominations after revisions, but found ${latestNominationFiles.length}`
@@ -94,7 +109,8 @@ async function main() {
     for (const fileName of latestNominationFiles) {
       const filePath = `${NOMINATIONS_FOLDER}/${fileName}`;
       console.log(`Processing nomination file: ${filePath}`);
-      const data = await processXmlFile(sftp, filePath);
+      const xml = await processXmlFile(sftp, filePath);
+      const data = xml.data;
       if (
         data &&
         data.Election &&
@@ -103,11 +119,11 @@ async function main() {
         data.Election[0].Constituency[0]
       ) {
         const constituencyNumber = data.Election[0].Constituency[0].$.number;
-        constituencies[constituencyNumber] = data;
+        console.log(`constituencyNumber: ${constituencyNumber}`);
+        constituencies[constituencyNumber] = xml;
       }
     }
 
-    // Check if we have 650 constituencies after processing nominations
     const constituencyCount = Object.keys(constituencies).length;
     if (constituencyCount !== 650) {
       throw new Error(
@@ -130,7 +146,11 @@ async function main() {
         if (constituencies[constituencyNumber]) {
           constituencies[constituencyNumber] = {
             ...constituencies[constituencyNumber],
-            ...data,
+            data: {
+              ...constituencies[constituencyNumber].data,
+              ...data,
+            },
+            resultsVersion: data.$.revision,
           };
         } else {
           throw new Error(

@@ -75,7 +75,10 @@ const filterConstituenciesByPage = (constituencies, page, pageParam) => {
 
 const processConstituencies = (constituencies) => {
   return constituencies.map((constituency) => {
+    console.log("constituency", constituency);
+
     const constituencyDeepData = constituency.data.Election[0].Constituency[0];
+    console.log("constituencyDeepData", constituencyDeepData);
 
     const candidates = constituencyDeepData.Candidate;
 
@@ -141,6 +144,7 @@ const calculatePartyData = (constituencies) => {
   let totalVotesPrev = 0;
 
   constituencies.forEach((constituency) => {
+    console.log("constituency", constituency);
     const candidates = constituency.data.Election[0].Constituency[0].Candidate;
     const prevCandidates =
       constituency.data.PreviousElection[0].Constituency[0].Candidate;

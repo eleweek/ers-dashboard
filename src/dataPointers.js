@@ -112,14 +112,15 @@ function convertHexjsonToStaticData(hexjsonData, fullData) {
   const constituencyNameToNumber = {};
   fullData.constituencies.forEach((constituency) => {
     if (
-      constituency.Election &&
-      constituency.Election[0] &&
-      constituency.Election[0].Constituency &&
-      constituency.Election[0].Constituency[0]
+      constituency.data.Election &&
+      constituency.data.Election[0] &&
+      constituency.data.Election[0].Constituency &&
+      constituency.data.Election[0].Constituency[0]
     ) {
-      const constituencyName = constituency.Election[0].Constituency[0].$.name;
+      const constituencyName =
+        constituency.data.Election[0].Constituency[0].$.name;
       const constituencyNumber =
-        constituency.Election[0].Constituency[0].$.number;
+        constituency.data.Election[0].Constituency[0].$.number;
       constituencyNameToNumber[constituencyName] = constituencyNumber;
       // console.log("Pa media constituencyName", constituencyName);
     }
