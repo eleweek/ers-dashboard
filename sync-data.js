@@ -45,7 +45,6 @@ async function processXmlFile(sftp, filePath) {
       } ${parsedData.Election[0].Constituency[0].Candidate[0].$.surname}`,
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
-      hasResults: false, // Initialize hasResults to false
     };
   } catch (error) {
     console.error(`Error processing file ${filePath}:`, error);
@@ -111,17 +110,18 @@ async function main() {
       const filePath = `${NOMINATIONS_FOLDER}/${fileName}`;
       console.log(`Processing nomination file: ${filePath}`);
       const xml = await processXmlFile(sftp, filePath);
-      const data = xml.data;
       if (
-        data &&
-        data.Election &&
-        data.Election[0] &&
-        data.Election[0].Constituency &&
-        data.Election[0].Constituency[0]
+        xml &&
+        xml.data &&
+        xml.data.Election &&
+        xml.data.Election[0] &&
+        xml.data.Election[0].Constituency &&
+        xml.data.Election[0].Constituency[0]
       ) {
-        const constituencyNumber = data.Election[0].Constituency[0].$.number;
+        const constituencyNumber =
+          xml.data.Election[0].Constituency[0].$.number;
         console.log(`constituencyNumber: ${constituencyNumber}`);
-        constituencies[constituencyNumber] = xml;
+        constituencies[constituencyNumber] = { ...xml, hasResults: false };
       }
     }
 
@@ -138,12 +138,14 @@ async function main() {
       const xml = await processXmlFile(sftp, filePath);
       if (
         xml &&
-        xml.Election &&
-        xml.Election[0] &&
-        xml.Election[0].Constituency &&
-        xml.Election[0].Constituency[0]
+        xml.data &&
+        xml.data.Election &&
+        xml.data.Election[0] &&
+        xml.data.Election[0].Constituency &&
+        xml.data.Election[0].Constituency[0]
       ) {
-        const constituencyNumber = xml.Election[0].Constituency[0].$.number;
+        const constituencyNumber =
+          xml.data.Election[0].Constituency[0].$.number;
         if (constituencies[constituencyNumber]) {
           constituencies[constituencyNumber] = {
             ...constituencies[constituencyNumber],
@@ -152,7 +154,7 @@ async function main() {
               ...xml.data,
             },
             resultsVersion: xml.resultsVersion,
-            hasResults: true, // Set hasResults to true when processing results
+            hasResults: true,
           };
         } else {
           throw new Error(
