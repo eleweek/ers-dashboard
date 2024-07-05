@@ -1,4 +1,4 @@
-import staticData from "./old-static-data.json";
+import { staticData } from "./dataPointers";
 
 export const othersColor = "#A6A6A6";
 

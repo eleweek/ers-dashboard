@@ -4,8 +4,6 @@ import { orderBy, values, pick, forEach } from "lodash";
 
 import Chart from "react-google-charts";
 
-import hex2019 from "./2019-constituencies.json";
-
 import {
   fixPartyName,
   getPlaceName,
@@ -31,8 +29,7 @@ import TopMenu, { englandSubRegionSelector } from "./components/TopMenu";
 
 import "./App.css";
 
-import fullData from "./old-data.json";
-import staticData from "./old-static-data.json";
+import { hexData, staticData, fullData } from "./dataPointers";
 import { FullResultsTable } from "./components/visualisations/FullResultsTable";
 import DotPlot from "./components/visualisations/DotPlot";
 import VotesPerMPBarChart from "./components/visualisations/VotesPerMPBarChart";
@@ -426,7 +423,7 @@ function WinningPartyHexMap({ data, unfilteredData }) {
 
   return (
     <HexMap
-      hexjson={hex2019}
+      hexjson={hexData}
       data={winningPartyData}
       valueType={null}
       displayMode="winningParty"
@@ -508,7 +505,7 @@ function HexMaps({ data, unfilteredData, selectedRegion }) {
         </button>
       </div>
       <HexMap
-        hexjson={hex2019}
+        hexjson={hexData}
         data={hexmapData}
         valueType={valueType}
         displayMode="value"

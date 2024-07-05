@@ -4,8 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUser } from "@fortawesome/free-solid-svg-icons";
 
-import entireData from "../old-data.json";
-import staticData from "../old-static-data.json";
+import { staticData, fullData } from "../dataPointers";
 
 import "./ConstituencyFinder.css";
 
@@ -53,7 +52,7 @@ const ConstituencyFinder = ({ escapeString }) => {
       }
     } else {
       // Local search implementation
-      const searchResults = entireData.constituencies
+      const searchResults = fullData.constituencies
         .filter((constituency) => {
           const constituencyObj = constituency.data.Election[0].Constituency[0];
           const constituencyData = constituencyObj.$;
