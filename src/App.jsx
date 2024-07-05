@@ -39,6 +39,7 @@ import VotesPerMPBarChart from "./components/visualisations/VotesPerMPBarChart";
 import VotesTypesBarChart from "./components/visualisations/VotesTypesBarChart";
 import classNames from "classnames";
 import HistoricalDataGrid from "./components/visualisations/HistoricalDataGrid";
+import { displayedPartyName } from "./components/visualisations/utils";
 
 const BACKEND_HOST = "https://ge2019.electoral-reform.org.uk";
 
@@ -381,14 +382,7 @@ function getPartiesTableSettings(partiesTableColumns, data) {
     name: `<div class="custom-badge" style="background-color: ${party.colour}"></div>${party.name}`,
   }));
 
-  const partiesExtendedTableItems = data.partiesExtended
-    .map((party) => ({
-      ...pick(party, partiesTableColumns),
-      name: `<div class="custom-badge" style="background-color: ${party.colour}"></div>${party.name}`,
-    }))
-    .sort((a, b) => b.totalVotes - a.totalVotes);
-
-  return { partiesTableFields, partiesTableItems, partiesExtendedTableItems };
+  return { partiesTableFields, partiesTableItems };
 }
 
 const computeWinningPartyData = (constituencies, allConstituencies) => {
@@ -742,7 +736,7 @@ function LeadBarChartParties({ data }) {
 
     data.parties.forEach((party) => {
       table.push([
-        party.name,
+        displayedPartyName(party),
         oneDecimal(party.totalVotesShare),
         `color: ${party.colour}; opacity: 0.6; stroke-width: 0`,
         oneDecimal(party.totalSeatsShare),
@@ -873,8 +867,10 @@ function RegionAndUKPage({ data, unfilteredData, page, pageParam }) {
     "totalVotesPerSeat",
   ];
 
-  const { partiesTableFields, partiesExtendedTableItems } =
-    getPartiesTableSettings(partiesTableColumns, data);
+  const { partiesTableFields, partiesTableItems } = getPartiesTableSettings(
+    partiesTableColumns,
+    data
+  );
 
   const selectedRegionName =
     page === "region"
@@ -986,7 +982,7 @@ function RegionAndUKPage({ data, unfilteredData, page, pageParam }) {
             <h2>Full Results</h2>
 
             <FullResultsTable
-              partiesExtendedTableItems={partiesExtendedTableItems}
+              partiesTableItems={partiesTableItems}
               partiesTableFields={partiesTableFields}
               partiesTableColumns={partiesTableColumns}
             />
@@ -1110,13 +1106,11 @@ function App() {
   const [data, setData] = useState({
     ...fullData,
     parties: [],
-    partiesExtended: [],
   });
 
   const [unfilteredData, setUnfilteredData] = useState({
     ...fullData,
     parties: [],
-    partiesExtended: [],
   });
 
   const [dataLoaded, setDataLoaded] = useState(null);
@@ -1203,14 +1197,6 @@ function App() {
         seatLimit: 1,
         includeIndependentsInOthers: true,
       });
-
-      // Use dynamic condition for extended parties
-      // You can adjust the voteLimit as needed
-      newData.partiesExtended = condenseParties(newData.parties, "dynamic", {
-        voteLimit: 75000,
-        seatLimit: 1,
-        includeIndependentsInOthers: true,
-      });
     }
 
     newData.parties = calculatePartyPercentagesAndVotesPerSeat(
@@ -1220,18 +1206,6 @@ function App() {
       newData.totalSeatsPrev,
       newData.totalVotesPrev
     );
-
-    if (newData.partiesExtended.length > 0) {
-      newData.partiesExtended = calculatePartyPercentagesAndVotesPerSeat(
-        newData.partiesExtended,
-        newData.totalSeats,
-        newData.totalVotes,
-        newData.totalSeatsPrev,
-        newData.totalVotesPrev
-      );
-    } else {
-      newData.partiesExtended = [];
-    }
 
     newData.electorate = newData.constituencies.reduce(
       (sum, constituency) =>

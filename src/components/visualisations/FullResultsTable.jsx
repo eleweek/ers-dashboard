@@ -1,7 +1,7 @@
 import { commas, oneDecimal } from "../../utils";
 
 export function FullResultsTable({
-  partiesExtendedTableItems,
+  partiesTableItems,
   partiesTableFields,
   partiesTableColumns,
 }) {
@@ -15,7 +15,7 @@ export function FullResultsTable({
         </tr>
       </thead>
       <tbody>
-        {partiesExtendedTableItems.map((item, index) => (
+        {partiesTableItems.map((item, index) => (
           <tr key={index}>
             {partiesTableColumns.map((column) => {
               switch (column) {
