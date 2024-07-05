@@ -229,7 +229,14 @@ const calculatePartyData = (constituencies) => {
   };
 };
 
-const condenseParties = (parties, resourceParties, page, pageParam) => {
+const condenseParties = (parties, method, options = {}) => {
+  const {
+    specificParties = [],
+    voteLimit = 75000,
+    seatLimit = 1,
+    includeIndependentsInOthers = false, // New flag
+  } = options;
+
   const condensedParties = [];
   const otherParties = {
     abbreviation: "Others",
@@ -243,28 +250,83 @@ const condenseParties = (parties, resourceParties, page, pageParam) => {
     surplusVotes: 0,
     decisiveVotes: 0,
   };
-
-  const partiesList =
-    page === "region" && pageParam === "northern_ireland"
-      ? staticData.niParties
-      : staticData[resourceParties];
+  const independents = {
+    abbreviation: "Ind",
+    name: "Independents",
+    colour: "#535353",
+    totalSeats: 0,
+    totalVotes: 0,
+    totalSeatsPrev: 0,
+    totalVotesPrev: 0,
+    wastedVotes: 0,
+    surplusVotes: 0,
+    decisiveVotes: 0,
+  };
 
   parties.forEach((party) => {
-    if (partiesList.indexOf(party.abbreviation) > -1) {
-      condensedParties.push(party);
+    if (party.abbreviation === "Ind") {
+      independents.totalSeats += party.totalSeats;
+      independents.totalVotes += party.totalVotes;
+      independents.totalSeatsPrev += party.totalSeatsPrev;
+      independents.totalVotesPrev += party.totalVotesPrev;
+      independents.wastedVotes += party.wastedVotes;
+      independents.surplusVotes += party.surplusVotes;
+      independents.decisiveVotes += party.decisiveVotes;
     } else {
-      otherParties.totalSeats += party.totalSeats;
-      otherParties.totalVotes += party.totalVotes;
-      otherParties.totalSeatsPrev += party.totalSeatsPrev;
-      otherParties.totalVotesPrev += party.totalVotesPrev;
+      let isSignificant;
 
-      otherParties.wastedVotes += party.wastedVotes;
-      otherParties.surplusVotes += party.surplusVotes;
-      otherParties.decisiveVotes += party.decisiveVotes;
+      if (method === "specific") {
+        isSignificant = specificParties.includes(party.abbreviation);
+      } else if (method === "dynamic") {
+        isSignificant =
+          party.totalVotes > voteLimit || party.totalSeats >= seatLimit;
+      } else {
+        throw new Error("Invalid condensing method");
+      }
+
+      if (isSignificant) {
+        condensedParties.push(party);
+      } else {
+        otherParties.totalSeats += party.totalSeats;
+        otherParties.totalVotes += party.totalVotes;
+        otherParties.totalSeatsPrev += party.totalSeatsPrev;
+        otherParties.totalVotesPrev += party.totalVotesPrev;
+        otherParties.wastedVotes += party.wastedVotes;
+        otherParties.surplusVotes += party.surplusVotes;
+        otherParties.decisiveVotes += party.decisiveVotes;
+      }
     }
   });
 
-  condensedParties.push(otherParties);
+  if (independents.totalVotes > 0) {
+    if (includeIndependentsInOthers) {
+      otherParties.totalSeats += independents.totalSeats;
+      otherParties.totalVotes += independents.totalVotes;
+      otherParties.totalSeatsPrev += independents.totalSeatsPrev;
+      otherParties.totalVotesPrev += independents.totalVotesPrev;
+      otherParties.wastedVotes += independents.wastedVotes;
+      otherParties.surplusVotes += independents.surplusVotes;
+      otherParties.decisiveVotes += independents.decisiveVotes;
+    } else if (
+      method === "specific" ||
+      independents.totalVotes > voteLimit ||
+      independents.totalSeats >= seatLimit
+    ) {
+      condensedParties.push(independents);
+    } else {
+      otherParties.totalSeats += independents.totalSeats;
+      otherParties.totalVotes += independents.totalVotes;
+      otherParties.totalSeatsPrev += independents.totalSeatsPrev;
+      otherParties.totalVotesPrev += independents.totalVotesPrev;
+      otherParties.wastedVotes += independents.wastedVotes;
+      otherParties.surplusVotes += independents.surplusVotes;
+      otherParties.decisiveVotes += independents.decisiveVotes;
+    }
+  }
+
+  if (otherParties.totalVotes > 0) {
+    condensedParties.push(otherParties);
+  }
 
   return condensedParties;
 };
@@ -1116,7 +1178,11 @@ function App() {
     const { parties, wastedVotes, totalVotes, totalVotesPrev } =
       calculatePartyData(newData.constituencies);
 
-    newData.parties = orderBy(parties, ["totalSeats"], ["desc"]);
+    newData.parties = orderBy(
+      parties,
+      ["totalSeats", "totalVotes"],
+      ["desc", "desc"]
+    );
 
     newData.wastedVotes = wastedVotes;
     newData.totalVotes = totalVotes;
@@ -1128,18 +1194,23 @@ function App() {
     newData.totalSeatsPrev = newData.constituencies.length;
 
     if (page !== "constituency") {
-      newData.partiesExtended = condenseParties(
-        newData.parties,
-        "extendedParties",
-        page,
-        pageParam
-      );
-      newData.parties = condenseParties(
-        newData.parties,
-        "mainParties",
-        page,
-        pageParam
-      );
+      // Use specific list for main parties
+      // newData.parties = condenseParties(newData.parties, "specific", {
+      //   specificParties: staticData.mainParties,
+      // });
+      newData.parties = condenseParties(newData.parties, "dynamic", {
+        voteLimit: 75000,
+        seatLimit: 1,
+        includeIndependentsInOthers: true,
+      });
+
+      // Use dynamic condition for extended parties
+      // You can adjust the voteLimit as needed
+      newData.partiesExtended = condenseParties(newData.parties, "dynamic", {
+        voteLimit: 75000,
+        seatLimit: 1,
+        includeIndependentsInOthers: true,
+      });
     }
 
     newData.parties = calculatePartyPercentagesAndVotesPerSeat(
@@ -1150,7 +1221,7 @@ function App() {
       newData.totalVotesPrev
     );
 
-    if (newData.partiesExtended) {
+    if (newData.partiesExtended.length > 0) {
       newData.partiesExtended = calculatePartyPercentagesAndVotesPerSeat(
         newData.partiesExtended,
         newData.totalSeats,

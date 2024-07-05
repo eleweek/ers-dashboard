@@ -158,12 +158,14 @@ export default function DotPlot({ parties }) {
 
                 {/* Party data */}
                 <g style={{ pointerEvents: "none" }}>
-                  <circle
-                    cx={votesX}
-                    cy={yScale(party.name)}
-                    r={3.5}
-                    fill={lightColor}
-                  />
+                  {Math.abs(votesX - seatsX) > 4 && (
+                    <circle
+                      cx={votesX}
+                      cy={yScale(party.name)}
+                      r={3.5}
+                      fill={lightColor}
+                    />
+                  )}
                   <path
                     d="M 0 -4 L 4 4 L -4 4 Z"
                     fill={color}
@@ -171,14 +173,16 @@ export default function DotPlot({ parties }) {
                       seatsX + (triangleRotation ? 2.5 : 0)
                     }, ${yScale(party.name)}) rotate(${triangleRotation})`}
                   />
-                  <line
-                    x1={votesX}
-                    y1={yScale(party.name)}
-                    x2={seatsX}
-                    y2={yScale(party.name)}
-                    stroke={`url(#gradient-${i})`}
-                    strokeWidth={1.5}
-                  />
+                  {Math.abs(votesX - seatsX) > 4 && (
+                    <line
+                      x1={votesX}
+                      y1={yScale(party.name)}
+                      x2={seatsX}
+                      y2={yScale(party.name)}
+                      stroke={`url(#gradient-${i})`}
+                      strokeWidth={1.5}
+                    />
+                  )}
 
                   {/* Labels */}
                   {showLabel &&
