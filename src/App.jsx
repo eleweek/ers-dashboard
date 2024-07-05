@@ -745,15 +745,17 @@ function LeadBarChartParties({ data }) {
     ];
 
     data.parties.forEach((party) => {
-      table.push([
-        displayedPartyName(party),
-        oneDecimal(party.totalVotesShare),
-        `color: ${getPartyColor(
-          party.abbreviation
-        )}; opacity: 0.6; stroke-width: 0`,
-        oneDecimal(party.totalSeatsShare),
-        `color: ${getPartyColor(party.abbreviation)}; stroke-width: 0`,
-      ]);
+      if (party.name !== "The Speaker") {
+        table.push([
+          displayedPartyName(party),
+          oneDecimal(party.totalVotesShare),
+          `color: ${getPartyColor(
+            party.abbreviation
+          )}; opacity: 0.6; stroke-width: 0`,
+          oneDecimal(party.totalSeatsShare),
+          `color: ${getPartyColor(party.abbreviation)}; stroke-width: 0`,
+        ]);
+      }
     });
 
     return table;
@@ -947,7 +949,11 @@ function RegionAndUKPage({ data, unfilteredData, page, pageParam }) {
               Westminster. Some parties do well out of this system, while others
               lose out.
             </p>
-            <DotPlot parties={data.parties} />
+            <DotPlot
+              parties={data.parties.filter(
+                (party) => party.name !== "The Speaker"
+              )}
+            />
           </div>
         </div>
         <div className="gap-40"></div>
