@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate, useLocation, Navigate } from "react-router-dom";
 import { orderBy, values, pick, forEach } from "lodash";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -1335,6 +1335,8 @@ function App() {
       constituencyCounting = true;
       constituencyCountingName =
         fullConstituenciesFiltered[0].data.Election[0].Constituency[0].$.name;
+    } else {
+      return <Navigate to="/" />;
     }
   }
 
