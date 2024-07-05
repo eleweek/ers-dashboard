@@ -34,17 +34,14 @@ export default function DotPlot({ parties }) {
   const formatPercent = (value) =>
     value === 0 ? "no" : `${value.toFixed(1)}%`;
 
-  // Function to determine if labels should be combined
   const shouldCombineLabels = (votesShare, seatsShare) => {
-    return Math.abs(xScale(votesShare) - xScale(seatsShare)) < 50; // Adjust this threshold as needed
+    return Math.abs(xScale(votesShare) - xScale(seatsShare)) < 50;
   };
 
-  // Function to check if a party is small (<5% in either category)
   const isSmallParty = (votesShare, seatsShare) => {
     return Math.max(votesShare, seatsShare) < 5;
   };
 
-  // Function to generate label text with correct order and arrow
   const getLabelText = (votesShare, seatsShare) => {
     const arrow = votesShare < seatsShare ? "→" : "←";
     return votesShare < seatsShare
@@ -56,7 +53,6 @@ export default function DotPlot({ parties }) {
         )} votes`;
   };
 
-  // Sort parties by total seats to get top two
   const sortedParties = [...parties].sort(
     (a, b) => b.totalSeats - a.totalSeats
   );
@@ -97,7 +93,7 @@ export default function DotPlot({ parties }) {
             {xScale.ticks(5).map((tick) => (
               <g key={tick} transform={`translate(${xScale(tick)}, 0)`}>
                 <line x1={0} y1={0} x2={0} y2={5} stroke="black" />
-                <text x={0} y={20} textAnchor="middle">
+                <text x={0} y={20} textAnchor="middle" fontSize="14px">
                   {tick}%
                 </text>
               </g>
@@ -109,10 +105,11 @@ export default function DotPlot({ parties }) {
             {parties.map((party) => (
               <text
                 key={party.abbreviation}
-                x={-10}
+                x={-15}
                 y={yScale(party.name)}
                 textAnchor="end"
                 alignmentBaseline="middle"
+                fontSize="16px"
               >
                 {displayedPartyName(party)}
               </text>
@@ -170,9 +167,9 @@ export default function DotPlot({ parties }) {
                   <path
                     d="M 0 -4 L 4 4 L -4 4 Z"
                     fill={color}
-                    transform={`translate(${seatsX}, ${yScale(
-                      party.name
-                    )}) rotate(${triangleRotation})`}
+                    transform={`translate(${
+                      seatsX + (triangleRotation ? 2.5 : 0)
+                    }, ${yScale(party.name)}) rotate(${triangleRotation})`}
                   />
                   <line
                     x1={votesX}
