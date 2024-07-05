@@ -2,6 +2,9 @@ import React, { useState, useEffect, useMemo } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { orderBy, values, pick, forEach } from "lodash";
 
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faHandBackFist, faTrophy } from "@fortawesome/free-solid-svg-icons";
+
 import Chart from "react-google-charts";
 
 import {
@@ -572,11 +575,19 @@ function ConstituencyPage({ data, selectedConstituency, page }) {
       })
     : null;
 
+  const previousElectionData = data.constituencies[0].data.PreviousElection
+    ? data.constituencies[0].data.PreviousElection[0]
+    : data.constituencies[0].data.PreviousNotionalElection[0];
+
+  const isPreviousNotional =
+    !!data.constituencies[0].data.PreviousNotionalElection;
+
   const selectedConstituencyPreviouslyWinningParty = selectedConstituency
     ? data.parties.find((party) => {
-        const partyAbbr =
-          data.constituencies[0].data.PreviousElection[0].Constituency[0]
-            .Candidate[0].Party[0].$.abbreviation;
+        const partyAbbr = isPreviousNotional
+          ? previousElectionData.Constituency[0].$.winningParty
+          : previousElectionData.Constituency[0].Candidate[0].Party[0].$
+              .abbreviation;
         if (party.abbreviation === "Lab Co-op") {
           return partyAbbr === "Lab" || partyAbbr === "Lab Co-op";
         }
@@ -605,11 +616,11 @@ function ConstituencyPage({ data, selectedConstituency, page }) {
               </div>
               {selectedConstituency.$.gainOrHold === "hold" ? (
                 <div>
-                  <i className="fa fa-hand-rock"></i> Hold
+                  <FontAwesomeIcon icon={faHandBackFist} /> Hold
                 </div>
               ) : (
                 <div>
-                  <i className="fa fa-trophy"></i> Gain
+                  <FontAwesomeIcon icon={faTrophy} /> Gain
                   {selectedConstituencyPreviouslyWinningParty && (
                     <span>
                       {" "}
