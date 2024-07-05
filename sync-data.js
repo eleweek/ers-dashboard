@@ -45,6 +45,7 @@ async function processXmlFile(sftp, filePath) {
       } ${parsedData.Election[0].Constituency[0].Candidate[0].$.surname}`,
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
+      hasResults: false, // Initialize hasResults to false
     };
   } catch (error) {
     console.error(`Error processing file ${filePath}:`, error);
@@ -134,23 +135,24 @@ async function main() {
     for (const fileName of latestResultFiles) {
       const filePath = `${RESULTS_FOLDER}/${fileName}`;
       console.log(`Processing result file: ${filePath}`);
-      const data = await processXmlFile(sftp, filePath);
+      const xml = await processXmlFile(sftp, filePath);
       if (
-        data &&
-        data.Election &&
-        data.Election[0] &&
-        data.Election[0].Constituency &&
-        data.Election[0].Constituency[0]
+        xml &&
+        xml.Election &&
+        xml.Election[0] &&
+        xml.Election[0].Constituency &&
+        xml.Election[0].Constituency[0]
       ) {
-        const constituencyNumber = data.Election[0].Constituency[0].$.number;
+        const constituencyNumber = xml.Election[0].Constituency[0].$.number;
         if (constituencies[constituencyNumber]) {
           constituencies[constituencyNumber] = {
             ...constituencies[constituencyNumber],
             data: {
               ...constituencies[constituencyNumber].data,
-              ...data,
+              ...xml.data,
             },
-            resultsVersion: data.$.revision,
+            resultsVersion: xml.resultsVersion,
+            hasResults: true, // Set hasResults to true when processing results
           };
         } else {
           throw new Error(
