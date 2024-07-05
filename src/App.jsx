@@ -1332,6 +1332,13 @@ function App() {
           ]
         ]
       : "";
+  console.log(
+    "Selected regionName",
+    pageParam,
+    constituenciesEscapedNameToPcons,
+    selectedConstituencyRegionName,
+    constituenciesEscapedNameToPcons[pageParam]
+  );
 
   return (
     <div id="app" style={{ position: "relative" }}>

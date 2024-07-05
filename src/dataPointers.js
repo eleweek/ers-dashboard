@@ -133,12 +133,14 @@ function convertHexjsonToStaticData(hexjsonData, fullData) {
   );
 
   for (const [pcon18, hexData] of Object.entries(hexjsonData.hexes)) {
-    const name = hexData.n.replace(" and ", " & ").replace("The", "the");
+    let name = hexData.n.replace(" and ", " & ").replace("The", "the");
     let constituencyNumber = constituencyNameToNumber[name];
+
     if (!constituencyNumber) {
       const paName = hexNameToPaName[name];
       if (paName) {
-        constituencyNumber = constituencyNameToNumber[paName];
+        name = paName;
+        constituencyNumber = constituencyNameToNumber[name];
       }
     }
 
