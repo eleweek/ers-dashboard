@@ -46,7 +46,7 @@ const SignPetition = ({
                 parliament match how we vote.
               </div>
               <a
-                href="https://action.electoral-reform.org.uk/page/5802/subscribe/1?ea.tracking.id=4ez8ean0"
+                href="https://action.electoral-reform.org.uk/page/3782/petition/1?ea.tracking.id=4ez8ean0"
                 target="_blank"
                 rel="noopener noreferrer"
               >
