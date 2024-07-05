@@ -562,90 +562,92 @@ function ConstituencyPage({ data, selectedConstituency, page }) {
     : null;
 
   return (
-    <div className="container-fluid">
-      <div className="row text-center">
-        <div className="col-lg-12">
-          <div className="gap-40"></div>
-          <h3>Winning party</h3>
-        </div>
-        <div className="col-lg-12">
-          <div
-            className="party-winner"
-            data-party={selectedConstituencyWinningParty.name}
-            style={{
-              backgroundColor: selectedConstituencyWinningParty.colour,
-            }}
-          >
-            <div className="party-winner-name">
-              {selectedConstituencyWinningParty.name}
+    <>
+      <div className="container-fluid">
+        <div className="row text-center">
+          <div className="col-lg-12">
+            <div className="gap-40"></div>
+            <h3>Winning party</h3>
+          </div>
+          <div className="col-lg-12">
+            <div
+              className="party-winner"
+              data-party={selectedConstituencyWinningParty.name}
+              style={{
+                backgroundColor: selectedConstituencyWinningParty.colour,
+              }}
+            >
+              <div className="party-winner-name">
+                {selectedConstituencyWinningParty.name}
+              </div>
+              {selectedConstituency.$.gainOrHold === "hold" ? (
+                <div>
+                  <i className="fa fa-hand-rock"></i> Hold
+                </div>
+              ) : (
+                <div>
+                  <i className="fa fa-trophy"></i> Gain
+                  {selectedConstituencyPreviouslyWinningParty && (
+                    <span>
+                      {" "}
+                      from {selectedConstituencyPreviouslyWinningParty.name}
+                    </span>
+                  )}
+                </div>
+              )}
             </div>
-            {selectedConstituency.$.gainOrHold === "hold" ? (
-              <div>
-                <i className="fa fa-hand-rock"></i> Hold
-              </div>
-            ) : (
-              <div>
-                <i className="fa fa-trophy"></i> Gain
-                {selectedConstituencyPreviouslyWinningParty && (
-                  <span>
-                    {" "}
-                    from {selectedConstituencyPreviouslyWinningParty.name}
-                  </span>
-                )}
-              </div>
-            )}
+          </div>
+          <div className="col-lg-12">
+            Candidate elected:
+            <strong>
+              {" "}
+              {selectedConstituency.Candidate[0].$.firstName}{" "}
+              {selectedConstituency.Candidate[0].$.surname}
+            </strong>
+          </div>
+          <div className="col-lg-12">
+            Majority:
+            <strong> {commas(selectedConstituency.$.majority)}</strong>
+            <br />
+            <br />
           </div>
         </div>
-        <div className="col-lg-12">
-          Candidate elected:
-          <strong>
-            {" "}
-            {selectedConstituency.Candidate[0].$.firstName}{" "}
-            {selectedConstituency.Candidate[0].$.surname}
-          </strong>
-        </div>
-        <div className="col-lg-12">
-          Majority:
-          <strong> {commas(selectedConstituency.$.majority)}</strong>
-          <br />
-          <br />
-        </div>
-      </div>
-      <div className="row">
-        <div className="col-lg-12">
-          <h2>2024 General Election Results</h2>
-          <table className="table table-bordered">
-            <thead>
-              <tr>
-                {partiesTableFields.map((field) => (
-                  <th key={field.key}>{field.label}</th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {partiesTableItems.map((item, index) => (
-                <tr key={index}>
-                  {partiesTableColumns.map((column) => (
-                    <td
-                      key={column}
-                      dangerouslySetInnerHTML={{
-                        __html:
-                          column === "totalVotes"
-                            ? commas(item[column])
-                            : column === "totalVotesShare" ||
-                              column === "totalVotesShareChange"
-                            ? oneDecimal(item[column])
-                            : item[column],
-                      }}
-                    ></td>
+        <div className="row">
+          <div className="col-lg-12">
+            <h2>2024 General Election Results</h2>
+            <table className="table table-bordered">
+              <thead>
+                <tr>
+                  {partiesTableFields.map((field) => (
+                    <th key={field.key}>{field.label}</th>
                   ))}
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {partiesTableItems.map((item, index) => (
+                  <tr key={index}>
+                    {partiesTableColumns.map((column) => (
+                      <td
+                        key={column}
+                        dangerouslySetInnerHTML={{
+                          __html:
+                            column === "totalVotes"
+                              ? commas(item[column])
+                              : column === "totalVotesShare" ||
+                                column === "totalVotesShareChange"
+                              ? oneDecimal(item[column])
+                              : item[column],
+                        }}
+                      ></td>
+                    ))}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
+        <div className="gap-40"></div>
       </div>
-      <div className="gap-40"></div>
       <SignPetition
         oneDecimal={oneDecimal}
         wastedVotes={wastedVotes}
@@ -654,22 +656,7 @@ function ConstituencyPage({ data, selectedConstituency, page }) {
         selectedConstituency={selectedConstituency}
         selectedRegionName={null}
       />
-      <div className="gap-40"></div>
-      <div className="container-fluid">
-        <div className="row text-center">
-          <div className="col-lg-4">
-            <h1 style={{ padding: "0 0 20px 0" }}>
-              {oneDecimal(percentage(data.totalVotes / data.electorate))}%
-            </h1>
-            <strong>Turnout</strong>
-          </div>
-        </div>
-      </div>
-      <div className="gap-40"></div>
-      <div className="text-muted text-center">
-        {data.constituencies.length} / 650 seats declared
-      </div>
-    </div>
+    </>
   );
 }
 
