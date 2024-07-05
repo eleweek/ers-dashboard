@@ -751,6 +751,7 @@ function UKLevelOnly() {
           than FPTP in terms of proportionality, voter choice, and
           representation. In other words, systems that work much better for you.
         </p>
+        <div className="gap-20"></div>
         <h2>The 2024 General Election under Proportional Representation</h2>
         <p>
           What if we had used the same electoral system they use for the
