@@ -1,11 +1,27 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import * as d3 from "d3";
 import { displayedPartyName, getPartyColor } from "./utils";
 
 export default function DotPlot({ parties }) {
   const [hoveredParty, setHoveredParty] = useState(null);
+  const [width, setWidth] = useState(1000);
+  const containerRef = useRef(null);
 
-  const width = 1000;
+  useEffect(() => {
+    const handleResize = () => {
+      if (containerRef.current) {
+        setWidth(containerRef.current.offsetWidth);
+      }
+    };
+
+    handleResize();
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
+
   const height = 100 + parties.length * 30;
   const margin = { top: 40, right: 100, bottom: 40, left: 200 };
   const plotWidth = width - margin.left - margin.right;
@@ -61,7 +77,7 @@ export default function DotPlot({ parties }) {
   );
 
   return (
-    <div>
+    <div ref={containerRef} style={{ width: "100%" }}>
       <svg width={width} height={height}>
         <defs>
           {parties.map((party, i) => {
