@@ -13,13 +13,13 @@ const PARTY_COLORS = {
   Independent: "#535353",
   PC: "#008142",
   Reform: "#12B6CF",
-  WP: "#A52A2A",
+  WPB: "#A52A2A",
   Yorkshire: "#00aeef",
   Other: "#A6A6A6",
 };
 
 export const getPartyColor = (party) => {
-  return PARTY_COLORS[party] || null;
+  return PARTY_COLORS[party] || PARTY_COLORS.Other;
 };
 
 export const displayedPartyName = (party) => {

@@ -39,6 +39,9 @@ export default function VotesTypesBarChart({ parties }) {
 
     // Calculate percentages and sort by decisive votes
     const processedData = parties
+      .filter(
+        (party) => party.name !== "Others" && party.name !== "The Speaker"
+      )
       .map((party) => {
         const total = categories.reduce((sum, cat) => sum + party[cat], 0);
         return {
@@ -143,6 +146,9 @@ export default function VotesTypesBarChart({ parties }) {
           .toLowerCase()
           .trim();
 
+        if (result === "wasted votes") {
+          return "unrepresented";
+        }
         return result !== "decisive votes"
           ? result.replace(" votes", "")
           : result;

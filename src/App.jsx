@@ -527,7 +527,7 @@ function HexMaps({ data, unfilteredData, selectedRegion }) {
           )}
           onClick={() => setTab("wasted")}
         >
-          Wasted
+          Unrepresented
         </button>
       </div>
       <HexMap

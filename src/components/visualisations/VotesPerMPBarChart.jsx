@@ -69,6 +69,7 @@ export default function VotesPerMPBarChart({ parties }) {
 
     // Add this function at the beginning of your component or in a utility file
     function isColorDark(color) {
+      if (!color) return false; // Default to light if no color
       const rgb = d3.color(color).rgb();
       const luminance = (0.299 * rgb.r + 0.587 * rgb.g + 0.114 * rgb.b) / 255;
       return luminance < 0.5;

@@ -43,8 +43,6 @@ async function processXmlFile(sftp, filePath) {
       search: `${constituencyName.toLowerCase()} ${
         parsedData.Election[0].Constituency[0].Candidate[0].$.firstName
       } ${parsedData.Election[0].Constituency[0].Candidate[0].$.surname}`,
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
     };
   } catch (error) {
     console.error(`Error processing file ${filePath}:`, error);
