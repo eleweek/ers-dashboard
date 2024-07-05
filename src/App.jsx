@@ -1192,8 +1192,10 @@ function App() {
       // newData.parties = condenseParties(newData.parties, "specific", {
       //   specificParties: staticData.mainParties,
       // });
+
+      const voteLimit = page === "" || pageParam === "england" ? 75000 : 10000;
       newData.parties = condenseParties(newData.parties, "dynamic", {
-        voteLimit: 75000,
+        voteLimit,
         seatLimit: 1,
         includeIndependentsInOthers: true,
       });
