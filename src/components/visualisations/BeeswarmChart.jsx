@@ -1,5 +1,4 @@
-// BeeswarmChart.jsx
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import * as d3 from "d3";
 import { AccurateBeeswarm } from "accurate-beeswarm-plot";
 import { getPartyColor, getPartyName } from "./utils";
@@ -14,15 +13,27 @@ const SingleBeeswarmChart = ({
   party,
 }) => {
   const svgRef = useRef();
+  const [svgWidth, setSvgWidth] = useState(width);
+
+  useEffect(() => {
+    const handleResize = () => {
+      const containerWidth = svgRef.current.parentElement.clientWidth;
+      setSvgWidth(Math.min(width, containerWidth));
+    };
+
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, [width]);
 
   useEffect(() => {
     const svg = d3.select(svgRef.current);
-    svg.selectAll("*").remove(); // Clear previous render
+    svg.selectAll("*").remove();
 
     const x = d3
       .scaleLinear()
       .domain(domain || d3.extent(data, (d) => d.value))
-      .range([margin.left, width - margin.right]);
+      .range([margin.left, svgWidth - margin.right]);
 
     const r = radius + padding / 2;
     const beeswarmData = new AccurateBeeswarm(data, r, (d) => x(d.value))
@@ -34,7 +45,9 @@ const SingleBeeswarmChart = ({
     const maxY = d3.max(beeswarmData, (d) => d.y);
     const height = maxY + margin.top + margin.bottom + radius * 2;
 
-    svg.attr("viewBox", [0, 0, width, height]);
+    svg.attr("viewBox", [0, 0, svgWidth, height]);
+
+    const fontSize = svgWidth < 600 ? "12px" : "14px";
 
     const xAxis = (g) =>
       g
@@ -43,10 +56,10 @@ const SingleBeeswarmChart = ({
           d3
             .axisBottom(x)
             .tickSizeOuter(0)
-            .ticks(5)
+            .ticks(svgWidth < 400 ? 3 : 5)
             .tickFormat((d) => `${d}%`)
         )
-        .call((g) => g.selectAll(".tick text").attr("font-size", "14px"));
+        .call((g) => g.selectAll(".tick text").attr("font-size", fontSize));
 
     svg.append("g").call(xAxis);
 
@@ -60,16 +73,15 @@ const SingleBeeswarmChart = ({
       .attr("r", radius)
       .attr("fill", (d) => getPartyColor(d.data.winningParty) || "black");
 
-    // Add party label
+    // Add party label below the x-axis
     svg
       .append("text")
       .attr("x", margin.left)
-      .attr("y", margin.top - 5)
-      .attr("font-size", "14px")
+      .attr("y", height - margin.bottom + 40) // Position below x-axis
+      .attr("font-size", fontSize)
       .attr("font-weight", "bold")
       .text(getPartyName(party));
 
-    // Add tooltip
     const tooltip = d3
       .select("body")
       .append("div")
@@ -82,8 +94,8 @@ const SingleBeeswarmChart = ({
         tooltip
           .html(
             `${d.data.name}<br/>
-                      Percentage: ${d.data.value.toFixed(2)}%<br/>
-                      Votes: ${d.data.actualVotes.toLocaleString()} / ${d.data.totalVotes.toLocaleString()}`
+            Percentage: ${d.data.value.toFixed(2)}%<br/>
+            Votes: ${d.data.actualVotes.toLocaleString()} / ${d.data.totalVotes.toLocaleString()}`
           )
           .style("left", event.pageX + 10 + "px")
           .style("top", event.pageY - 28 + "px");
@@ -95,13 +107,12 @@ const SingleBeeswarmChart = ({
     return () => {
       tooltip.remove();
     };
-  }, [data, width, radius, padding, margin, domain, party]);
+  }, [data, svgWidth, radius, padding, margin, domain, party]);
 
-  return <svg ref={svgRef} width={width} />;
+  return <svg ref={svgRef} width="100%" />;
 };
 
 const BeeswarmChart = ({ data, width, radius, padding, margin, domain }) => {
-  // Merge Lab and Lab Co-op
   const mergedData = data.map((d) => ({
     ...d,
     winningParty: d.winningParty === "Lab Co-op" ? "Lab" : d.winningParty,
