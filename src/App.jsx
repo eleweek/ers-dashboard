@@ -618,6 +618,7 @@ function ConstituencyPage({ data, selectedConstituency, page }) {
   const surplusVotes = winningVotes - secondPlaceVotes - 1;
 
   const otherVotesPercentage = Math.round((otherVotes / totalVotes) * 100);
+  console.log("constituencyData", constituencyData);
 
   return (
     <>

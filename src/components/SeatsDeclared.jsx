@@ -1,4 +1,5 @@
 import React from "react";
+import { oneDecimal } from "../utils";
 
 const SeatsDeclared = ({ data }) => {
   console.log("SeatsDeclared data", data);
@@ -9,7 +10,12 @@ const SeatsDeclared = ({ data }) => {
       ? `${declared} / ${total} seats declared`
       : `All ${total} seats declared`;
 
-  return <div className="text-muted">{message}</div>;
+  return (
+    <div className="text-muted">
+      {message} · {oneDecimal((100 * data.totalVotes) / data.electorate)}%
+      turnout
+    </div>
+  );
 };
 
 export default SeatsDeclared;
