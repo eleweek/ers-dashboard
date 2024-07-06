@@ -23,10 +23,17 @@ export default function DotPlot({ parties }) {
   }, []);
 
   const height = 100 + parties.length * 30;
-  const margin = { top: 40, right: 100, bottom: 40, left: 200 };
+  const isNarrowWidth = width < 768;
+
+  const margin = {
+    top: 40,
+    right: 0,
+    bottom: 40,
+    left: isNarrowWidth ? 162 : 200,
+  };
+
   const plotWidth = width - margin.left - margin.right;
   const plotHeight = height - margin.top - margin.bottom;
-  const isNarrowWidth = width < 768;
 
   const votesShare = parties.map((d) => d.totalVotesShare);
   const seatsShare = parties.map((d) => d.totalSeatsShare);
@@ -107,7 +114,7 @@ export default function DotPlot({ parties }) {
           {/* X-axis */}
           <g transform={`translate(0, ${plotHeight})`}>
             <line x1={0} y1={0} x2={plotWidth} y2={0} stroke="black" />
-            {xScale.ticks(5).map((tick) => (
+            {xScale.ticks(isNarrowWidth ? 3 : 5).map((tick) => (
               <g key={tick} transform={`translate(${xScale(tick)}, 0)`}>
                 <line x1={0} y1={0} x2={0} y2={5} stroke="black" />
                 <text x={0} y={20} textAnchor="middle" fontSize="14px">
@@ -126,7 +133,7 @@ export default function DotPlot({ parties }) {
                 y={yScale(party.name)}
                 textAnchor="end"
                 alignmentBaseline="middle"
-                fontSize="16px"
+                fontSize={isNarrowWidth ? "13px" : "16px"}
               >
                 {displayedPartyName(party)}
               </text>
