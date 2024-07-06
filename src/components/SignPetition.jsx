@@ -2,8 +2,6 @@ import React from "react";
 
 import { getPlaceName } from "../utils";
 
-import SeatsDeclared from "./SeatsDeclared";
-
 const SignPetition = ({
   oneDecimal,
   wastedVotes,

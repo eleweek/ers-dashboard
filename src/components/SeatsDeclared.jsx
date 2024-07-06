@@ -2,7 +2,6 @@ import React from "react";
 import { oneDecimal } from "../utils";
 
 const SeatsDeclared = ({ data }) => {
-  console.log("SeatsDeclared data", data);
   const declared = data.constituencies.length;
   const total = data.constituenciesTotal;
   const message =

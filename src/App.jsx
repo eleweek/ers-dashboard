@@ -746,7 +746,7 @@ function ConstituencyPage({ data, selectedConstituency, page }) {
         wastedVotes={wastedVotes}
         page={page}
         data={data}
-        selectedConstituency={selectedConstituency}
+        selectedConstituencyName={selectedConstituency.$.name}
         selectedRegionName={null}
       />
     </>
