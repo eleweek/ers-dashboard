@@ -1,10 +1,11 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import * as d3 from "d3";
 import { displayedPartyName } from "./utils";
 
 export default function VotesTypesBarChart({ parties, region }) {
   const svgRef = useRef();
   const containerRef = useRef();
+  const [dimensions, setDimensions] = useState({ width: 1100, height: 350 });
 
   const title =
     "Percentage of decisive votes, unrepresented votes and surplus votes in 2024 by party" +
@@ -13,14 +14,26 @@ export default function VotesTypesBarChart({ parties, region }) {
     "Parties with geographically concentrated supporters tend to do better under First Past the Post";
 
   useEffect(() => {
+    const handleResize = () => {
+      const containerWidth = containerRef.current.clientWidth;
+      const aspectRatio = 928 / 350;
+      const height = Math.max(350, containerWidth / aspectRatio);
+      setDimensions({ width: containerWidth, height });
+    };
+
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  useEffect(() => {
     if (parties && parties.length > 0) {
       createChart();
     }
-  }, [parties]);
+  }, [parties, dimensions]);
 
   const createChart = () => {
-    const width = 928;
-    const height = 350;
+    const { width, height } = dimensions;
     const marginTop = 45;
     const marginRight = 140;
     const marginBottom = 10;
@@ -92,7 +105,7 @@ export default function VotesTypesBarChart({ parties, region }) {
         .attr("transform", `translate(${marginLeft},0)`)
         .call(d3.axisLeft(y).tickSize(0).tickPadding(10))
         .call((g) => g.select(".domain").remove())
-        .call((g) => g.selectAll(".tick text").attr("font-size", "14px"));
+        .call((g) => g.selectAll(".tick text").attr("font-size", "12px"));
 
     const xAxis = (g) =>
       g
@@ -108,7 +121,7 @@ export default function VotesTypesBarChart({ parties, region }) {
           g
             .selectAll(".tick text")
             .attr("dy", "-0.2em")
-            .attr("font-size", "14px")
+            .attr("font-size", "12px")
         );
 
     svg.append("g").call(xAxis);
@@ -123,23 +136,23 @@ export default function VotesTypesBarChart({ parties, region }) {
       )
       .attr("text-anchor", "start")
       .attr("font-family", "sans-serif")
-      .attr("font-size", 14)
+      .attr("font-size", 12)
       .selectAll("g")
       .data(categories)
       .join("g")
-      .attr("transform", (d, i) => `translate(0,${i * 24})`);
+      .attr("transform", (d, i) => `translate(0,${i * 20})`);
 
     legend
       .append("rect")
       .attr("x", 0)
-      .attr("width", 19)
-      .attr("height", 19)
+      .attr("width", 15)
+      .attr("height", 15)
       .attr("fill", color);
 
     legend
       .append("text")
-      .attr("x", 25)
-      .attr("y", 9.5)
+      .attr("x", 20)
+      .attr("y", 7.5)
       .attr("dy", "0.35em")
       .text((d) => {
         const result = d
@@ -154,36 +167,11 @@ export default function VotesTypesBarChart({ parties, region }) {
           ? result.replace(" votes", "")
           : result;
       });
-
-    // Update caption position
-    updateCaptionPosition();
   };
-
-  const updateCaptionPosition = () => {
-    const svg = d3.select(svgRef.current);
-    const captionContainer = d3.select(containerRef.current).select("div");
-
-    // Get the actual rendered size of the SVG
-    const svgBounds = svg.node().getBoundingClientRect();
-
-    // Calculate the scale factor
-    const scaleFactor = svgBounds.width / parseFloat(svg.attr("width"));
-
-    // Update caption container position and width
-    captionContainer
-      .style("margin-left", `${150 * scaleFactor - 3}px`)
-      .style("max-width", `${(928 - 150 - 140) * scaleFactor}px`);
-  };
-
-  // Add resize listener
-  useEffect(() => {
-    window.addEventListener("resize", updateCaptionPosition);
-    return () => window.removeEventListener("resize", updateCaptionPosition);
-  }, []);
 
   return (
     <div ref={containerRef}>
-      <div>
+      <div style={{ marginLeft: dimensions.width > 700 ? 150 : 0 }}>
         <h5
           style={{ margin: 0, padding: 0, paddingBottom: 5, lineHeight: 1.1 }}
         >
