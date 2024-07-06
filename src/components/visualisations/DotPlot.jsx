@@ -26,6 +26,7 @@ export default function DotPlot({ parties }) {
   const margin = { top: 40, right: 100, bottom: 40, left: 200 };
   const plotWidth = width - margin.left - margin.right;
   const plotHeight = height - margin.top - margin.bottom;
+  const isNarrowWidth = width < 768;
 
   const votesShare = parties.map((d) => d.totalVotesShare);
   const seatsShare = parties.map((d) => d.totalSeatsShare);
@@ -260,8 +261,8 @@ export default function DotPlot({ parties }) {
       <div
         className="caption"
         style={{
-          width: plotWidth,
-          transform: `translateX(${margin.left}px)`,
+          width: isNarrowWidth ? "100%" : plotWidth,
+          transform: isNarrowWidth ? "none" : `translateX(${margin.left}px)`,
         }}
       >
         <h5
