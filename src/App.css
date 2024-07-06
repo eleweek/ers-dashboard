@@ -286,3 +286,11 @@ h1.with-sup .sup {
   padding-left: 50px;
   padding-right: 50px;
 }
+
+@media only screen and (max-width: 768px) {
+  .container-fluid {
+    max-width: 100%;
+    padding-left: 15px;
+    padding-right: 15px;
+  }
+}
