@@ -967,7 +967,7 @@ function UKLevelOnly() {
 }
 
 function RegionAndUKPage({ data, unfilteredData, page, pageParam }) {
-  const wastedVotes = percentage(data.wastedVotes / data.totalVotes);
+  const wastedVotes = (100 * data.wastedVotes) / data.totalVotes;
 
   const partiesTableColumns = [
     "name",
@@ -1109,7 +1109,7 @@ function RegionAndUKPage({ data, unfilteredData, page, pageParam }) {
           </div>
           <div className="col-lg-8">
             <div className="gap-40"></div>
-
+            <h2>{oneDecimal(wastedVotes)}% voters unrepresented</h2>
             <p>
               To become an MP, a candidate just needs to beat the second placed
               candidate by a single vote, so if they win any more votes beyond

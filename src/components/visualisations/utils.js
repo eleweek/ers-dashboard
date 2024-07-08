@@ -1,7 +1,7 @@
 const PARTY_COLORS = {
   C: "#0087DC",
   Lab: "#DC241f",
-  SNP: "#a89a02",
+  SNP: "#fce803",
   LD: "#FAA61A",
   Green: "#6AB023",
   DUP: "#D46A4C",

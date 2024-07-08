@@ -241,7 +241,7 @@ export default function DotPlot({ parties }) {
                       <>
                         <text
                           x={votesX}
-                          y={yScale(party.name) - 15}
+                          y={yScale(party.name) - 11}
                           fill={color}
                           textAnchor="middle"
                           fontSize="12px"
@@ -250,7 +250,7 @@ export default function DotPlot({ parties }) {
                         </text>
                         <text
                           x={seatsX}
-                          y={yScale(party.name) - 15}
+                          y={yScale(party.name) - 11}
                           fill={color}
                           textAnchor="middle"
                           fontSize="12px"
