@@ -759,7 +759,7 @@ function PartiesSeatsTable({ parties }) {
       <thead>
         <tr>
           <th>Party</th>
-          <th className="parties-stats-table-seats">Seats</th>
+          <th className="parties-stats-table-seats">MPs</th>
         </tr>
       </thead>
       <tbody>
