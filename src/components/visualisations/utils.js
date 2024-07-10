@@ -16,6 +16,7 @@ const PARTY_COLORS = {
   WPB: "#A52A2A",
   Yorkshire: "#00aeef",
   Other: "#A6A6A6",
+  TUV: "#0c3a6a",
 };
 
 export const getPartyColor = (party) => {
@@ -28,6 +29,7 @@ export const displayedPartyName = (party) => {
     case "DUP":
     case "SDLP":
     case "UUP":
+    case "TUV":
       return party.abbreviation;
     default:
       return party.name;
