@@ -814,7 +814,7 @@ function LeadBarChartParties({ data }) {
       ["Party", "Votes %", { role: "style" }, "MPs %", { role: "style" }],
     ];
 
-    data.parties.forEach((party) => {
+    data.mainParties.forEach((party) => {
       if (party.name !== "The Speaker") {
         table.push([
           displayedPartyName(party),
@@ -829,7 +829,7 @@ function LeadBarChartParties({ data }) {
     });
 
     return table;
-  }, [data.parties]);
+  }, [data.mainParties]);
 
   console.log("Parties chart data", partiesChartData);
 
@@ -1317,9 +1317,12 @@ function App() {
 
     if (page !== "constituency") {
       // Use specific list for main parties
-      // newData.parties = condenseParties(newData.parties, "specific", {
-      //   specificParties: staticData.mainParties,
-      // });
+      newData.mainParties = condenseParties(newData.parties, "specific", {
+        specificParties: ["Lab", "C", "LD", "Green", "SNP", "PC", "Reform"],
+        includeIndependentsInOthers: true,
+      });
+
+      console.log("Main parties", newData.mainParties);
 
       const voteLimit =
         page !== "region" || page !== "constituency" || pageParam === "england"
@@ -1334,6 +1337,14 @@ function App() {
 
     newData.parties = calculatePartyPercentagesAndVotesPerSeat(
       newData.parties,
+      newData.totalSeats,
+      newData.totalVotes,
+      newData.totalSeatsPrev,
+      newData.totalVotesPrev
+    );
+
+    newData.mainParties = calculatePartyPercentagesAndVotesPerSeat(
+      newData.mainParties,
       newData.totalSeats,
       newData.totalVotes,
       newData.totalSeatsPrev,
