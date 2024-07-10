@@ -16,15 +16,19 @@ export default function VotesTypesBarChart({ parties, region }) {
   useEffect(() => {
     const handleResize = () => {
       const containerWidth = containerRef.current.clientWidth;
-      const aspectRatio = 928 / 350;
-      const height = Math.max(350, containerWidth / aspectRatio);
+      const barCount = parties.filter(
+        (party) => party.name !== "Others" && party.name !== "The Speaker"
+      ).length;
+      const maxHeight = Math.min(350, 35 * barCount);
+      const aspectRatio = 928 / maxHeight;
+      const height = Math.min(maxHeight, containerWidth / aspectRatio);
       setDimensions({ width: containerWidth, height });
     };
 
     handleResize();
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
-  }, []);
+  }, [parties]);
 
   useEffect(() => {
     if (parties && parties.length > 0) {
@@ -36,7 +40,7 @@ export default function VotesTypesBarChart({ parties, region }) {
     const { width, height } = dimensions;
     const marginTop = 45;
     const marginRight = 140;
-    const marginBottom = 10;
+    const marginBottom = Math.min(10, height * 0.03);
     const marginLeft = 150;
 
     // Clear any existing SVG content
@@ -91,7 +95,7 @@ export default function VotesTypesBarChart({ parties, region }) {
         .attr("transform", `translate(${marginLeft},0)`)
         .call(d3.axisLeft(y).tickSize(0).tickPadding(10))
         .call((g) => g.select(".domain").remove())
-        .call((g) => g.selectAll(".tick text").attr("font-size", "12px"));
+        .call((g) => g.selectAll(".tick text").attr("font-size", "14px"));
 
     const xAxis = (g) =>
       g
@@ -107,7 +111,7 @@ export default function VotesTypesBarChart({ parties, region }) {
           g
             .selectAll(".tick text")
             .attr("dy", "-0.2em")
-            .attr("font-size", "12px")
+            .attr("font-size", "14px")
         );
 
     svg.append("g").call(xAxis);
@@ -133,9 +137,9 @@ export default function VotesTypesBarChart({ parties, region }) {
       .attr("x2", x(50))
       .attr("y1", marginTop)
       .attr("y2", height - marginBottom)
-      .attr("stroke", "rgba(255, 255, 255, 0.4)") // Semi-transparent white
-      .attr("stroke-width", 1) // Slightly thicker line
-      .style("mix-blend-mode", "hard-light"); // Blend with colors underneath
+      .attr("stroke", "rgba(255, 255, 255, 0.4)")
+      .attr("stroke-width", 1)
+      .style("mix-blend-mode", "hard-light");
 
     // Legend
     const legend = svg
@@ -146,7 +150,7 @@ export default function VotesTypesBarChart({ parties, region }) {
       )
       .attr("text-anchor", "start")
       .attr("font-family", "sans-serif")
-      .attr("font-size", 12)
+      .attr("font-size", 14)
       .selectAll("g")
       .data(categories)
       .join("g")
