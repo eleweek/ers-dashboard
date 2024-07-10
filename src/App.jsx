@@ -1343,13 +1343,15 @@ function App() {
       newData.totalVotesPrev
     );
 
-    newData.mainParties = calculatePartyPercentagesAndVotesPerSeat(
-      newData.mainParties,
-      newData.totalSeats,
-      newData.totalVotes,
-      newData.totalSeatsPrev,
-      newData.totalVotesPrev
-    );
+    if (page !== "constituency") {
+      newData.mainParties = calculatePartyPercentagesAndVotesPerSeat(
+        newData.mainParties,
+        newData.totalSeats,
+        newData.totalVotes,
+        newData.totalSeatsPrev,
+        newData.totalVotesPrev
+      );
+    }
 
     newData.electorate = newData.constituencies.reduce(
       (sum, constituency) =>
