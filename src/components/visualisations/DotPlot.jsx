@@ -41,7 +41,7 @@ export default function DotPlot({ parties }) {
   const xvaluesExtra = votesShare.concat(seatsShare).map((d) => d * 1.1);
   const xScale = d3
     .scaleLinear()
-    .domain([0, d3.max(xvaluesExtra)])
+    .domain([0, Math.max(d3.max(xvaluesExtra), 50)])
     .range([0, plotWidth]);
 
   const yScale = d3
@@ -123,6 +123,16 @@ export default function DotPlot({ parties }) {
               </g>
             ))}
           </g>
+
+          {/* 50% guideline */}
+          <line
+            x1={xScale(50)}
+            y1={0}
+            x2={xScale(50)}
+            y2={plotHeight}
+            stroke="#bbb"
+            strokeWidth={1}
+          />
 
           {/* Y-axis */}
           <g>

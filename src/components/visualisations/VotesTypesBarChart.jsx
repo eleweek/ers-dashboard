@@ -86,20 +86,6 @@ export default function VotesTypesBarChart({ parties, region }) {
       .domain(categories)
       .range(["#fc85ae", "#9e579d", "#303A52"]);
 
-    svg
-      .append("g")
-      .selectAll("g")
-      .data(stackedData)
-      .join("g")
-      .attr("fill", (d) => color(d.key))
-      .selectAll("rect")
-      .data((d) => d)
-      .join("rect")
-      .attr("x", (d) => x(d[0]))
-      .attr("y", (d) => y(d.data.name))
-      .attr("width", (d) => x(d[1]) - x(d[0]))
-      .attr("height", y.bandwidth());
-
     const yAxis = (g) =>
       g
         .attr("transform", `translate(${marginLeft},0)`)
@@ -126,6 +112,30 @@ export default function VotesTypesBarChart({ parties, region }) {
 
     svg.append("g").call(xAxis);
     svg.append("g").call(yAxis);
+
+    svg
+      .append("g")
+      .selectAll("g")
+      .data(stackedData)
+      .join("g")
+      .attr("fill", (d) => color(d.key))
+      .selectAll("rect")
+      .data((d) => d)
+      .join("rect")
+      .attr("x", (d) => x(d[0]))
+      .attr("y", (d) => y(d.data.name))
+      .attr("width", (d) => x(d[1]) - x(d[0]))
+      .attr("height", y.bandwidth());
+
+    svg
+      .append("line")
+      .attr("x1", x(50))
+      .attr("x2", x(50))
+      .attr("y1", marginTop)
+      .attr("y2", height - marginBottom)
+      .attr("stroke", "rgba(255, 255, 255, 0.4)") // Semi-transparent white
+      .attr("stroke-width", 1) // Slightly thicker line
+      .style("mix-blend-mode", "hard-light"); // Blend with colors underneath
 
     // Legend
     const legend = svg

@@ -63,6 +63,20 @@ const SingleBeeswarmChart = ({
 
     svg.append("g").call(xAxis);
 
+    // Add 50% guideline
+    const [minDomain, maxDomain] = x.domain();
+    if (minDomain <= 50 && maxDomain >= 50) {
+      const guidelineX = x(50);
+      svg
+        .append("line")
+        .attr("x1", guidelineX)
+        .attr("y1", margin.top)
+        .attr("x2", guidelineX)
+        .attr("y2", height - margin.bottom)
+        .attr("stroke", "#bbb")
+        .attr("stroke-width", 1);
+    }
+
     const circles = svg
       .append("g")
       .selectAll("circle")
