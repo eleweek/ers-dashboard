@@ -863,10 +863,15 @@ function LeadBarChartParties({ data }) {
           legend: { position: "none" },
           chartArea: {
             width: "100%",
-            left: 20,
+            left: 40,
             top: 60,
             bottom: 40,
             height: "100%",
+          },
+          vAxis: {
+            minValue: 0,
+            format: "#'%'",
+            textPosition: "out",
           },
         }}
       />
