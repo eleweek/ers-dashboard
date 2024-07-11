@@ -1343,7 +1343,7 @@ function App() {
         // Default to the same parties for Northern Ireland
         newData.mainParties = condenseParties(
           newData.parties,
-          "specific",
+          "dynamic",
           condenseOpts
         );
       }
