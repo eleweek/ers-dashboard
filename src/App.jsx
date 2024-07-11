@@ -14,9 +14,10 @@ import {
   percentage,
   oneDecimal,
   commas,
-  partyColourByAbbr,
   othersColor,
 } from "./utils";
+
+import { getPartyName } from "./components/visualisations/utils";
 
 // Import components (these will need to be converted to React as well)
 import SignPetition from "./components/SignPetition";
@@ -430,7 +431,7 @@ const computeWinningPartyData = (constituencies, allConstituencies) => {
 
     winningPartyData[pcon] = {
       value: winningParty,
-      winningParty: winningParty,
+      winningParty: getPartyName(winningParty),
       winningPartyColor: getPartyColor(winningParty),
       isSelected: selectedConstituencies.has(constituencyData.$.number),
     };

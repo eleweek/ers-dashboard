@@ -265,7 +265,7 @@ export default function HexMap({ hexjson, data, valueType, displayMode }) {
         svg.appendChild(tip);
       }
 
-      let tooltipContent = `${e.data.data.n}<br />`;
+      let tooltipContent = `<b>${e.data.data.n}</b><br />`;
       if (displayMode === "winningParty") {
         if (data[e.data.region]) {
           tooltipContent += `Winning Party: ${
