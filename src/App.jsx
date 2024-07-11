@@ -1316,23 +1316,36 @@ function App() {
     newData.totalSeatsPrev = newData.constituencies.length;
 
     if (page !== "constituency") {
-      // Use specific list for main parties
-      newData.mainParties = condenseParties(newData.parties, "specific", {
-        specificParties: ["Lab", "C", "LD", "Green", "SNP", "PC", "Reform"],
-        includeIndependentsInOthers: true,
-      });
-
-      console.log("Main parties", newData.mainParties);
-
       const voteLimit =
         page !== "region" || page !== "constituency" || pageParam === "england"
           ? 75000
           : 10000;
-      newData.parties = condenseParties(newData.parties, "dynamic", {
+
+      const condenseOpts = {
         voteLimit,
         seatLimit: 1,
         includeIndependentsInOthers: true,
-      });
+      };
+      newData.parties = condenseParties(
+        newData.parties,
+        "dynamic",
+        condenseOpts
+      );
+
+      if (page !== "region" || pageParam !== "northern_ireland") {
+        // Use specific list for main parties
+        newData.mainParties = condenseParties(newData.parties, "specific", {
+          specificParties: ["Lab", "C", "LD", "Green", "SNP", "PC", "Reform"],
+          includeIndependentsInOthers: true,
+        });
+      } else {
+        // Default to the same parties for Northern Ireland
+        newData.mainParties = condenseParties(
+          newData.parties,
+          "specific",
+          condenseOpts
+        );
+      }
     }
 
     newData.parties = calculatePartyPercentagesAndVotesPerSeat(
