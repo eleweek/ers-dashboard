@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import * as d3 from "d3";
 import { AccurateBeeswarm } from "accurate-beeswarm-plot";
 import { getPartyColor, getPartyName } from "./utils";
+import "./BeeswarmChart.css";
 
 const SingleBeeswarmChart = ({
   data,
@@ -113,8 +114,8 @@ const SingleBeeswarmChart = ({
             Percentage: ${d.data.value.toFixed(2)}%<br />
             Votes: ${d.data.actualVotes.toLocaleString()} / ${d.data.totalVotes.toLocaleString()}
           `,
-          x: x + 10,
-          y: y - 10,
+          x: d.x,
+          y: height - margin.bottom - 5 - d.y - radius - 10, // Position above the dot
         });
       })
       .on("mouseout", () => {
@@ -126,7 +127,7 @@ const SingleBeeswarmChart = ({
     <div ref={containerRef} style={{ position: "relative" }}>
       <svg ref={svgRef} width="100%" />
       <div
-        className="tooltip"
+        className="beeswarm-tooltip"
         style={{
           display: tooltip.display,
           position: "absolute",
@@ -156,7 +157,14 @@ const BeeswarmChart = ({ data, width, radius, padding, margin, domain }) => {
     .flatMap(([_, constituencies]) => constituencies);
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        gap: "10px",
+        width: "100%",
+      }}
+    >
       {majorParties.map((party) => (
         <SingleBeeswarmChart
           key={party}
