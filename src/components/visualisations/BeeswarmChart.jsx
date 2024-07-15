@@ -17,7 +17,7 @@ const SingleBeeswarmChart = ({
   const containerRef = useRef();
   const [svgWidth, setSvgWidth] = useState(width);
   const [tooltip, setTooltip] = useState({
-    display: "none",
+    display: false,
     content: "",
     x: 0,
     y: 0,
@@ -99,43 +99,57 @@ const SingleBeeswarmChart = ({
     svg
       .append("text")
       .attr("x", margin.left)
-      .attr("y", height - margin.bottom + 40) // Position below x-axis
+      .attr("y", height - margin.bottom + 40)
       .attr("font-size", fontSize)
       .attr("font-weight", "bold")
       .text(getPartyName(party));
 
     circles
       .on("mouseover", (event, d) => {
-        const [x, y] = d3.pointer(event);
+        const svgRect = svgRef.current.getBoundingClientRect();
+        const svgWidth = svgRect.width;
+        const svgHeight = svgRect.height;
+        const viewBox = svgRef.current.viewBox.baseVal;
+
+        // Calculate scale factors
+        const scaleX = svgWidth / viewBox.width;
+        const scaleY = svgHeight / viewBox.height;
+
+        const circleX = svgRect.left + d.x * scaleX;
+        const circleY =
+          svgRect.top + (height - margin.bottom - 5 - d.y) * scaleY;
+
+        const tooltipContent = `
+          <b>${d.data.name}</b><br />
+          Percentage: ${d.data.value.toFixed(2)}%<br />
+        `;
+
         setTooltip({
-          display: "block",
-          content: `
-            <b>${d.data.name}</b><br />
-            Percentage: ${d.data.value.toFixed(2)}%<br />
-            Votes: ${d.data.actualVotes.toLocaleString()} / ${d.data.totalVotes.toLocaleString()}
-          `,
-          x: d.x,
-          y: height - margin.bottom - 5 - d.y - radius - 10, // Position above the dot
+          display: true,
+          content: tooltipContent,
+          x: circleX,
+          y: circleY,
         });
       })
       .on("mouseout", () => {
-        setTooltip({ ...tooltip, display: "none" });
+        setTooltip({ ...tooltip, display: false });
       });
   }, [data, svgWidth, radius, padding, margin, domain, party]);
 
   return (
     <div ref={containerRef} style={{ position: "relative" }}>
       <svg ref={svgRef} width="100%" />
-      <div
-        className="beeswarm-tooltip"
-        style={{
-          display: tooltip.display,
-          position: "absolute",
-          left: `${tooltip.x}px`,
-          top: `${tooltip.y}px`,
-        }}
-        dangerouslySetInnerHTML={{ __html: tooltip.content }}
-      />
+      {tooltip.display && (
+        <div
+          className="beeswarm-tooltip"
+          style={{
+            position: "fixed",
+            left: `${tooltip.x}px`,
+            top: `${tooltip.y}px`,
+          }}
+          dangerouslySetInnerHTML={{ __html: tooltip.content }}
+        />
+      )}
     </div>
   );
 };
