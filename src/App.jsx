@@ -871,8 +871,18 @@ function LeadBarChartParties({ data }) {
           },
           vAxis: {
             minValue: 0,
+            viewWindow: {
+              min: 0,
+              max: 75,
+            },
             format: "#'%'",
             textPosition: "out",
+            gridlines: {
+              count: 0,
+            },
+            minorGridlines: {
+              color: "none",
+            },
           },
         }}
       />
