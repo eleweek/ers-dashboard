@@ -13,11 +13,18 @@ const SingleBeeswarmChart = ({
   party,
 }) => {
   const svgRef = useRef();
+  const containerRef = useRef();
   const [svgWidth, setSvgWidth] = useState(width);
+  const [tooltip, setTooltip] = useState({
+    display: "none",
+    content: "",
+    x: 0,
+    y: 0,
+  });
 
   useEffect(() => {
     const handleResize = () => {
-      const containerWidth = svgRef.current.parentElement.clientWidth;
+      const containerWidth = containerRef.current.clientWidth;
       setSvgWidth(Math.min(width, containerWidth));
     };
 
@@ -96,34 +103,40 @@ const SingleBeeswarmChart = ({
       .attr("font-weight", "bold")
       .text(getPartyName(party));
 
-    const tooltip = d3
-      .select("body")
-      .append("div")
-      .attr("class", "tooltip")
-      .style("opacity", 0);
-
     circles
       .on("mouseover", (event, d) => {
-        tooltip.transition().duration(200).style("opacity", 0.9);
-        tooltip
-          .html(
-            `${d.data.name}<br/>
-            Percentage: ${d.data.value.toFixed(2)}%<br/>
-            Votes: ${d.data.actualVotes.toLocaleString()} / ${d.data.totalVotes.toLocaleString()}`
-          )
-          .style("left", event.pageX + 10 + "px")
-          .style("top", event.pageY - 28 + "px");
+        const [x, y] = d3.pointer(event);
+        setTooltip({
+          display: "block",
+          content: `
+            <b>${d.data.name}</b><br />
+            Percentage: ${d.data.value.toFixed(2)}%<br />
+            Votes: ${d.data.actualVotes.toLocaleString()} / ${d.data.totalVotes.toLocaleString()}
+          `,
+          x: x + 10,
+          y: y - 10,
+        });
       })
       .on("mouseout", () => {
-        tooltip.transition().duration(500).style("opacity", 0);
+        setTooltip({ ...tooltip, display: "none" });
       });
-
-    return () => {
-      tooltip.remove();
-    };
   }, [data, svgWidth, radius, padding, margin, domain, party]);
 
-  return <svg ref={svgRef} width="100%" />;
+  return (
+    <div ref={containerRef} style={{ position: "relative" }}>
+      <svg ref={svgRef} width="100%" />
+      <div
+        className="tooltip"
+        style={{
+          display: tooltip.display,
+          position: "absolute",
+          left: `${tooltip.x}px`,
+          top: `${tooltip.y}px`,
+        }}
+        dangerouslySetInnerHTML={{ __html: tooltip.content }}
+      />
+    </div>
+  );
 };
 
 const BeeswarmChart = ({ data, width, radius, padding, margin, domain }) => {
