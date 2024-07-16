@@ -144,7 +144,7 @@ const SingleBeeswarmChart = ({
       const sortedResults = d.data.results.sort((a, b) => b.value - a.value);
 
       const tooltipContent = `
-        <strong>${d.data.name}</strong><br>
+        <div style="padding-bottom:3px"><strong>${d.data.name}</strong></div>
         <div style="font-family: monospace;">
           ${sortedResults
             .map((result) => {
@@ -166,7 +166,10 @@ const SingleBeeswarmChart = ({
       highlightCircle
         .attr("cx", d.x)
         .attr("cy", height - margin.bottom - 5 - d.y)
-        .style("display", "block");
+        .style("display", "block")
+        .on("mouseover", () => {
+          showTooltip(d);
+        });
     };
 
     circleGroup
