@@ -22,7 +22,6 @@ const SingleBeeswarmChart = ({
     x: 0,
     y: 0,
   });
-  const [highlightedDot, setHighlightedDot] = useState(null);
 
   useEffect(() => {
     const handleResize = () => {
@@ -86,16 +85,38 @@ const SingleBeeswarmChart = ({
         .attr("stroke-width", 1);
     }
 
-    const circles = svg
+    const circleGroup = svg
       .append("g")
-      .selectAll("circle")
+      .selectAll("g")
       .data(beeswarmData)
-      .join("circle")
-      .attr("cx", (d) => d.x)
-      .attr("cy", (d) => height - margin.bottom - 5 - d.y)
-      .attr("r", radius)
-      .attr("fill", (d) => getPartyColor(d.data.winningParty) || "black")
+      .join("g")
+      .attr(
+        "transform",
+        (d) => `translate(${d.x}, ${height - margin.bottom - 5 - d.y})`
+      );
+
+    // Larger, invisible circle for hover detection
+    circleGroup
+      .append("circle")
+      .attr("r", radius + 4)
+      .attr("fill", "transparent")
       .style("cursor", "pointer");
+
+    // Visible circle
+    const visibleCircles = circleGroup
+      .append("circle")
+      .attr("r", radius)
+      .style("cursor", "pointer")
+      .attr("fill", (d) => getPartyColor(d.data.winningParty) || "black");
+
+    // Highlight circle
+    const highlightCircle = svg
+      .append("circle")
+      .attr("r", radius + 1)
+      .attr("fill", "none")
+      .attr("stroke", "#000")
+      .attr("stroke-width", 1)
+      .style("display", "none");
 
     // Add party label below the x-axis
     svg
@@ -105,14 +126,6 @@ const SingleBeeswarmChart = ({
       .attr("font-size", fontSize)
       .attr("font-weight", "bold")
       .text(getPartyName(party));
-
-    const highlightCircle = svg
-      .append("circle")
-      .attr("r", radius + 1)
-      .attr("fill", "none")
-      .attr("stroke", "#000")
-      .attr("stroke-width", 1)
-      .style("display", "none");
 
     const showTooltip = (d) => {
       const svgRect = svgRef.current.getBoundingClientRect();
@@ -154,20 +167,21 @@ const SingleBeeswarmChart = ({
         .attr("cx", d.x)
         .attr("cy", height - margin.bottom - 5 - d.y)
         .style("display", "block");
-
-      setHighlightedDot(d);
     };
 
-    circles
+    circleGroup
       .on("mouseover", (event, d) => {
-        d3.select(event.target).attr("r", radius + 2);
+        d3.select(event.currentTarget)
+          .select("circle:nth-child(2)")
+          .attr("r", radius + 2);
         showTooltip(d);
       })
       .on("mouseout", (event) => {
-        d3.select(event.target).attr("r", radius);
+        d3.select(event.currentTarget)
+          .select("circle:nth-child(2)")
+          .attr("r", radius);
         setTooltip({ ...tooltip, display: false });
         highlightCircle.style("display", "none");
-        setHighlightedDot(null);
       });
   }, [data, svgWidth, radius, padding, margin, domain, party]);
 
