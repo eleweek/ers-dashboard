@@ -22,6 +22,7 @@ const SingleBeeswarmChart = ({
     x: 0,
     y: 0,
   });
+  const [highlightedDot, setHighlightedDot] = useState(null);
 
   useEffect(() => {
     const handleResize = () => {
@@ -93,7 +94,8 @@ const SingleBeeswarmChart = ({
       .attr("cx", (d) => d.x)
       .attr("cy", (d) => height - margin.bottom - 5 - d.y)
       .attr("r", radius)
-      .attr("fill", (d) => getPartyColor(d.data.winningParty) || "black");
+      .attr("fill", (d) => getPartyColor(d.data.winningParty) || "black")
+      .style("cursor", "pointer");
 
     // Add party label below the x-axis
     svg
@@ -104,35 +106,68 @@ const SingleBeeswarmChart = ({
       .attr("font-weight", "bold")
       .text(getPartyName(party));
 
+    const highlightCircle = svg
+      .append("circle")
+      .attr("r", radius + 1)
+      .attr("fill", "none")
+      .attr("stroke", "#000")
+      .attr("stroke-width", 1)
+      .style("display", "none");
+
+    const showTooltip = (d) => {
+      const svgRect = svgRef.current.getBoundingClientRect();
+      const svgWidth = svgRect.width;
+      const svgHeight = svgRect.height;
+      const viewBox = svgRef.current.viewBox.baseVal;
+
+      // Calculate scale factors
+      const scaleX = svgWidth / viewBox.width;
+      const scaleY = svgHeight / viewBox.height;
+
+      const circleX = svgRect.left + d.x * scaleX;
+      const circleY = svgRect.top + (height - margin.bottom - 5 - d.y) * scaleY;
+
+      // Sort the results in descending order
+      const sortedResults = d.data.results.sort((a, b) => b.value - a.value);
+
+      const tooltipContent = `
+        <strong>${d.data.name}</strong><br>
+        <div style="font-family: monospace;">
+          ${sortedResults
+            .map((result) => {
+              const [intPart, decPart] = result.value.toFixed(1).split(".");
+              const paddedIntPart = intPart.padStart(2, `\u00A0`);
+              return `${paddedIntPart}<span style="font-family: inherit;">.</span>${decPart}% <span style="font-family: inherit;">${result.party}</span>`;
+            })
+            .join("<br>")}
+        </div>
+      `;
+
+      setTooltip({
+        display: true,
+        content: tooltipContent,
+        x: circleX,
+        y: circleY,
+      });
+
+      highlightCircle
+        .attr("cx", d.x)
+        .attr("cy", height - margin.bottom - 5 - d.y)
+        .style("display", "block");
+
+      setHighlightedDot(d);
+    };
+
     circles
       .on("mouseover", (event, d) => {
-        const svgRect = svgRef.current.getBoundingClientRect();
-        const svgWidth = svgRect.width;
-        const svgHeight = svgRect.height;
-        const viewBox = svgRef.current.viewBox.baseVal;
-
-        // Calculate scale factors
-        const scaleX = svgWidth / viewBox.width;
-        const scaleY = svgHeight / viewBox.height;
-
-        const circleX = svgRect.left + d.x * scaleX;
-        const circleY =
-          svgRect.top + (height - margin.bottom - 5 - d.y) * scaleY;
-
-        const tooltipContent = `
-          <b>${d.data.name}</b><br />
-          Percentage: ${d.data.value.toFixed(2)}%<br />
-        `;
-
-        setTooltip({
-          display: true,
-          content: tooltipContent,
-          x: circleX,
-          y: circleY,
-        });
+        d3.select(event.target).attr("r", radius + 2);
+        showTooltip(d);
       })
-      .on("mouseout", () => {
+      .on("mouseout", (event) => {
+        d3.select(event.target).attr("r", radius);
         setTooltip({ ...tooltip, display: false });
+        highlightCircle.style("display", "none");
+        setHighlightedDot(null);
       });
   }, [data, svgWidth, radius, padding, margin, domain, party]);
 

@@ -788,18 +788,36 @@ const processDataForBeeswarm = (data) => {
       (sum, candidate) => sum + parseInt(candidate.Party[0].$.votes, 10),
       0
     );
+
+    // Sort candidates by votes in descending order
+    const sortedCandidates = [...constituencyData.Candidate].sort(
+      (a, b) =>
+        parseInt(b.Party[0].$.votes, 10) - parseInt(a.Party[0].$.votes, 10)
+    );
+
+    const results = sortedCandidates.map((candidate) => {
+      const partyData = candidate.Party[0].$;
+      const votes = parseInt(partyData.votes, 10);
+      const votePercentage = (votes / totalVotes) * 100;
+
+      return {
+        party:
+          partyData.abbreviation === "Lab Co-op" ? "Labour" : partyData.name,
+        value: votePercentage,
+      };
+    });
+
     const winningCandidate = constituencyData.Candidate.find(
       (c) => c.$.elected
     );
     const winningVotes = parseInt(winningCandidate.Party[0].$.votes, 10);
-    const votePercentage = (winningVotes / totalVotes) * 100;
+    const winningPercentage = (winningVotes / totalVotes) * 100;
 
     return {
       name: constituencyData.$.name,
-      value: votePercentage,
+      value: winningPercentage,
       winningParty: constituencyData.$.winningParty,
-      actualVotes: winningVotes,
-      totalVotes: totalVotes,
+      results: results,
     };
   });
 
