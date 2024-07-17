@@ -262,15 +262,26 @@ export default function HexMap({ hexjson, data, valueType, displayMode }) {
       if (!tip) {
         tip = document.createElement("div");
         tip.classList.add("tooltip");
+        if (displayMode === "winningParty") {
+          tip.classList.add("tooltip-winner");
+        }
         svg.appendChild(tip);
       }
 
       let tooltipContent = `<b>${e.data.data.n}</b><br />`;
       if (displayMode === "winningParty") {
         if (data[e.data.region]) {
-          tooltipContent += `Winning Party: ${
-            data[e.data.region].winningParty
-          }`;
+          const constituencyData = data[e.data.region];
+          tooltipContent += `<div style="padding-top:0px;padding-bottom:5px;">Winning party: ${constituencyData.winningParty}</div>`;
+          tooltipContent +=
+            '<div style="font-family: monospace; line-height: 1;">';
+          tooltipContent += '<div style="font-size: 14px">';
+          constituencyData.results.forEach((result) => {
+            const [intPart, decPart] = result.value.toFixed(1).split(".");
+            const paddedIntPart = intPart.padStart(2, "\u00A0");
+            tooltipContent += `${paddedIntPart}<span style="font-family: inherit;">.</span>${decPart}% <span style="font-family: inherit;">${result.party}</span><br />`;
+          });
+          tooltipContent += "</div></div>";
         } else {
           tooltipContent += "Still counting";
         }

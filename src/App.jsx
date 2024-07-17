@@ -429,11 +429,23 @@ const computeWinningPartyData = (constituencies, allConstituencies) => {
       ? winningCandidate.Party[0].$.abbreviation
       : "Unknown";
 
+    // Calculate results breakdown
+    const totalVotes = constituencyData.Candidate.reduce(
+      (sum, candidate) => sum + parseInt(candidate.Party[0].$.votes, 10),
+      0
+    );
+    const results = constituencyData.Candidate.map((candidate) => ({
+      party: candidate.Party[0].$.name,
+      value: (parseInt(candidate.Party[0].$.votes, 10) / totalVotes) * 100,
+    })).sort((a, b) => b.value - a.value);
+
     winningPartyData[pcon] = {
       value: winningParty,
       winningParty: getPartyName(winningParty),
       winningPartyColor: getPartyColor(winningParty),
       isSelected: selectedConstituencies.has(constituencyData.$.number),
+      name: constituencyData.$.name,
+      results: results,
     };
   });
   return winningPartyData;

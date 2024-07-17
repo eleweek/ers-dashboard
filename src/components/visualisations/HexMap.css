@@ -25,7 +25,8 @@
 .hexmap .tooltip {
   position: absolute;
   text-align: left;
-  background: black;
+  white-space: nowrap;
+  background: rgba(0, 0, 0, 0.9);
   color: white;
   padding: 0.25em 0.5em;
   transform: translate3d(-50%, 50%, 0);
@@ -33,6 +34,11 @@
   border-radius: 4px;
   z-index: 1000;
   min-width: 200px;
+}
+
+.hexmap .tooltip.tooltip-winner {
+  margin: 0;
+  transform: translate3d(-50%, 18%, 0);
 }
 
 .hexmap .tooltip::after {
