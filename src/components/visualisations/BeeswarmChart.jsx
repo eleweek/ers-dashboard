@@ -112,7 +112,7 @@ const SingleBeeswarmChart = ({
       .attr("fill", "transparent")
       .style("cursor", "pointer");
 
-    // Highlight circle (added last, so it's on top of visible circles but under hover circles)
+    // Highlight circle
     const highlightCircle = circlesGroup
       .append("circle")
       .attr("r", radius + 1)
@@ -120,7 +120,7 @@ const SingleBeeswarmChart = ({
       .attr("stroke", "#000")
       .attr("stroke-width", 1)
       .style("display", "none")
-      .style("pointer-events", "none"); // Ensure it doesn't interfere with hover
+      .style("pointer-events", "none");
 
     // Add party label below the x-axis
     svg
@@ -133,32 +133,32 @@ const SingleBeeswarmChart = ({
 
     const showTooltip = (d) => {
       const svgRect = svgRef.current.getBoundingClientRect();
-      const svgWidth = svgRect.width;
-      const svgHeight = svgRect.height;
-      const viewBox = svgRef.current.viewBox.baseVal;
+      const containerRect = containerRef.current.getBoundingClientRect();
 
       // Calculate scale factors
-      const scaleX = svgWidth / viewBox.width;
-      const scaleY = svgHeight / viewBox.height;
+      const scaleX = svgRect.width / svgWidth;
+      const scaleY = scaleX; // Assuming uniform scaling
 
-      const circleX = svgRect.left + d.x * scaleX;
-      const circleY = svgRect.top + (height - margin.bottom - 5 - d.y) * scaleY;
+      const circleX = d.x * scaleX + (svgRect.left - containerRect.left);
+      const circleY =
+        (height - margin.bottom - 5 - d.y) * scaleY +
+        (svgRect.top - containerRect.top);
 
       // Sort the results in descending order
       const sortedResults = d.data.results.sort((a, b) => b.value - a.value);
 
       const tooltipContent = `
-        <div style="padding-bottom:3px"><strong>${d.data.name}</strong></div>
-        <div style="font-family: monospace;">
-          ${sortedResults
-            .map((result) => {
-              const [intPart, decPart] = result.value.toFixed(1).split(".");
-              const paddedIntPart = intPart.padStart(2, `\u00A0`);
-              return `${paddedIntPart}<span style="font-family: inherit;">.</span>${decPart}% <span style="font-family: inherit;">${result.party}</span>`;
-            })
-            .join("<br>")}
-        </div>
-      `;
+          <div style="padding-bottom:3px"><strong>${d.data.name}</strong></div>
+          <div style="font-family: monospace;">
+            ${sortedResults
+              .map((result) => {
+                const [intPart, decPart] = result.value.toFixed(1).split(".");
+                const paddedIntPart = intPart.padStart(2, `\u00A0`);
+                return `${paddedIntPart}<span style="font-family: inherit;">.</span>${decPart}% <span style="font-family: inherit;">${result.party}</span>`;
+              })
+              .join("<br>")}
+          </div>
+        `;
 
       setTooltip({
         display: true,
@@ -196,7 +196,7 @@ const SingleBeeswarmChart = ({
         <div
           className="beeswarm-tooltip"
           style={{
-            position: "fixed",
+            position: "absolute",
             left: `${tooltip.x}px`,
             top: `${tooltip.y}px`,
           }}
