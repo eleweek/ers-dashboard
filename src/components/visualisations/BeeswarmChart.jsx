@@ -85,22 +85,18 @@ const SingleBeeswarmChart = ({
         .attr("stroke-width", 1);
     }
 
-    const circleGroup = svg
-      .append("g")
-      .selectAll("g")
+    // Create a group for all circles
+    const circlesGroup = svg.append("g");
+
+    const circleGroup = circlesGroup
+      .selectAll("g.circle-group")
       .data(beeswarmData)
       .join("g")
+      .attr("class", "circle-group")
       .attr(
         "transform",
         (d) => `translate(${d.x}, ${height - margin.bottom - 5 - d.y})`
       );
-
-    // Larger, invisible circle for hover detection
-    circleGroup
-      .append("circle")
-      .attr("r", radius + 4)
-      .attr("fill", "transparent")
-      .style("cursor", "pointer");
 
     // Visible circle
     const visibleCircles = circleGroup
@@ -109,14 +105,22 @@ const SingleBeeswarmChart = ({
       .style("cursor", "pointer")
       .attr("fill", (d) => getPartyColor(d.data.winningParty) || "black");
 
-    // Highlight circle
-    const highlightCircle = svg
+    // Larger, invisible circle for hover detection
+    const hoverCircles = circleGroup
+      .append("circle")
+      .attr("r", radius + 4)
+      .attr("fill", "transparent")
+      .style("cursor", "pointer");
+
+    // Highlight circle (added last, so it's on top of visible circles but under hover circles)
+    const highlightCircle = circlesGroup
       .append("circle")
       .attr("r", radius + 1)
       .attr("fill", "none")
       .attr("stroke", "#000")
       .attr("stroke-width", 1)
-      .style("display", "none");
+      .style("display", "none")
+      .style("pointer-events", "none"); // Ensure it doesn't interfere with hover
 
     // Add party label below the x-axis
     svg
@@ -166,22 +170,19 @@ const SingleBeeswarmChart = ({
       highlightCircle
         .attr("cx", d.x)
         .attr("cy", height - margin.bottom - 5 - d.y)
-        .style("display", "block")
-        .on("mouseover", () => {
-          showTooltip(d);
-        });
+        .style("display", "block");
     };
 
-    circleGroup
+    hoverCircles
       .on("mouseover", (event, d) => {
-        d3.select(event.currentTarget)
-          .select("circle:nth-child(2)")
+        d3.select(event.currentTarget.parentNode)
+          .select("circle:first-child")
           .attr("r", radius + 2);
         showTooltip(d);
       })
       .on("mouseout", (event) => {
-        d3.select(event.currentTarget)
-          .select("circle:nth-child(2)")
+        d3.select(event.currentTarget.parentNode)
+          .select("circle:first-child")
           .attr("r", radius);
         setTooltip({ ...tooltip, display: false });
         highlightCircle.style("display", "none");

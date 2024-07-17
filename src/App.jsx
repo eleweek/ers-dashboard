@@ -830,7 +830,7 @@ const processDataForBeeswarm = (data) => {
 function LeadBarChartParties({ data }) {
   const partiesChartData = useMemo(() => {
     const table = [
-      ["Party", "Votes %", { role: "style" }, "MPs %", { role: "style" }],
+      ["Party", "Votes", { role: "style" }, "MPs", { role: "style" }],
     ];
 
     data.mainParties.forEach((party) => {
