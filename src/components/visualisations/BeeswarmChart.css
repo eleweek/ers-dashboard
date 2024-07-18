@@ -1,17 +1,15 @@
 .beeswarm-tooltip {
-  font-family: Arial, sans-serif;
+  position: absolute;
   text-align: left;
-  white-space: nowrap;
-  padding: 8px;
-  font: 12px sans-serif;
   background: rgba(0, 0, 0, 0.8);
-  color: #fff;
-  border: none;
+  color: white;
+  padding: 0.25em 0.5em;
   border-radius: 4px;
   pointer-events: none;
-  white-space: nowrap;
-  z-index: 10;
-  transform: translate(-50%, calc(-100% - 13px));
+  z-index: 1000;
+  min-width: 200px;
+  font-size: 12px;
+  --arrow-left: 50%;
 }
 
 .beeswarm-tooltip::after {
@@ -19,9 +17,17 @@
   position: absolute;
   width: 0;
   height: 0;
-  border: 6px solid transparent;
+  border: 0.5em solid transparent;
   border-top-color: rgba(0, 0, 0, 0.8);
-  left: 50%;
-  bottom: -12px;
-  transform: translateX(-50%);
+  left: var(--arrow-left);
+  bottom: 0;
+  transform: translate(-50%, 100%);
+}
+
+.beeswarm-tooltip b {
+  font-size: 14px;
+}
+
+.beeswarm-tooltip div {
+  margin-top: 5px;
 }

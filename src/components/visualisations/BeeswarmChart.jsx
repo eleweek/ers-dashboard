@@ -21,6 +21,8 @@ const SingleBeeswarmChart = ({
     content: "",
     x: 0,
     y: 0,
+    transform: "",
+    arrowLeft: "",
   });
 
   useEffect(() => {
@@ -148,8 +150,9 @@ const SingleBeeswarmChart = ({
       const sortedResults = d.data.results.sort((a, b) => b.value - a.value);
 
       const tooltipContent = `
-          <div style="padding-bottom:3px"><strong>${d.data.name}</strong></div>
-          <div style="font-family: monospace;">
+        <div style="padding-bottom:3px"><strong>${d.data.name}</strong></div>
+        <div style="font-family: monospace; line-height: 1;">
+          <div style="font-size: 14px">
             ${sortedResults
               .map((result) => {
                 const [intPart, decPart] = result.value.toFixed(1).split(".");
@@ -158,13 +161,39 @@ const SingleBeeswarmChart = ({
               })
               .join("<br>")}
           </div>
-        `;
+        </div>
+      `;
+
+      const tempTooltip = document.createElement("div");
+      tempTooltip.className = "beeswarm-tooltip";
+      tempTooltip.style.visibility = "hidden";
+      tempTooltip.style.position = "absolute";
+      tempTooltip.innerHTML = tooltipContent;
+      document.body.appendChild(tempTooltip);
+
+      const tooltipRect = tempTooltip.getBoundingClientRect();
+      document.body.removeChild(tempTooltip);
+
+      const spaceOnLeft = circleX - containerRect.left;
+      const spaceOnRight = containerRect.right - circleX;
+
+      let transform, arrowLeft;
+
+      if (spaceOnLeft <= 125) {
+        transform = "translate(-12.5%, -110%)";
+        arrowLeft = "12.5%";
+      } else {
+        transform = "translate(-50%, -110%)";
+        arrowLeft = "50%";
+      }
 
       setTooltip({
         display: true,
         content: tooltipContent,
         x: circleX,
         y: circleY,
+        transform: transform,
+        arrowLeft: arrowLeft,
       });
 
       highlightCircle
@@ -199,6 +228,8 @@ const SingleBeeswarmChart = ({
             position: "absolute",
             left: `${tooltip.x}px`,
             top: `${tooltip.y}px`,
+            transform: tooltip.transform,
+            "--arrow-left": tooltip.arrowLeft,
           }}
           dangerouslySetInnerHTML={{ __html: tooltip.content }}
         />
