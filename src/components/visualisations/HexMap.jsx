@@ -1,4 +1,6 @@
 import React, { useEffect, useRef, useState, useMemo } from "react";
+import { useNavigate } from "react-router-dom";
+
 import "./HexMap.css";
 import * as d3 from "d3-color";
 
@@ -85,6 +87,8 @@ function HexMapLegend({ min, max }) {
 }
 
 export default function HexMap({ hexjson, data, valueType, displayMode }) {
+  const navigate = useNavigate();
+
   const hexmapRef = useRef(null);
   const hexInstanceRef = useRef(null);
   const [isRendered, setIsRendered] = useState(false);
@@ -202,6 +206,13 @@ export default function HexMap({ hexjson, data, valueType, displayMode }) {
     const setupHexmapEvents = (instance) => {
       // Remove existing event listeners if any
       if (instance.callback) {
+        instance.on("click", function (e) {
+          if (!isMounted) return;
+          const hex = e.target.closest(".hex");
+          if (hex && data[e.data.region] && data[e.data.region].url) {
+            navigate(data[e.data.region].url);
+          }
+        });
         if (instance.callback.mouseover) {
           instance.el.removeEventListener(
             "mouseover",

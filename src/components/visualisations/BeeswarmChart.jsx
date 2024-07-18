@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import * as d3 from "d3";
 import { AccurateBeeswarm } from "accurate-beeswarm-plot";
 import { getPartyColor, getPartyName } from "./utils";
@@ -13,6 +14,8 @@ const SingleBeeswarmChart = ({
   domain,
   party,
 }) => {
+  const navigate = useNavigate();
+
   const svgRef = useRef();
   const containerRef = useRef();
   const [svgWidth, setSvgWidth] = useState(width);
@@ -205,6 +208,12 @@ const SingleBeeswarmChart = ({
     };
 
     hoverCircles
+      .on("click", (event, d) => {
+        console.log("Clicked on", d.data.name);
+        if (d.data.url) {
+          navigate(d.data.url);
+        }
+      })
       .on("mouseover", (event, d) => {
         d3.select(event.currentTarget.parentNode)
           .select("circle:first-child")

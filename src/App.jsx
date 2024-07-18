@@ -445,6 +445,7 @@ const computeWinningPartyData = (constituencies, allConstituencies) => {
       winningPartyColor: getPartyColor(winningParty),
       isSelected: selectedConstituencies.has(constituencyData.$.number),
       name: constituencyData.$.name,
+      url: `/constituency/${constituencyData.$.nameEscaped}`,
       results: results,
     };
   });
@@ -500,6 +501,7 @@ function HexMaps({ data, unfilteredData, selectedRegion }) {
               ? constituency.surplusVotes
               : constituency.wastedVotes,
           isSelected: isSelected,
+          url: `/constituency/${constituencyData.$.nameEscaped}`,
         },
       ];
     })
@@ -827,6 +829,7 @@ const processDataForBeeswarm = (data) => {
 
     return {
       name: constituencyData.$.name,
+      url: `/constituency/${constituencyData.$.nameEscaped}`,
       value: winningPercentage,
       winningParty: constituencyData.$.winningParty,
       results: results,
@@ -1315,6 +1318,7 @@ function App() {
       console.log("useEffect location page pageParam", newData);
       setData(newData);
     }
+    window.scrollTo(0, 0);
   }, [location, page, pageParam]);
 
   const processData = (page, pageParam) => {
