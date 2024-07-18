@@ -150,7 +150,9 @@ const SingleBeeswarmChart = ({
       const sortedResults = d.data.results.sort((a, b) => b.value - a.value);
 
       const tooltipContent = `
-        <div style="padding-bottom:3px"><strong>${d.data.name}</strong></div>
+        <div style="font-size: 14px; padding-bottom:3px"><strong>${
+          d.data.name
+        }</strong></div>
         <div style="font-family: monospace; line-height: 1;">
           <div style="font-size: 14px">
             ${sortedResults
