@@ -207,6 +207,9 @@ export default function HexMap({ hexjson, data, valueType, displayMode }) {
       // Remove existing event listeners if any
       if (instance.callback) {
         instance.on("click", function (e) {
+          if (e.pointerType !== "mouse") {
+            return;
+          }
           if (!isMounted) return;
           const hex = e.target.closest(".hex");
           if (hex && data[e.data.region] && data[e.data.region].url) {

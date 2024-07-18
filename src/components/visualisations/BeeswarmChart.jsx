@@ -209,7 +209,9 @@ const SingleBeeswarmChart = ({
 
     hoverCircles
       .on("click", (event, d) => {
-        console.log("Clicked on", d.data.name);
+        if (event.pointerType !== "mouse") {
+          return;
+        }
         if (d.data.url) {
           navigate(d.data.url);
         }
