@@ -23,23 +23,25 @@ const MagicButtons = () => {
     <div className="container-cta dark-cta">
       <div className="container-fluid">
         <div className="row">
-          <div className="col-lg-12 text-center">
+          <div className="col-sm-12 col-xs-12 text-center">
             <h2>Share this page with your friends</h2>
-            <TwitterShareButton url={shareUrl} style={buttonStyle}>
-              <TwitterIcon size={SHARE_SIZE} round />
-            </TwitterShareButton>
+            <div className="share-buttons">
+              <TwitterShareButton url={shareUrl} style={buttonStyle}>
+                <TwitterIcon size={SHARE_SIZE} round />
+              </TwitterShareButton>
 
-            <FacebookShareButton url={shareUrl} style={buttonStyle}>
-              <FacebookIcon size={SHARE_SIZE} round />
-            </FacebookShareButton>
+              <FacebookShareButton url={shareUrl} style={buttonStyle}>
+                <FacebookIcon size={SHARE_SIZE} round />
+              </FacebookShareButton>
 
-            <WhatsappShareButton url={shareUrl} style={buttonStyle}>
-              <WhatsappIcon size={SHARE_SIZE} round />
-            </WhatsappShareButton>
+              <WhatsappShareButton url={shareUrl} style={buttonStyle}>
+                <WhatsappIcon size={SHARE_SIZE} round />
+              </WhatsappShareButton>
 
-            <EmailShareButton url={shareUrl} style={buttonStyle}>
-              <EmailIcon size={SHARE_SIZE} round />
-            </EmailShareButton>
+              <EmailShareButton url={shareUrl} style={buttonStyle}>
+                <EmailIcon size={SHARE_SIZE} round />
+              </EmailShareButton>
+            </div>
           </div>
         </div>
       </div>
