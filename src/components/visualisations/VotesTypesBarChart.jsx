@@ -20,9 +20,8 @@ export default function VotesTypesBarChart({ parties, region }) {
       const barCount = parties.filter(
         (party) => party.name !== "Others" && party.name !== "The Speaker"
       ).length;
-      const maxHeight = Math.min(350, 35 * barCount);
-      const aspectRatio = 928 / maxHeight;
-      const height = Math.min(maxHeight, containerWidth / aspectRatio);
+      const barHeight = 22;
+      const height = Math.max(350, barCount * barHeight + 100); // 100 for margins and legend
       setDimensions({ width: containerWidth, height });
       setIsNarrow(containerWidth <= 600);
     };
@@ -42,7 +41,7 @@ export default function VotesTypesBarChart({ parties, region }) {
     const { width, height } = dimensions;
     const marginTop = 45;
     const marginRight = isNarrow ? 20 : 140;
-    const marginBottom = Math.min(10, height * 0.03);
+    const marginBottom = 20;
     const marginLeft = 150;
 
     // Clear any existing SVG content
@@ -79,7 +78,7 @@ export default function VotesTypesBarChart({ parties, region }) {
       .scaleBand()
       .domain(processedData.map((d) => d.name))
       .rangeRound([marginTop, height - marginBottom])
-      .paddingInner(0.1);
+      .padding(0.1);
 
     const x = d3
       .scaleLinear()
@@ -101,7 +100,7 @@ export default function VotesTypesBarChart({ parties, region }) {
 
     const xAxis = (g) =>
       g
-        .attr("transform", `translate(0,${marginTop + 2})`)
+        .attr("transform", `translate(0,${marginTop})`)
         .call(
           d3
             .axisTop(x)
@@ -206,6 +205,7 @@ export default function VotesTypesBarChart({ parties, region }) {
             display: "flex",
             justifyContent: "center",
             marginTop: "10px",
+            flexWrap: "wrap",
           }}
         >
           {["decisiveVotes", "surplusVotes", "wastedVotes"].map((category) => (

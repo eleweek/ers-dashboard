@@ -1203,6 +1203,8 @@ function RegionAndUKPage({ data, unfilteredData, page, pageParam }) {
           </div>
         </div>
         <div className="gap-40"></div>
+        <div className="gap-40"></div>
+
         <div className="row">
           <div className="col-lg-10">
             <HexMaps
