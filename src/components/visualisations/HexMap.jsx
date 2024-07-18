@@ -294,8 +294,28 @@ export default function HexMap({ hexjson, data, valueType, displayMode }) {
 
       const bb = hex.getBoundingClientRect();
       const bbo = svg.getBoundingClientRect();
+      const tipRect = tip.getBoundingClientRect();
+      const spaceOnLeft = bb.left - bbo.left;
+      const spaceOnRight = bbo.right - (bb.left + bb.width);
+
+      let arrowLeft;
+
+      const magicTipOffset = displayMode === "winningParty" ? "18%" : "50%";
+      console.log(spaceOnLeft, spaceOnRight, tipRect.width);
+      if (spaceOnLeft <= 125) {
+        tip.style.transform = `translate3d(-10%, ${magicTipOffset}, 0)`;
+        arrowLeft = `12.5%`;
+      } else {
+        // Align to the left of the hex if there's not enough space on the right
+        tip.style.transform = `translate3d(-50%, ${magicTipOffset}, 0)`;
+        arrowLeft = `50%`;
+      }
+
+      tip.style.setProperty("--arrow-left", arrowLeft);
+
       tip.style.left = `${bb.left + bb.width / 2 - bbo.left}px`;
       tip.style.top = `${bb.top + bb.height / 2 - bbo.top}px`;
+
       tip.style.display = "block";
     };
 
