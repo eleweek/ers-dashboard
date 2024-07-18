@@ -6,6 +6,7 @@ export default function VotesTypesBarChart({ parties, region }) {
   const svgRef = useRef();
   const containerRef = useRef();
   const [dimensions, setDimensions] = useState({ width: 1100, height: 350 });
+  const [isNarrow, setIsNarrow] = useState(false);
 
   const title =
     "Percentage of decisive votes, unrepresented votes and surplus votes in 2024 by party" +
@@ -23,6 +24,7 @@ export default function VotesTypesBarChart({ parties, region }) {
       const aspectRatio = 928 / maxHeight;
       const height = Math.min(maxHeight, containerWidth / aspectRatio);
       setDimensions({ width: containerWidth, height });
+      setIsNarrow(containerWidth <= 600);
     };
 
     handleResize();
@@ -34,12 +36,12 @@ export default function VotesTypesBarChart({ parties, region }) {
     if (parties && parties.length > 0) {
       createChart();
     }
-  }, [parties, dimensions]);
+  }, [parties, dimensions, isNarrow]);
 
   const createChart = () => {
     const { width, height } = dimensions;
     const marginTop = 45;
-    const marginRight = 140;
+    const marginRight = isNarrow ? 20 : 140;
     const marginBottom = Math.min(10, height * 0.03);
     const marginLeft = 150;
 
@@ -141,46 +143,48 @@ export default function VotesTypesBarChart({ parties, region }) {
       .attr("stroke-width", 1)
       .style("mix-blend-mode", "hard-light");
 
-    // Legend
-    const legend = svg
-      .append("g")
-      .attr(
-        "transform",
-        `translate(${width - marginRight + 10}, ${marginTop + 3})`
-      )
-      .attr("text-anchor", "start")
-      .attr("font-family", "sans-serif")
-      .attr("font-size", 14)
-      .selectAll("g")
-      .data(categories)
-      .join("g")
-      .attr("transform", (d, i) => `translate(0,${i * 20})`);
+    if (!isNarrow) {
+      // Legend (only for wider screens)
+      const legend = svg
+        .append("g")
+        .attr(
+          "transform",
+          `translate(${width - marginRight + 10}, ${marginTop + 3})`
+        )
+        .attr("text-anchor", "start")
+        .attr("font-family", "sans-serif")
+        .attr("font-size", 14)
+        .selectAll("g")
+        .data(categories)
+        .join("g")
+        .attr("transform", (d, i) => `translate(0,${i * 20})`);
 
-    legend
-      .append("rect")
-      .attr("x", 0)
-      .attr("width", 15)
-      .attr("height", 15)
-      .attr("fill", color);
+      legend
+        .append("rect")
+        .attr("x", 0)
+        .attr("width", 15)
+        .attr("height", 15)
+        .attr("fill", color);
 
-    legend
-      .append("text")
-      .attr("x", 20)
-      .attr("y", 7.5)
-      .attr("dy", "0.35em")
-      .text((d) => {
-        const result = d
-          .replace(/([A-Z])/g, " $1")
-          .toLowerCase()
-          .trim();
+      legend
+        .append("text")
+        .attr("x", 20)
+        .attr("y", 7.5)
+        .attr("dy", "0.35em")
+        .text((d) => getLegendText(d));
+    }
+  };
 
-        if (result === "wasted votes") {
-          return "unrepresented";
-        }
-        return result !== "decisive votes"
-          ? result.replace(" votes", "")
-          : result;
-      });
+  const getLegendText = (d) => {
+    const result = d
+      .replace(/([A-Z])/g, " $1")
+      .toLowerCase()
+      .trim();
+
+    if (result === "wasted votes") {
+      return "unrepresented";
+    }
+    return result !== "decisive votes" ? result.replace(" votes", "") : result;
   };
 
   return (
@@ -196,6 +200,39 @@ export default function VotesTypesBarChart({ parties, region }) {
         </div>
       </div>
       <svg ref={svgRef}></svg>
+      {isNarrow && (
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            marginTop: "10px",
+          }}
+        >
+          {["decisiveVotes", "surplusVotes", "wastedVotes"].map((category) => (
+            <div
+              key={category}
+              style={{
+                margin: "0 10px",
+                display: "flex",
+                alignItems: "center",
+              }}
+            >
+              <div
+                style={{
+                  width: "15px",
+                  height: "15px",
+                  backgroundColor: d3
+                    .scaleOrdinal()
+                    .domain(["decisiveVotes", "surplusVotes", "wastedVotes"])
+                    .range(["#fc85ae", "#9e579d", "#303A52"])(category),
+                  marginRight: "5px",
+                }}
+              ></div>
+              <span>{getLegendText(category)}</span>
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 }
