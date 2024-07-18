@@ -516,19 +516,13 @@ function HexMaps({ data, unfilteredData, selectedRegion }) {
 
   return (
     <div>
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "center",
-          marginBottom: "20px", // Add some space between buttons and map
-        }}
-      >
-        <div>
+      <div className="hexmap-btn-group">
+        <div className="btn-group" role="group" aria-label="Basic example">
           <button
             type="button"
             className={classNames(
               "btn",
-              tab === "decisive" ? "btn-primary" : "btn-secondary"
+              tab === "decisive" ? "active" : "btn-outline-primary"
             )}
             onClick={() => setTab("decisive")}
           >
@@ -538,7 +532,7 @@ function HexMaps({ data, unfilteredData, selectedRegion }) {
             type="button"
             className={classNames(
               "btn",
-              tab === "surplus" ? "btn-primary" : "btn-secondary"
+              tab === "surplus" ? "active" : "btn-outline-primary"
             )}
             onClick={() => setTab("surplus")}
           >
@@ -548,7 +542,7 @@ function HexMaps({ data, unfilteredData, selectedRegion }) {
             type="button"
             className={classNames(
               "btn",
-              tab === "wasted" ? "btn-primary" : "btn-secondary"
+              tab === "wasted" ? "active" : "btn-outline-primary"
             )}
             onClick={() => setTab("wasted")}
           >

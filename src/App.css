@@ -294,3 +294,33 @@ h1.with-sup .sup {
     padding-right: 15px;
   }
 }
+
+.hexmap-btn-group {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+  width: 100%;
+  overflow-x: auto;
+}
+
+.hexmap-btn-group .btn-group {
+  display: flex;
+  flex-wrap: nowrap;
+}
+
+.hexmap-btn-group .btn {
+  flex: 1 1 auto;
+  white-space: nowrap;
+  min-width: min-content;
+}
+
+.hexmap-btn-group .btn.active {
+  background-color: #303a52; /* Bootstrap primary color */
+  color: white;
+  border-color: #303a52;
+}
+
+.hexmap-btn-group .btn:hover {
+  background-color: #504a62; /* Darker shade for hover */
+  border-color: #504a62;
+}
